@@ -44,8 +44,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest(properties = "spring.config.location=" +
+        "classpath:/application-test.yml")
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest()
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -115,7 +116,7 @@ public class ReviewerControllerTest {
     @Order(1)
     @DisplayName("1. 답변등록 API 테스트")
     @Test
-    void 답변등록() throws Exception {
+    public void 답변등록() throws Exception {
         String token = createTokenAndSpringSecuritySetting(reviewer);
 
         AddAnswerDto addAnswerDto = new AddAnswerDto("답변내용");
@@ -141,7 +142,7 @@ public class ReviewerControllerTest {
     @Order(2)
     @DisplayName("2. 답변목록 조회 API")
     @Test
-    void 답변목록_조회() throws Exception {
+    public void 답변목록_조회() throws Exception {
         String token = createTokenAndSpringSecuritySetting(reviewer);
         mockMvc.perform(RestDocumentationRequestBuilders.get("/answers")
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
@@ -180,7 +181,7 @@ public class ReviewerControllerTest {
     @Order(3)
     @DisplayName("3. 답변수정 API 테스트")
     @Test
-    void 답변수정() throws Exception {
+    public void 답변수정() throws Exception {
         String token = createTokenAndSpringSecuritySetting(reviewer);
 
         UpdateAnswerDto updateAnswerDto = new UpdateAnswerDto("답변수정");
@@ -206,7 +207,7 @@ public class ReviewerControllerTest {
     @Order(4)
     @DisplayName("4. 리뷰어 변경 API")
     @Test
-    void 리뷰어_변경() throws Exception {
+    public void 리뷰어_변경() throws Exception {
         String token = createTokenAndSpringSecuritySetting(reviewer);
 
         UpdateReviewerDto updateReviewerDto = new UpdateReviewerDto(newReviewer.getId());
@@ -233,7 +234,7 @@ public class ReviewerControllerTest {
     @Order(5)
     @DisplayName("5. 답변평가 API")
     @Test
-    void 답변평가() throws Exception {
+    public void 답변평가() throws Exception {
 
         String token = createTokenAndSpringSecuritySetting(user);
         EvaluateAnswerDto evaluateAnswerDto = new EvaluateAnswerDto(4.5);

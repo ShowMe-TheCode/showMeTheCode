@@ -40,7 +40,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest()
+@SpringBootTest(properties = "spring.config.location=" +
+        "classpath:/application-test.yml")
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -112,7 +113,7 @@ public class UserControllerTest {
     @DisplayName("1. 언어이름으로 리뷰어 조회 API 테스트")
     @Order(1)
     @Test
-    void 회원가입() throws Exception {
+    public void 회원가입() throws Exception {
         final String testLanguageName = "JAVA";
         mockMvc.perform(get("/user/language")
                         .param("language", testLanguageName)
@@ -137,7 +138,7 @@ public class UserControllerTest {
     @DisplayName("2. 내가 등록한 리뷰요청목록 조회 API 테스트")
     @Order(2)
     @Test
-    void 리뷰요청목록조회() throws Exception {
+    public void 리뷰요청목록조회() throws Exception {
         String token = createTokenAndSpringSecuritySetting(user);
 
         mockMvc.perform(get("/user/requests")
@@ -180,7 +181,7 @@ public class UserControllerTest {
     @DisplayName("3.나에게 요청된 리뷰목록 조회 API 테스트")
     @Order(3)
     @Test
-    void 요청된_리뷰목록_조회() throws Exception {
+    public void 요청된_리뷰목록_조회() throws Exception {
         String token = createTokenAndSpringSecuritySetting(reviewer);
 
         mockMvc.perform(get("/user/received")

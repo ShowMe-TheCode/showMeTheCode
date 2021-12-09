@@ -48,7 +48,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest()
+@SpringBootTest(properties = "spring.config.location=" +
+        "classpath:/application-test.yml")
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -116,7 +117,7 @@ public class ReviewRequestControllerTest {
     @Order(1)
     @DisplayName("1. 코드리뷰 요청")
     @Test
-    void 코드리뷰_요청() throws Exception {
+    public void 코드리뷰_요청() throws Exception {
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto("테스트_제목", "테스트_내용", "JAVA", reviewer.getId());
         String dto = new GsonBuilder().create().toJson(reviewRequestDto);
 
@@ -149,7 +150,7 @@ public class ReviewRequestControllerTest {
     @Order(2)
     @DisplayName("2. 코드리뷰 요청목록 ")
     @Test
-    void 코드리뷰_요청목록() throws Exception {
+    public void 코드리뷰_요청목록() throws Exception {
 
         mockMvc.perform(get("/questions")
                         .param("page", "1")
@@ -190,7 +191,7 @@ public class ReviewRequestControllerTest {
     @Order(3)
     @DisplayName("3. 코드리뷰 요청 상세정보 (단건조회) ")
     @Test
-    void 상세정보_조회() throws Exception {
+    public void 상세정보_조회() throws Exception {
 
         mockMvc.perform(get("/question")
                         .param("id", reviewRequest.getId().toString())
@@ -235,7 +236,7 @@ public class ReviewRequestControllerTest {
     @Order(4)
     @DisplayName("4. 코드리뷰 요청 수정")
     @Test
-    void 코드리뷰_수정() throws Exception {
+    public void 코드리뷰_수정() throws Exception {
         UpdateReviewDto updateReviewDto = new UpdateReviewDto("제목수정", "내용수정");
         String dtoJson = new Gson().toJson(updateReviewDto);
 
@@ -265,7 +266,7 @@ public class ReviewRequestControllerTest {
     @Order(5)
     @DisplayName("5. 코드리뷰 요청 삭제")
     @Test
-    void 코드리뷰_삭제() throws Exception {
+    public void 코드리뷰_삭제() throws Exception {
         String token = createTokenAndSpringSecuritySetting();
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/question/{id}", reviewRequest.getId())
@@ -287,7 +288,7 @@ public class ReviewRequestControllerTest {
     @Order(5)
     @DisplayName("5. 코드리뷰 요청 언어별 카운팅 API 테스트")
     @Test
-    void 언어별_카운팅() throws Exception {
+    public void 언어별_카운팅() throws Exception {
         mockMvc.perform(get("/question/language")
                         .param("language", "JAVA")
                         .param("page", "1")

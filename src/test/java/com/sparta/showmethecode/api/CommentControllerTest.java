@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -24,6 +25,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -43,8 +45,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest()
+@SpringBootTest(properties = "spring.config.location=" +
+        "classpath:/application-test.yml")
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -76,7 +80,7 @@ public class CommentControllerTest {
     String token;
 
     @BeforeAll
-    void init() {
+    public void init() {
         user = new User("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER, 0, 0, 0.0);
         reviewer = new User("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어", UserRole.ROLE_REVIEWER, 0, 0, 0.0, Arrays.asList(new Language("JAVA")));
 
@@ -112,7 +116,7 @@ public class CommentControllerTest {
     @Order(1)
     @DisplayName("1. 댓글추가 API 테스트")
     @Test
-    void 댓글추가() throws Exception {
+    public void 댓글추가() throws Exception {
         String token = createTokenAndSpringSecuritySetting(user);
         AddCommentDto addCommentDto = new AddCommentDto("테스트 댓글입니다.");
         String dtoJson = new Gson().toJson(addCommentDto);
@@ -137,7 +141,7 @@ public class CommentControllerTest {
     @Order(2)
     @DisplayName("2. 댓글삭제 API 테스트")
     @Test
-    void 댓글삭제() throws Exception {
+    public void 댓글삭제() throws Exception {
         String token = createTokenAndSpringSecuritySetting(user);
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/question/comment/{commentId}", comment.getId())
@@ -154,7 +158,7 @@ public class CommentControllerTest {
     @Order(3)
     @DisplayName("3. 댓글수정 API 테스트")
     @Test
-    void 댓글수정() throws Exception {
+    public void 댓글수정() throws Exception {
         String token = createTokenAndSpringSecuritySetting(user);
         UpdateCommentDto updateCommentDto = new UpdateCommentDto("댓글수정 테스트");
         String dtoJson = new Gson().toJson(updateCommentDto);

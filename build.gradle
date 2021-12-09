@@ -23,8 +23,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-//    implementation('org.hibernate.validator:hibernate-validator:6.1.2.Final')
-//    implementation('org.glassfish:jakarta.el:3.0.3')
     implementation('org.springframework.boot:spring-boot-starter-validation:2.5.2')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
@@ -34,6 +32,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'io.jsonwebtoken:jjwt:0.9.1' // JWT
+
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 
     // ==== Query dsl ==== //
     implementation 'com.querydsl:querydsl-jpa'
@@ -69,9 +69,9 @@ bootJar {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
-    filter {
-        includeTestsMatching "com.sparta.showmethecode.api.*"
-    }
+//    filter {
+//        includeTestsMatching "com.sparta.showmethecode.api.*"
+//    }
 }
 
 asciidoctor {
