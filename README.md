@@ -51,19 +51,21 @@
 <br/>
 
 ### 📌 핵심 기능
-- API를 이용한 국회 발의법안 리스트 보기
-- 제목 클릭 시 상세페이지를 크롤링해 모달 창으로 보여주는 기능
-- 법안이름과 의원이름을 통한 발의법안 리스트 검색
-- 조회수 순위 기능
-- 발의법안에 대한 좋아요/싫어요 표현 기능
-- 발의법안에 대한 즐겨찾기 추가/삭제 기능
-- 더보기 버튼 이용한 페이징 기능
+- 리뷰어를 지정하여 코드리뷰를 요청
+- 리뷰어는 리뷰요청을 받아 답변하거나 거절
+- 일반 사용자는 답변에 대한 평가를 수행
+- 실시간 알림
+  - 리뷰 등록시 지정된 리뷰어에게 실시간 알림 (알림 클릭시 답변페이지로 이동)
+  - 리뷰 거절시 리뷰 요청자에게 실시간 알림 (코드리뷰 요청 상세페이지로 이동 - 삭제 or 리뷰어 변경)
+  
 
 <br/>
 <br/>
 
 ### 📌 문제를 이렇게 해결했어요!
-1.
+1. (Querydsl (+Mysql) Group by 성능 최적화) [https://velog.io/@dhk22/TIL-Day-65-Querydsl-Group-by]
+2. (Querydsl Jpa exist 최적화)[https://velog.io/@dhk22/TIL-Day-66-Jpa-exist-%EC%B5%9C%EC%A0%81%ED%99%94]
+3. (Querydsl 페이징 쿼리 최적화)[https://velog.io/@dhk22/TIL-Day-62]
 
 <br/>
 <br/>
@@ -74,17 +76,14 @@
 
 ### Prerequisite
 - `SpringBoot`
-    - `spring-boot-starter-data-jpa`
-    - `spring-boot-starter-securityt`
-    - `spring-boot-starter-oauth2-client`
-    - `spring-boot-starter-validation`
-    - `spring-boot-starter-web`
-
-- `querydsl-jpa`
+    - `spring-boot-data-jpa`
+    - `spring-boot-security`
+    - `spring-boot-oauth2-client`
+    - `querydsl`
+    - `spring rest docs`
 - `asciidoctor`
-- `lombok`
 - `jjwt`
 - `gson
 - `h2`
-- `mysql-connector-java`
+- `mysql`
 
