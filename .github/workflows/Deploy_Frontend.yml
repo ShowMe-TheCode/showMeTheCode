@@ -19,3 +19,9 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_FRONTEND_SECRET_ACCESS_KEY }}
         AWS_REGION: 'ap-northeast-2'   # optional: defaults to us-east-1
         SOURCE_DIR: './src/main/resources/static'      # optional: defaults to entire repository
+    - name: Invalidate cache CloudFront
+      uses: chetan/invalidate-cloudfront-action@master
+      env:
+        DISTRIBUTION: ${{secrets.DISTRIBUTION_ID}}
+        PATHS: '/index.html'
+      continue-on-error: true
