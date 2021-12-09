@@ -1,3 +1,5 @@
+let base_url = "http://aws-lb-1144110396.ap-northeast-2.elb.amazonaws.com"
+
 $(document).ready(function() {
 
     if (sessionStorage.getItem("userId") != null) {
