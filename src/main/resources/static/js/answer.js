@@ -1,3 +1,4 @@
+let base_url = "http://aws-lb-1144110396.ap-northeast-2.elb.amazonaws.com"
 
 $(document).ready(function() {
     getDetails();
@@ -12,7 +13,7 @@ function getDetails() {
 
     $.ajax({
         type: "GET",
-        url: `/details/${id}/answer`,
+        url: base_url+`/details/${id}/answer`,
         success: function (res) {
             console.log(res);
             let questionId = res['questionId']
@@ -79,7 +80,7 @@ function addComment2() {
 
     $.ajax({
         type: "POST",
-        url: `/question/${questionId}/comment`,
+        url: base_url+`/question/${questionId}/comment`,
         contentType: "application/json;charset=utf-8;",
         data: JSON.stringify(data),
         success: function (res) {
@@ -103,7 +104,7 @@ function addAnswer() {
 
     $.ajax({
         type: "POST",
-        url: `/answer/${questionId}`,
+        url: base_url+`/answer/${questionId}`,
         contentType: "application/json;charset=utf-8",
         data: JSON.stringify(data),
         success: function (res) {
@@ -121,7 +122,7 @@ function reject() {
 
     $.ajax({
         type: "POST",
-        url: `/reviewer/reject/${id}`,
+        url: base_url+`/reviewer/reject/${id}`,
         success: function (res) {
             console.log(res);
             alert('리뷰요청을 거절했습니다.');

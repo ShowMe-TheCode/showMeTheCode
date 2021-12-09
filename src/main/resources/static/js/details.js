@@ -1,6 +1,8 @@
 let g_reviewerId;
 let g_answerId;
 
+let base_url = "http://aws-lb-1144110396.ap-northeast-2.elb.amazonaws.com"
+
 $(document).ready(function () {
     let id = getParameterByName("id");
     getDetails(id);
@@ -17,7 +19,7 @@ function evaluate_confirm() {
 
     $.ajax({
         type: "POST",
-        url: `/question/${questionId}/eval/${g_answerId}`,
+        url: base_url+`/question/${questionId}/eval/${g_answerId}`,
         contentType: "application/json;charset=utf-8;",
         data: JSON.stringify(data),
         success: function (res) {
@@ -37,7 +39,7 @@ function drawStar(target) {
 function getDetails(id) {
     $.ajax({
         type: "GET",
-        url: `/question?id=${id}`,
+        url: base_url+`/question?id=${id}`,
         contentType: "application/json;charset-utf-8;",
         success: function (res) {
 
@@ -175,7 +177,7 @@ function addComment() {
 
     $.ajax({
         type: "POST",
-        url: `/question/${questionId}/comment`,
+        url: base_url+`/question/${questionId}/comment`,
         contentType: "application/json;charset=utf-8;",
         data: JSON.stringify(data),
         success: function (res) {
@@ -283,7 +285,7 @@ function findReviewer() {
     if (query != "") {
         $.ajax({
             type: "GET",
-            url: `/user/language?language=${query}`,
+            url: base_url+`/user/language?language=${query}`,
             success: function (res) {
                 $('#select-reviewer').append('<option>리뷰어를 선택하세요</option>')
 
@@ -327,7 +329,7 @@ function changeReviewer() {
 
         $.ajax({
             type: "POST",
-            url: `/question/${questionId}/reviewer/${g_reviewerId}`,
+            url: base_url+`/question/${questionId}/reviewer/${g_reviewerId}`,
             contentType: "application/json;charset=utf-8",
             data: JSON.stringify(data),
             success: function (res) {
@@ -346,7 +348,7 @@ function deleteReview() {
     let questionId = getParameterByName("id");
     $.ajax({
         type: "DELETE",
-        url: `/question/${questionId}`,
+        url: base_url+`/question/${questionId}`,
         success: function (res) {
             alert('리뷰요청 삭제했습니다.');
             location.href = 'mypage.html';
@@ -429,7 +431,7 @@ function editReview() {
 
     $.ajax({
         type: "PUT",
-        url: `/question/${questionId}`,
+        url: base_url+`/question/${questionId}`,
         contentType: "application/json;charset=utf-8;",
         data: JSON.stringify(data),
         success: function (res) {
