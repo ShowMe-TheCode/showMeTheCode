@@ -1,4 +1,5 @@
 let reviewerId;
+let base_url = "http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com"
 
 $('document').ready(function() {
     $("#select-reviewer").on("change", function () {
@@ -19,7 +20,7 @@ function findReviewer() {
     if (query != "") {
         $.ajax({
             type: "GET",
-            url: `/user/language?language=${query}`,
+            url: base_url+`/user/language?language=${query}`,
             success: function (res) {
                 $('#select-reviewer').append('<option>리뷰어를 선택하세요</option>')
 
@@ -63,7 +64,7 @@ function postQuestion(){
 
     $.ajax({
         type: "POST",
-        url: "/question",
+        url: base_url+"/question",
         contentType: "application/json;charset=utf-8",
         data: JSON.stringify(data),
         success: function(res) {

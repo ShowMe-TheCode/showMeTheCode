@@ -1,3 +1,5 @@
+let base_url = "hhttp://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com"
+
 $(document).ready(function() {
 
     if (sessionStorage.getItem("userId") != null) {
@@ -67,7 +69,7 @@ function signin() {
 
     $.ajax({
         type: "POST",
-        url: "/user/signin",
+        url: base_url+"/user/signin",
         contentType: "application/json;charset=utf-8;",
         data: JSON.stringify(data),
         success: function(res) {
@@ -169,7 +171,7 @@ function signup() {
 
     $.ajax({
         type: "POST",
-        url: "/user/signup",
+        url: base_url+"/user/signup",
         contentType: "application/json;charset=utf-8;",
         data: JSON.stringify(data),
         success: function (res) {
@@ -187,7 +189,7 @@ function signup() {
 function logout() {
     $.ajax({
         type: "POST",
-        url: "/logout",
+        url: base_url+"/logout",
         success: function(res) {
             if (res['result'] == "success") {
                 sessionStorage.clear();

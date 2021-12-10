@@ -2,7 +2,7 @@ function go_back() {
     history.go(-1);
 }
 
-// let base_url = "http://aws-lb-1144110396.ap-northeast-2.elb.amazonaws.com"
+let base_url = "http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com"
 
 // let subscribeUrl = "http://localhost:8080"
 $(document).ready(function () {
@@ -43,7 +43,7 @@ $(document).ready(function () {
 function getTag(){
     $.ajax({
         type: "GET",
-        url: "/question/languages/count",
+        url: base_url+"/question/languages/count",
         success: function (res) {
             let tagname = "";
             let count = 0;
@@ -78,7 +78,7 @@ function getQuestionListByLanguage(language,page) {
     nextPage = parseInt(currentPage) + 1;
     $.ajax({
         type: "GET",
-        url: "/question/language",
+        url: base_url+"/question/language",
         data: {
             page: currentPage,
             language: language
@@ -111,7 +111,7 @@ function getQuestionList() {
     nextPage = parseInt(currentPage) + 1;
     $.ajax({
         type: "GET",
-        url: "/questions",
+        url: base_url+"/questions",
         data: {
             page: currentPage,
             query: query,
@@ -381,7 +381,7 @@ function getRankingAll() {
     nextPage = parseInt(currentPage) + 1;
     $.ajax({
         type: "GET",
-        url: "/reviewer/rank",
+        url: base_url+"/reviewer/rank",
         data: {
             page: currentPage
         },
@@ -470,7 +470,7 @@ function getRankingAll() {
 function getRanking(){
     $.ajax({
         type: "GET",
-        url: "/reviewer/top",
+        url: base_url+"/reviewer/top",
         data: {},
         success: function (res) {
             console.log(res);
