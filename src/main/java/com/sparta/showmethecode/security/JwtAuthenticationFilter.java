@@ -42,13 +42,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 for (GrantedAuthority authority : authorities) {
                     log.info("filter authority: {}", authority.getAuthority());
                 }
-
+                log.info("new authentication token");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             } else {
                 if (SecurityContextHolder.getContext().getAuthentication() != null){
-//                    log.info("authentication: {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+                    log.info("authentication: {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
                 }
             }
         }
