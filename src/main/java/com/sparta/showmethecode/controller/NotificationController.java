@@ -24,7 +24,7 @@ public class NotificationController {
      * 유저 sse 연결
      */
     @CrossOrigin
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @GetMapping(value = "/subscribe/{id}", consumes = MediaType.ALL_VALUE)
     public SseEmitter subscribe(@PathVariable Long id,
                                 @RequestParam(value = "lastEventId", required = false, defaultValue = "") String lastEventId) {
