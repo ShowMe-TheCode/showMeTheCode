@@ -3,6 +3,10 @@
 :doctype: book
 
 
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
 == 리뷰요청 관련 API
 ==== 코드리뷰 요청 API
 include::{snippets}/post-question/http-request.adoc[]
@@ -59,3 +63,4 @@ include::{snippets}/get-user-searchByLanguageName/http-response.adoc[]
 ==== 언어이름으로 언어 이름별 개수 조회 API
 include::{snippets}/get-question-language-count/http-request.adoc[]
 include::{snippets}/get-question-language-count/http-response.adoc[]
+

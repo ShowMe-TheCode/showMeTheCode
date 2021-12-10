@@ -448,21 +448,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_리뷰요청_관련_api">리뷰요청 관련 API</a>
 <ul class="sectlevel3">
 <li><a href="#_코드리뷰_요청_api">코드리뷰 요청 API</a></li>
+<li><a href="#_코드리뷰_목록조회_api">코드리뷰 목록조회 API</a></li>
+<li><a href="#_코드리뷰_삭제_api">코드리뷰 삭제 API</a></li>
+<li><a href="#_코드리뷰_수정_api">코드리뷰 수정 API</a></li>
+<li><a href="#_내가_요청한_코드리뷰_목록조회_api">내가 요청한 코드리뷰 목록조회 API</a></li>
+<li><a href="#_요청받은_코드리뷰_목록조회_api">요청받은 코드리뷰 목록조회 API</a></li>
+<li><a href="#_해결전_리뷰요청_리뷰어_변경_api">해결전 리뷰요청 리뷰어 변경 API</a></li>
 </ul>
 </li>
 <li><a href="#_리뷰요청_답변_관련_api">리뷰요청 답변 관련 API</a>
 <ul class="sectlevel3">
 <li><a href="#_답변추가_api">답변추가 API</a></li>
+<li><a href="#_답변조회_api_나에게_요청된_답변">답변조회 API (나에게 요청된 답변)</a></li>
+<li><a href="#_답변수정_api">답변수정 API</a></li>
+<li><a href="#_답변평가_api_답변시_요청한_사용자가_평가">답변평가 API (답변시 요청한 사용자가 평가)</a></li>
 </ul>
 </li>
 <li><a href="#_댓글_관련_api">댓글 관련 API</a>
 <ul class="sectlevel3">
 <li><a href="#_댓글추가_api">댓글추가 API</a></li>
+<li><a href="#_댓글삭제_api">댓글삭제 API</a></li>
+<li><a href="#_댓글수정_api">댓글수정 API</a></li>
 </ul>
 </li>
 <li><a href="#_언어이름_관련_api">언어이름 관련 API</a>
 <ul class="sectlevel3">
 <li><a href="#_언어이름으로_리뷰어_조회_api">언어이름으로 리뷰어 조회 API</a></li>
+<li><a href="#_언어이름으로_언어_이름별_개수_조회_api">언어이름으로 언어 이름별 개수 조회 API</a></li>
 </ul>
 </li>
 </ul>
@@ -474,27 +486,168 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="sect3">
 <h4 id="_코드리뷰_요청_api">코드리뷰 요청 API</h4>
-<div class="paragraph">
-<p>Unresolved directive in api-docs.adoc - include::{snippets}/post-question/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/post-question/http-response.adoc[]
-==== 코드리뷰 목록조회 API
-Unresolved directive in api-docs.adoc - include::{snippets}/get-questions/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/get-questions/http-response.adoc[]
-==== 코드리뷰 삭제 API
-Unresolved directive in api-docs.adoc - include::{snippets}/delete-question/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/delete-question/http-response.adoc[]
-==== 코드리뷰 수정 API
-Unresolved directive in api-docs.adoc - include::{snippets}/put-question/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/put-question/http-response.adoc[]
-==== 내가 요청한 코드리뷰 목록조회 API
-Unresolved directive in api-docs.adoc - include::{snippets}/get-request-reviewList/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/get-request-reviewList/http-response.adoc[]
-==== 요청받은 코드리뷰 목록조회 API
-Unresolved directive in api-docs.adoc - include::{snippets}/get-received-reviewList/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/get-received-reviewList/http-response.adoc[]
-==== 해결전 리뷰요청 리뷰어 변경 API
-Unresolved directive in api-docs.adoc - include::{snippets}/put-question-reviewer/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/put-question-reviewer/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /question HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE2MzkxMDM5NTl9.yukYW5qp_ik4uid2vPCArKKrAMKr8HHsxmHpI4OY5rs
+Content-Length: 91
+Host: localhost:8080
+
+{"title":"테스트_제목","content":"테스트_내용","language":"JAVA","reviewerId":68}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 2
+
+ok</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_코드리뷰_목록조회_api">코드리뷰 목록조회 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /questions?page=1&amp;size=10&amp;sortBy=createdAt&amp;isAsc=true HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 2295
+
+{"data":[{"reviewRequestId":1,"username":"user1","nickname":"nickname1","title":"테스트제목","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.601","commentCount":1},{"reviewRequestId":2,"username":"user1","nickname":"nickname1","title":"테스트제목1 - java","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.605","commentCount":0},{"reviewRequestId":3,"username":"user1","nickname":"nickname1","title":"테스트제목2 - java","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.606","commentCount":0},{"reviewRequestId":4,"username":"user1","nickname":"nickname1","title":"테스트제목1 - python","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.607","commentCount":0},{"reviewRequestId":5,"username":"user1","nickname":"nickname1","title":"테스트제목2 - python","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.608","commentCount":0},{"reviewRequestId":6,"username":"user1","nickname":"nickname1","title":"테스트제목3 - spring","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.609","commentCount":0},{"reviewRequestId":7,"username":"user1","nickname":"nickname1","title":"테스트제목4 - spring","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.61","commentCount":0},{"reviewRequestId":8,"username":"user1","nickname":"nickname1","title":"테스트제목","content":"테스트내용 - 입력","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.61","commentCount":0},{"reviewRequestId":9,"username":"user1","nickname":"nickname1","title":"테스트제목","content":"테스트내용 - 출력","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.611","commentCount":0},{"reviewRequestId":10,"username":"user1","nickname":"nickname1","title":"테스트제목","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.612","commentCount":0}],"totalPage":4,"totalElements":35,"page":0,"size":10}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_코드리뷰_삭제_api">코드리뷰 삭제 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /question/70 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE2MzkxMDM5NTl9.yukYW5qp_ik4uid2vPCArKKrAMKr8HHsxmHpI4OY5rs
+Content-Type: application/json;charset=UTF-8
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 2
+
+ok</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_코드리뷰_수정_api">코드리뷰 수정 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /question/70 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE2MzkxMDM5NTl9.yukYW5qp_ik4uid2vPCArKKrAMKr8HHsxmHpI4OY5rs
+Content-Type: application/json;charset=UTF-8
+Content-Length: 49
+Host: localhost:8080
+
+{"title":"제목수정","content":"내용수정"}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 2
+
+ok</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_내가_요청한_코드리뷰_목록조회_api">내가 요청한 코드리뷰 목록조회 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /user/requests?page=1&amp;size=10&amp;isAsc=true&amp;sortBy=createdAt&amp;status=UNSOLVE HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE2MzkxMDM5NTd9.bKjnfVdl_A_SfOoDKrVuqngwef6iylQIHBX-6BR-f84
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 269
+
+{"data":[{"reviewRequestId":45,"username":"user","nickname":"테스트_사용자","title":"제목","content":"내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:16.313","commentCount":2}],"totalPage":1,"totalElements":1,"page":0,"size":10}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_요청받은_코드리뷰_목록조회_api">요청받은 코드리뷰 목록조회 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /user/received?page=1&amp;size=10&amp;isAsc=true&amp;sortBy=createdAt&amp;status=UNSOLVE HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJldmlld2VyIiwiZXhwIjoxNjM5MTAzOTU3fQ.9UsVr62PAGIuBjuhPMzkyfqRelLAkHvs9uxEyY5HVbM
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 274
+
+{"data":[{"reviewRequestId":45,"username":"reviewer","nickname":"테스트_리뷰어1","title":"제목","content":"내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:16.313","commentCount":2}],"totalPage":1,"totalElements":1,"page":0,"size":10}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_해결전_리뷰요청_리뷰어_변경_api">해결전 리뷰요청 리뷰어 변경 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /question/54/reviewer/50 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJldmlld2VyIiwiZXhwIjoxNjM5MTAzOTU4fQ.CNxyt8JnGhjsVEsbKTNC9yHZUKYp6B6ds-lJ2mI64NY
+Content-Type: application/json;charset=UTF-8
+Content-Length: 20
+Host: localhost:8080
+
+{"newReviewerId":52}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 7
+
+success</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -504,18 +657,102 @@ Unresolved directive in api-docs.adoc - include::{snippets}/put-question-reviewe
 <div class="sectionbody">
 <div class="sect3">
 <h4 id="_답변추가_api">답변추가 API</h4>
-<div class="paragraph">
-<p>Unresolved directive in api-docs.adoc - include::{snippets}/post-answer/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/post-answer/http-response.adoc[]
-==== 답변조회 API (나에게 요청된 답변)
-Unresolved directive in api-docs.adoc - include::{snippets}/get-answers/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/get-answers/http-response.adoc[]
-==== 답변수정 API
-Unresolved directive in api-docs.adoc - include::{snippets}/put-answer/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/put-answer/http-response.adoc[]
-==== 답변평가 API (답변시 요청한 사용자가 평가)
-Unresolved directive in api-docs.adoc - include::{snippets}/post-answer-evaluate/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/post-answer-evaluate/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /answer/54 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJldmlld2VyIiwiZXhwIjoxNjM5MTAzOTU3fQ.9UsVr62PAGIuBjuhPMzkyfqRelLAkHvs9uxEyY5HVbM
+Content-Type: application/json;charset=UTF-8
+Content-Length: 26
+Host: localhost:8080
+
+{"content":"답변내용"}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 2
+
+ok</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_답변조회_api_나에게_요청된_답변">답변조회 API (나에게 요청된 답변)</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /answers?page=1&amp;size=10&amp;isAsc=true&amp;sortBy=createdAt HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJldmlld2VyIiwiZXhwIjoxNjM5MTAzOTU4fQ.CNxyt8JnGhjsVEsbKTNC9yHZUKYp6B6ds-lJ2mI64NY
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 240
+
+{"data":[{"reviewAnswerId":57,"reviewRequestId":54,"username":"reviewer","nickname":"테스트_리뷰어","answerContent":"답변내용","point":4.5,"createdAt":"2021-12-10T10:39:17.966"}],"totalPage":1,"totalElements":1,"page":0,"size":10}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_답변수정_api">답변수정 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /answer/57 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJldmlld2VyIiwiZXhwIjoxNjM5MTAzOTU4fQ.CNxyt8JnGhjsVEsbKTNC9yHZUKYp6B6ds-lJ2mI64NY
+Content-Type: application/json;charset=UTF-8
+Content-Length: 26
+Host: localhost:8080
+
+{"content":"답변수정"}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 2
+
+ok</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_답변평가_api_답변시_요청한_사용자가_평가">답변평가 API (답변시 요청한 사용자가 평가)</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /question/54/eval/57 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE2MzkxMDM5NTh9.1wSyTp5zZNcdjAFqskAkdywkjHS0pYHUWbdna1gh1EU
+Content-Type: application/json;charset=UTF-8
+Content-Length: 13
+Host: localhost:8080
+
+{"point":4.5}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 2
+
+ok</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -525,15 +762,76 @@ Unresolved directive in api-docs.adoc - include::{snippets}/post-answer-evaluate
 <div class="sectionbody">
 <div class="sect3">
 <h4 id="_댓글추가_api">댓글추가 API</h4>
-<div class="paragraph">
-<p>Unresolved directive in api-docs.adoc - include::{snippets}/post-comment/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/post-comment/http-response.adoc[]
-==== 댓글삭제 API
-Unresolved directive in api-docs.adoc - include::{snippets}/delete-comment/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/delete-comment/http-response.adoc[]
-==== 댓글수정 API
-Unresolved directive in api-docs.adoc - include::{snippets}/put-comment/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/put-comment/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /question/63/comment HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE2MzkxMDM5NTh9.1wSyTp5zZNcdjAFqskAkdywkjHS0pYHUWbdna1gh1EU
+Content-Type: application/json;charset=UTF-8
+Content-Length: 40
+Host: localhost:8080
+
+{"content":"테스트 댓글입니다."}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 19
+
+댓글작성 완료</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_댓글삭제_api">댓글삭제 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /question/comment/64 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE2MzkxMDM5NTh9.1wSyTp5zZNcdjAFqskAkdywkjHS0pYHUWbdna1gh1EU
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 19
+
+댓글삭제 완료</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_댓글수정_api">댓글수정 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /question/comment/64 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJleHAiOjE2MzkxMDM5NTh9.1wSyTp5zZNcdjAFqskAkdywkjHS0pYHUWbdna1gh1EU
+Content-Type: application/json;charset=UTF-8
+Content-Length: 36
+Host: localhost:8080
+
+{"content":"댓글수정 테스트"}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 19
+
+댓글수정 완료</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -543,12 +841,44 @@ Unresolved directive in api-docs.adoc - include::{snippets}/put-comment/http-res
 <div class="sectionbody">
 <div class="sect3">
 <h4 id="_언어이름으로_리뷰어_조회_api">언어이름으로 리뷰어 조회 API</h4>
-<div class="paragraph">
-<p>Unresolved directive in api-docs.adoc - include::{snippets}/get-user-searchByLanguageName/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/get-user-searchByLanguageName/http-response.adoc[]
-==== 언어이름으로 언어 이름별 개수 조회 API
-Unresolved directive in api-docs.adoc - include::{snippets}/get-question-language-count/http-request.adoc[]
-Unresolved directive in api-docs.adoc - include::{snippets}/get-question-language-count/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /user/language?language=JAVA HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 103
+
+[{"id":3,"username":"JavaGod","nickname":"nickname3","languages":["JAVA"],"answerCount":2,"point":3.0}]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_언어이름으로_언어_이름별_개수_조회_api">언어이름으로 언어 이름별 개수 조회 API</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /question/language?language=JAVA&amp;page=1&amp;size=10&amp;isAsc=true HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Content-Length: 2295
+
+{"data":[{"reviewRequestId":1,"username":"user1","nickname":"nickname1","title":"테스트제목","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.601","commentCount":1},{"reviewRequestId":2,"username":"user1","nickname":"nickname1","title":"테스트제목1 - java","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.605","commentCount":0},{"reviewRequestId":3,"username":"user1","nickname":"nickname1","title":"테스트제목2 - java","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.606","commentCount":0},{"reviewRequestId":4,"username":"user1","nickname":"nickname1","title":"테스트제목1 - python","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.607","commentCount":0},{"reviewRequestId":5,"username":"user1","nickname":"nickname1","title":"테스트제목2 - python","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.608","commentCount":0},{"reviewRequestId":6,"username":"user1","nickname":"nickname1","title":"테스트제목3 - spring","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.609","commentCount":0},{"reviewRequestId":7,"username":"user1","nickname":"nickname1","title":"테스트제목4 - spring","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.61","commentCount":0},{"reviewRequestId":8,"username":"user1","nickname":"nickname1","title":"테스트제목","content":"테스트내용 - 입력","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.61","commentCount":0},{"reviewRequestId":9,"username":"user1","nickname":"nickname1","title":"테스트제목","content":"테스트내용 - 출력","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.611","commentCount":0},{"reviewRequestId":10,"username":"user1","nickname":"nickname1","title":"테스트제목","content":"테스트내용","languageName":"JAVA","status":"미해결","createdAt":"2021-12-10T10:39:10.612","commentCount":0}],"totalPage":2,"totalElements":18,"page":0,"size":10}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -557,7 +887,7 @@ Unresolved directive in api-docs.adoc - include::{snippets}/get-question-languag
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2021-12-09 21:23:19 +0900
+Last updated 2021-12-10 10:36:39 +0900
 </div>
 </div>
 </body>
