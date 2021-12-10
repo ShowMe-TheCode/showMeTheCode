@@ -56,7 +56,7 @@ public class ReviewerController {
     /**
      * 리뷰요청 거절 API
      */
-    @Secured({"ROLE_REVIEWER"})
+//    @Secured({"ROLE_REVIEWER"})
     @PostMapping("/reviewer/reject/{questionId}")
     public ResponseEntity rejectRequestedReview(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -71,7 +71,7 @@ public class ReviewerController {
     /**
      * 리뷰요청에 대한 리뷰등록 API
      */
-    @Secured("ROLE_REVIEWER")
+//    @Secured("ROLE_REVIEWER")
     @PostMapping("/answer/{questionId}")
     public ResponseEntity addReviewAndComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -86,7 +86,7 @@ public class ReviewerController {
     /**
      * 내가 답변한 리뷰목록 조회 API
      */
-    @Secured({"ROLE_REVIEWER"})
+//    @Secured({"ROLE_REVIEWER"})
     @GetMapping("/answers")
     public ResponseEntity getMyAnswerList(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -105,7 +105,7 @@ public class ReviewerController {
     /**
      * 답변한 리뷰 수정 API
      */
-    @Secured({ "ROLE_REVIEWER"})
+//    @Secured({ "ROLE_REVIEWER"})
     @PutMapping("/answer/{answerId}")
     public ResponseEntity updateMyAnswer(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -123,7 +123,7 @@ public class ReviewerController {
     /**
      * 나에게 요청된 리뷰목록 조회
      */
-    @Secured({"ROLE_REVIEWER"})
+//    @Secured({"ROLE_REVIEWER"})
     @GetMapping("/user/received")
     public ResponseEntity<PageResponseDto> getMyReceivedList(
             @RequestParam ReviewRequestStatus status,
@@ -143,7 +143,7 @@ public class ReviewerController {
     /**
      * 리뷰어 변경하기 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @PutMapping("/question/{questionId}/reviewer/{reviewerId}")
     public ResponseEntity changeReviewer(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -159,7 +159,7 @@ public class ReviewerController {
     /**
      * 답변에 대한 평가 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @PostMapping("/question/{questionId}/eval/{answerId}")
     public ResponseEntity evaluateAnswer(
             @AuthenticationPrincipal UserDetailsImpl userDetails,

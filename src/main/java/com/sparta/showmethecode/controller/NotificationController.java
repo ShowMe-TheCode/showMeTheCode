@@ -37,7 +37,7 @@ public class NotificationController {
     /**
      *  로그인 한 유저의 모든 알림 조회
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @GetMapping("/notifications")
     public ResponseEntity<NotificationsResponse> notifications(@PathVariable Long id) {
         return ResponseEntity.ok().body(notificationService.findAllById(id));
@@ -46,7 +46,7 @@ public class NotificationController {
     /**
      *  알림 읽음 상태 변경
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @PatchMapping("/notifications/{id}")
     public ResponseEntity<Void> readNotification(@PathVariable Long id) {
         notificationService.readNotification(id);

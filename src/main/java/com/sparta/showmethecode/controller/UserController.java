@@ -83,7 +83,7 @@ public class UserController {
     /**
      * 로그아웃 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @PostMapping("/user/logout")
     public BasicResponseDto logout() {
         SecurityContextHolder.clearContext();
@@ -94,7 +94,7 @@ public class UserController {
     /**
      * 내가 등록한 리뷰요청목록 조회 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @GetMapping("/user/requests")
     public ResponseEntity<PageResponseDto> getMyRequestList(
             @RequestParam ReviewRequestStatus status,

@@ -23,7 +23,7 @@ public class CommentController {
     /**
      * 리뷰요청 - 댓글추가 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @PostMapping("/question/{questionId}/comment")
     public ResponseEntity addComment_Question(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -39,7 +39,7 @@ public class CommentController {
     /**
      * 리뷰요청 - 댓글삭제 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @DeleteMapping("/question/comment/{commentId}")
     public ResponseEntity removeComment_Question(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId
@@ -53,7 +53,7 @@ public class CommentController {
     /**
      * 리뷰요청 - 댓글수정 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @PutMapping("/question/comment/{commentId}")
     public ResponseEntity updateComment_Question(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -69,7 +69,7 @@ public class CommentController {
     /**
      * 리뷰답변 - 댓글추가 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @PostMapping("/answer/{answerId}/comment")
     public ResponseEntity addComment_Answer(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -85,7 +85,7 @@ public class CommentController {
     /**
      * 리뷰답변 - 댓글수정 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @PutMapping("/answer/comment/{commentId}")
     public ResponseEntity updateComment_Answer(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -101,7 +101,7 @@ public class CommentController {
     /**
      * 리뷰답변 - 댓글삭제 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
     @DeleteMapping("/answer/comment/{commentId}")
     public ResponseEntity removeComment_Answer(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
