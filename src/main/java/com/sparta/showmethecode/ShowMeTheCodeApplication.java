@@ -20,7 +20,7 @@ public class ShowMeTheCodeApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("https://www.smtc.shop","http://www.smtc.shop");
+                registry.addMapping("/**").allowedOrigins("http://www.smtc.shop");
             }
         };
     }
