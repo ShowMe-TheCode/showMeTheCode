@@ -1,4 +1,4 @@
-let base_url = "http://aws-lb-1144110396.ap-northeast-2.elb.amazonaws.com"
+let base_url = "http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com"
 
 $(document).ready(function () {
     let mytoken = sessionStorage.getItem("mytoken");
