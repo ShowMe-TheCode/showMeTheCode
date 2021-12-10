@@ -473,6 +473,7 @@ function getRanking(){
         url: "/reviewer/top",
         data: {},
         success: function (res) {
+            console.log(res);
             for (let i = 0; i < res.length; i++){
                 let ranking = i + 1
                 let username = res[i]["username"];
