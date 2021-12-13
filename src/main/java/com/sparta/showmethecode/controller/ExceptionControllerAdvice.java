@@ -19,6 +19,7 @@ public class ExceptionControllerAdvice {
         return new ExceptionResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadCredentialsException.class)
     public ExceptionResponse badCredentialsExceptionHandler(BadCredentialsException e) {
