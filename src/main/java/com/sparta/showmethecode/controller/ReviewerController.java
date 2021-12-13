@@ -86,7 +86,7 @@ public class ReviewerController {
     /**
      * 내가 답변한 리뷰목록 조회 API
      */
-    @Secured({"ROLE_REVIEWER"})
+//    @Secured({"ROLE_REVIEWER"})
     @GetMapping("/answers")
     public ResponseEntity getMyAnswerList(
             @AuthenticationPrincipal UserDetailsImpl userDetails,

@@ -29,27 +29,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader("Authorization");
-//        log.info(authorization);
         if (authorization != null && authorization.startsWith("Bearer ")) {
             String token = authorization.substring(7);
-//            log.info("token: {}", token);
+            log.info("token: {}", token);
 
             if (SecurityContextHolder.getContext().getAuthentication() == null && jwtUtils.isValidToken(token)) {
                 TokenDto userInfo = jwtUtils.getUserInfo(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userInfo.getUsername());
-//                log.info("userDetails username: {}", userDetails.getUsername());
-//                log.info("userDetails authority: {}", userDetails.getAuthorities());
+                log.info("userDetails username: {}", userDetails.getUsername());
+                log.info("userDetails authority: {}", userDetails.getAuthorities());
                 Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
                 for (GrantedAuthority authority : authorities) {
-//                    log.info("filter authority: {}", authority.getAuthority());
+                    log.info("filter authority: {}", authority.getAuthority());
                 }
-
+                log.info("new authentication token");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             } else {
                 if (SecurityContextHolder.getContext().getAuthentication() != null){
-//                    log.info("authentication: {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+                    log.info("authentication: {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
                 }
             }
         }
