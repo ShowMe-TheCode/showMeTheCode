@@ -1,6 +1,5 @@
 package com.sparta.showmethecode.security;
 
-import com.sparta.showmethecode.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

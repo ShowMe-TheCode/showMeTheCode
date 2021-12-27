@@ -1,7 +1,7 @@
 package com.sparta.showmethecode.security;
 
-import com.sparta.showmethecode.domain.User;
-import com.sparta.showmethecode.repository.UserRepository;
+import com.sparta.showmethecode.user.domain.User;
+import com.sparta.showmethecode.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

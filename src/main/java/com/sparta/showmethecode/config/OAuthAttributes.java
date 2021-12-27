@@ -1,7 +1,7 @@
 package com.sparta.showmethecode.config;
 
-import com.sparta.showmethecode.domain.User;
-import com.sparta.showmethecode.domain.UserRole;
+import com.sparta.showmethecode.user.domain.User;
+import com.sparta.showmethecode.user.domain.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.sparta.showmethecode.security;
 
-import com.sparta.showmethecode.domain.User;
+import com.sparta.showmethecode.user.domain.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

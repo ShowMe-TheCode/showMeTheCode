@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta
+			name="viewport"
+			content="height=device-height,
+                      width=device-width, initial-scale=1.0,
+                      minimum-scale=1.0, maximum-scale=1.0,
+                      user-scalable=no, target-densitydpi=device-dpi"
+		/>
+		<!--    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
+		<!-- Require SEO -->
+		<title>내 질문 - 쇼미더 코드 | 마이페이지</title>
+		<meta
+			name="description"
+			content="궁금했던 내 질문과 답변을 확인해보세요...."
+		/>
+
+		<!-- og tag START -->
+		<meta property="og:url" content="" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="내 질문 - 쇼미더 코드 | 마이페이지" />
+		<meta
+			property="og:description"
+			content="강의 중 궁금했던 내 질문과 답변을 확인해보세요...."
+		/>
+		<meta property="og:image" content="" />
+		<meta property="og:image:secure_url" content="" />
+		<meta property="og:site_name" content="쇼미더 코드" />
+		<meta property="og:locale" content="ko-KR" />
+		<!-- og tag END -->
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+		<script src="js/navbar.js"></script>
+		<script src="js/index.js"></script>
+		<script src="js/mypage.js"></script>
+		<script src="js/footer.js"></script>
+		<script src="js/login.js"></script>
+		<script src="js/user.js"></script>
+
+		<link rel="stylesheet" href="./css/main.css" />
+		<link rel="stylesheet" href="./css/my-post.css" />
+
+		<link
+			rel="stylesheet"
+			href="https://cdn.inflearn.com/dist/vendor/bulma-accordion.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.inflearn.com/dist/vendor/bulma-switch.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.inflearn.com/dist/vendor/bulma-tooltip.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://pro.fontawesome.com/releases/v5.12.0/css/all.css"
+			integrity="sha384-ekOryaXPbeCpWQNxMwSWVvQ0+1VrStoPJq54shlYhR8HzQgig1v5fas6YgOqLoKz"
+			crossorigin="anonymous"
+		/>
+	</head>
+
+	<body id="inflearn" class="profile my_questions is_logged_in is-student-user">
+		<div id="root">
+			<main id="main">
+				<section class="pg___my-posts">
+					<div class="my_student_header">
+						<div class="container"><h4>마이페이지</h4></div>
+					</div>
+					<div class="container">
+						<div class="columns">
+							<aside class="column is-2 sidebar_left">
+								<div class="menu_container">
+									<p class="menu-label">코드리뷰</p>
+
+									<ul id="mypage-menu-list" class="menu-list"></ul>
+
+									<p class="menu-label">설정</p>
+									<ul class="menu-list">
+										<li>
+											<a
+												class="btn_wrap menu-list__menu--new"
+												href="/settings/account"
+											>
+												<span>프로필</span>
+											</a>
+										</li>
+										<li>
+											<a class="btn_wrap" href="/settings/notification">
+												<span>알림 설정</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</aside>
+							<div class="my-posts__wrapper column">
+								<div>
+									<ul class="my-posts__tabs">
+										<li class="my-questions__tab is-active" data-tab="question">
+											<button
+												class="
+													ac-button
+													is-md is-text
+													tab-button
+													e-filter-tab
+													is-active
+												"
+												data-tab="question"
+											>
+												코드리뷰
+											</button>
+										</li>
+									</ul>
+								</div>
+								<div class="my-posts__post-list-cover">
+									<div id="condition-box" class="post-list__select-status">
+										<button
+											onclick="myRequestQuestionList('ALL')"
+											class="button is-link is-rounded"
+										>
+											전체보기</button
+										>&nbsp;&nbsp;
+										<button
+											onclick="myRequestQuestionList('SOLVE')"
+											class="button is-link is-rounded"
+										>
+											해결됨</button
+										>&nbsp;&nbsp;
+										<button
+											onclick="myRequestQuestionList('UNSOLVE')"
+											class="button is-link is-rounded"
+										>
+											미해결
+										</button>
+									</div>
+
+									<ul id="question-list" class="post-list__content"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+			<button class="gototop-btn e-gototop" fxd-data='{"left":30,"bottom":70}'>
+				<i class="far fa-chevron-up"></i><span class="gototop-text">TOP</span>
+			</button>
+		</div>
+	</body>
+</html>

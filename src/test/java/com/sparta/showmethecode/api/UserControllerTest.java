@@ -1,13 +1,19 @@
 package com.sparta.showmethecode.api;
 
 import com.google.common.net.HttpHeaders;
-import com.sparta.showmethecode.domain.*;
-import com.sparta.showmethecode.repository.ReviewAnswerRepository;
-import com.sparta.showmethecode.repository.ReviewRequestCommentRepository;
-import com.sparta.showmethecode.repository.ReviewRequestRepository;
-import com.sparta.showmethecode.repository.UserRepository;
+import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
+import com.sparta.showmethecode.language.domain.Language;
+import com.sparta.showmethecode.reviewAnswer.repository.ReviewAnswerRepository;
+import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
+import com.sparta.showmethecode.reviewAnswer.domain.ReviewAnswer;
+import com.sparta.showmethecode.reviewRequest.repository.ReviewRequestRepository;
+import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
+import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
+import com.sparta.showmethecode.user.repository.UserRepository;
 import com.sparta.showmethecode.security.JwtUtils;
 import com.sparta.showmethecode.security.UserDetailsImpl;
+import com.sparta.showmethecode.user.domain.User;
+import com.sparta.showmethecode.user.domain.UserRole;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +22,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
