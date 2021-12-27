@@ -11,11 +11,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.showmethecode.comment.dto.response.CommentResponseDto;
 import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
 import com.sparta.showmethecode.reviewAnswer.domain.ReviewAnswer;
+import com.sparta.showmethecode.reviewAnswer.dto.response.QReviewAnswerResponseDto;
 import com.sparta.showmethecode.reviewAnswer.dto.response.ReviewAnswerResponseDto;
 import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
 import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
-import com.sparta.showmethecode.reviewRequest.dto.response.ReviewRequestDetailResponseDto;
-import com.sparta.showmethecode.reviewRequest.dto.response.ReviewRequestResponseDto;
+import com.sparta.showmethecode.reviewRequest.dto.response.*;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.common.dto.response.*;
 import com.sparta.showmethecode.common.repository.OrderByNull;
@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
 
 import static com.querydsl.core.types.ExpressionUtils.count;
 import static com.querydsl.core.types.ExpressionUtils.path;
-import static com.sparta.showmethecode.domain.QReviewAnswer.reviewAnswer;
-import static com.sparta.showmethecode.domain.QReviewRequest.reviewRequest;
-import static com.sparta.showmethecode.domain.QReviewRequestComment.reviewRequestComment;
-import static com.sparta.showmethecode.domain.QUser.user;
+import static com.sparta.showmethecode.comment.domain.QReviewRequestComment.reviewRequestComment;
+import static com.sparta.showmethecode.reviewAnswer.domain.QReviewAnswer.reviewAnswer;
+import static com.sparta.showmethecode.reviewRequest.domain.QReviewRequest.reviewRequest;
+import static com.sparta.showmethecode.user.domain.QUser.user;
 
 
 @Slf4j

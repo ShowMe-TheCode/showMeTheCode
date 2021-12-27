@@ -2,7 +2,6 @@ package com.sparta.showmethecode.user.service;
 
 import com.sparta.showmethecode.notification.domain.MoveUriType;
 import com.sparta.showmethecode.reviewAnswer.dto.request.AddAnswerDto;
-import com.sparta.showmethecode.common.dto.request.UpdateReviewerDto;
 import com.sparta.showmethecode.reviewAnswer.dto.request.EvaluateAnswerDto;
 import com.sparta.showmethecode.reviewAnswer.dto.request.UpdateAnswerDto;
 import com.sparta.showmethecode.common.dto.response.*;
@@ -14,6 +13,7 @@ import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
 import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
 import com.sparta.showmethecode.reviewRequest.dto.response.ReviewRequestResponseDto;
 import com.sparta.showmethecode.notification.service.NotificationService;
+import com.sparta.showmethecode.user.dto.request.UpdateReviewerDto;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.user.dto.response.ReviewerInfoDto;

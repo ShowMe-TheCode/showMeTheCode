@@ -3,7 +3,7 @@ package com.sparta.showmethecode.reviewAnswer.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import static com.sparta.showmethecode.domain.QReviewAnswer.reviewAnswer;
+import static com.sparta.showmethecode.reviewAnswer.domain.QReviewAnswer.reviewAnswer;
 
 @RequiredArgsConstructor
 public class ReviewAnswerDaoImpl implements ReviewAnswerDao{

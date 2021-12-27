@@ -11,8 +11,8 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
-import static com.sparta.showmethecode.domain.QLanguage.language;
-import static com.sparta.showmethecode.domain.QUser.user;
+import static com.sparta.showmethecode.language.domain.QLanguage.language;
+import static com.sparta.showmethecode.user.domain.QUser.user;
 
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao {
 
         List<User> result = query.select(user)
                 .from(user)
-                .join(user.languages, language)
+                .join(user.languages, language).fetchJoin()
                 .where(user.role.eq(UserRole.ROLE_REVIEWER).and(language.name.eq(languageName)))
                 .fetch();
 

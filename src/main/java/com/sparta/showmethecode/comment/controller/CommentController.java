@@ -65,50 +65,50 @@ public class CommentController {
         return ResponseEntity.ok().body("댓글수정 완료");
     }
 
-    /**
-     * 리뷰답변 - 댓글추가 API
-     */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @PostMapping("/answer/{answerId}/comment")
-    public ResponseEntity addComment_Answer(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long answerId,
-            @RequestBody AddCommentDto addCommentDto
-    ) {
-        User user = userDetails.getUser();
-        commentService.addComment_Answer(user, answerId, addCommentDto);
-
-        return ResponseEntity.ok().body("댓글작성 완료");
-    }
-
-    /**
-     * 리뷰답변 - 댓글수정 API
-     */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @PutMapping("/answer/comment/{commentId}")
-    public ResponseEntity updateComment_Answer(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long commentId,
-            @RequestBody UpdateCommentDto updateCommentDto
-    ) {
-        User user = userDetails.getUser();
-        commentService.updateComment_Answer(user, commentId, updateCommentDto);
-
-        return ResponseEntity.ok().body("댓글작성 완료");
-    }
-
-    /**
-     * 리뷰답변 - 댓글삭제 API
-     */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @DeleteMapping("/answer/comment/{commentId}")
-    public ResponseEntity removeComment_Answer(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long commentId
-    ) {
-        User user = userDetails.getUser();
-        commentService.removeComment_Answer(user, commentId);
-
-        return ResponseEntity.ok().body("댓글삭제 완료");
-    }
+//    /**
+//     * 리뷰답변 - 댓글추가 API
+//     */
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @PostMapping("/answer/{answerId}/comment")
+//    public ResponseEntity addComment_Answer(
+//            @AuthenticationPrincipal UserDetailsImpl userDetails,
+//            @PathVariable Long answerId,
+//            @RequestBody AddCommentDto addCommentDto
+//    ) {
+//        User user = userDetails.getUser();
+//        commentService.addComment_Answer(user, answerId, addCommentDto);
+//
+//        return ResponseEntity.ok().body("댓글작성 완료");
+//    }
+//
+//    /**
+//     * 리뷰답변 - 댓글수정 API
+//     */
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @PutMapping("/answer/comment/{commentId}")
+//    public ResponseEntity updateComment_Answer(
+//            @AuthenticationPrincipal UserDetailsImpl userDetails,
+//            @PathVariable Long commentId,
+//            @RequestBody UpdateCommentDto updateCommentDto
+//    ) {
+//        User user = userDetails.getUser();
+//        commentService.updateComment_Answer(user, commentId, updateCommentDto);
+//
+//        return ResponseEntity.ok().body("댓글작성 완료");
+//    }
+//
+//    /**
+//     * 리뷰답변 - 댓글삭제 API
+//     */
+//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
+//    @DeleteMapping("/answer/comment/{commentId}")
+//    public ResponseEntity removeComment_Answer(
+//            @AuthenticationPrincipal UserDetailsImpl userDetails,
+//            @PathVariable Long commentId
+//    ) {
+//        User user = userDetails.getUser();
+//        commentService.removeComment_Answer(user, commentId);
+//
+//        return ResponseEntity.ok().body("댓글삭제 완료");
+//    }
 }

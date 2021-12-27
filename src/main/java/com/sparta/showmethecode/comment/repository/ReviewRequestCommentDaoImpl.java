@@ -4,7 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.sparta.showmethecode.domain.QReviewRequestComment.reviewRequestComment;
+import static com.sparta.showmethecode.comment.domain.QReviewRequestComment.reviewRequestComment;
 
 
 @Slf4j

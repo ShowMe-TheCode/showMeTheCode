@@ -22,7 +22,6 @@ public class CommentService {
     private final ReviewRequestCommentRepository reviewRequestCommentRepository;
 
     private final ReviewAnswerRepository reviewAnswerRepository;
-    private final ReviewAnswerCommentRepository reviewAnswerCommentRepository;
 
     /**
      * 코드리뷰요청 - 댓글추가 API
