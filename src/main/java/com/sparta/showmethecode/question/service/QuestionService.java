@@ -55,6 +55,17 @@ public class QuestionService {
     }
 
     /**
+     * 코드리뷰 요청목록 API V2 (더보기 방식)
+     */
+    @Transactional(readOnly = true)
+    public PageResponseDtoV2<ReviewRequestResponseDto> getReviewRequestListV2(Long lastId, int size, QuestionStatus status) {#127
+
+        List<ReviewRequestResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, size, status);
+
+        return new PageResponseDtoV2<ReviewRequestResponseDto>(reviewRequestList, reviewRequestList.get(reviewRequestList.size()-1).getReviewRequestId());
+    }
+
+    /**
      * 코드리뷰 검색 API
      */
     @Transactional(readOnly = true)

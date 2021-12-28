@@ -1,6 +1,7 @@
 package com.sparta.showmethecode.question.controller;
 
 import com.sparta.showmethecode.common.dto.response.PageResponseDto;
+import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
 import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.dto.request.ReviewRequestDto;
@@ -32,7 +33,7 @@ public class QuestionController {
     /**
      * 요청목록
      */
-    @GetMapping
+    //@GetMapping
     public ResponseEntity<PageResponseDto> getReviewRequestList(
             @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "true") Boolean isAsc,
@@ -45,6 +46,24 @@ public class QuestionController {
         }
 
         PageResponseDto result = reviewRequestService.getReviewRequestList(page, size, sortBy, isAsc, status);
+
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 요청목록 v2
+     */
+    @GetMapping
+    public ResponseEntity<PageResponseDtoV2> getReviewRequestListV2(
+            @RequestParam(required = false) Long lastId,
+            @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String query,
+            @RequestParam(required = false, defaultValue = "ALL") QuestionStatus status
+    ) {
+
+        if (!Objects.isNull(query)) {
+        }
+
+        PageResponseDtoV2 result = reviewRequestService.getReviewRequestListV2(lastId, size, status);
 
         return ResponseEntity.ok(result);
     }

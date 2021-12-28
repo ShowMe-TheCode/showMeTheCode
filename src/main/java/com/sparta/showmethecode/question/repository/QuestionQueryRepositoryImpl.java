@@ -11,11 +11,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
 import com.sparta.showmethecode.comment.dto.response.CommentResponseDto;
+import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
 import com.sparta.showmethecode.common.repository.OrderByNull;
 import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.dto.response.*;
+import com.sparta.showmethecode.user.domain.QUser;
 import com.sparta.showmethecode.user.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -73,6 +75,30 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
         long totalCount = pagination.fetchCount();
         return new PageImpl<>(pagination.fetch(), pageable, totalCount);
+    }
+
+    @Override
+    public List<ReviewRequestResponseDto> findReviewRequestListV2(Long lastId, int limit, QuestionStatus status) {
+        return query.select(new QReviewRequestResponseDto(
+                        question.id,
+                        question.requestUser.username,
+                        question.requestUser.nickname,
+                        question.title,
+                        question.content,
+                        question.languageName,
+                        question.status,
+                        question.createdAt,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(comment.id.count())
+                                        .from(comment)
+                                        .where(comment.question.eq(question)), "commentCount")
+                ))
+                .from(question)
+                .where(IdLessThen(lastId))
+                .where(statusEqual(status))
+                .orderBy(question.id.desc())
+                .limit(limit)
+                .fetch();
     }
 
     @Override
@@ -367,5 +393,9 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
     private BooleanExpression statusEqual(QuestionStatus status) {
         return !Objects.isNull(status) && !status.equals(QuestionStatus.ALL) ? question.status.eq(status) : null;
+    }
+
+    private BooleanExpression IdLessThen(Long id) {
+        return !Objects.isNull(id) ? question.id.lt(id) : null;
     }
 }

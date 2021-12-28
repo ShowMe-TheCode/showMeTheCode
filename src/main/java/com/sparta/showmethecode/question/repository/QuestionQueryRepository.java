@@ -1,7 +1,10 @@
 package com.sparta.showmethecode.question.repository;
 
+import com.sparta.showmethecode.common.dto.response.PageResponseDto;
+import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
 import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
 import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
+import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.dto.response.RequestAndAnswerResponseDto;
 import com.sparta.showmethecode.question.dto.response.ReviewRequestDetailResponseDto;
@@ -16,6 +19,9 @@ public interface QuestionQueryRepository {
 
     // 코드리뷰 목록 조회
     Page<ReviewRequestResponseDto> findReviewRequestList(Pageable pageable, boolean isAsc, QuestionStatus status);
+    // 코드리뷰 목록 조회 v2 더보기 버튼 방식 (no offset)
+    List<ReviewRequestResponseDto> findReviewRequestListV2(Long lastId, int limit, QuestionStatus status);
+
 
     Page<ReviewRequestResponseDto> findSearchByTitleOrComment(String keyword, Pageable pageable);
     // 코드리뷰요청 목록 제목+내용 검색쿼리
