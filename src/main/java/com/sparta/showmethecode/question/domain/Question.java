@@ -53,7 +53,7 @@ public class Question extends Timestamped {
     private User answerUser;
 
     @JoinColumn(name = "answer_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Answer answer;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
@@ -62,8 +62,13 @@ public class Question extends Timestamped {
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<Notification> notifications = new ArrayList<>();
 
+    public void addAnswer(Answer answer) {
+        this.answer = answer;
+        answer.setQuestion(this);
+    }
+
     public void addComment(Comment comment) {
-        this.comments.add(comment);
+        this.getComments().add(comment);
         comment.setQuestion(this);
     }
 

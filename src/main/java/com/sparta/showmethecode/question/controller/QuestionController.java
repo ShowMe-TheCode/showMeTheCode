@@ -67,8 +67,9 @@ public class QuestionController {
     /**
      * 질문 상세조회 API (코드리뷰 요청 상세정보)
      */
-    @GetMapping("/{questionId}}")
+    @GetMapping("/{questionId}")
     public ResponseEntity<ReviewRequestDetailResponseDto> getReviewRequest(@PathVariable Long questionId) {
+        log.info("질문 상세조회 API 호출");
         ReviewRequestDetailResponseDto reviewRequest = reviewRequestService.getReviewRequest(questionId);
 
         return ResponseEntity.ok(reviewRequest);

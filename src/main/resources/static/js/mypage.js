@@ -39,7 +39,7 @@ function myReceivedQuestionList(condition) {
 
 	$.ajax({
 		type: "GET",
-		url: base_url + `/user/received?status=${condition}`,
+		url: base_url + `/reviewers/questions?status=${condition}`,
 		success: function (res) {
 			console.log(res);
 			$("#question-list").empty();
@@ -61,7 +61,7 @@ function myRequestQuestionList(condition) {
 
 	$.ajax({
 		type: "GET",
-		url: base_url + `/user/requests?status=${condition}`,
+		url: base_url + `/users/requests?status=${condition}`,
 		success: function (res) {
 			$("#question-list").empty();
 			let reviews = res["data"];

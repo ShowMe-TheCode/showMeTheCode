@@ -37,13 +37,12 @@ public class Answer extends Timestamped {
     private User answerUser;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "answer", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(mappedBy = "answer")
     private Question question;
 
     public void setQuestion(Question question) {
         this.question = question;
     }
-
 
     public void evaluate(double point) {
         this.point = point;
@@ -58,5 +57,11 @@ public class Answer extends Timestamped {
         this.point = point;
         this.answerUser = answerUser;
         this.question = question;
+    }
+
+    public Answer(String content, double point, User answerUser) {
+        this.content = content;
+        this.point = point;
+        this.answerUser = answerUser;
     }
 }

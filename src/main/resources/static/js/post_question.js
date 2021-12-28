@@ -62,7 +62,7 @@ function postQuestion() {
 
 	$.ajax({
 		type: "POST",
-		url: base_url + "/question",
+		url: base_url + "/questions",
 		contentType: "application/json;charset=utf-8",
 		data: JSON.stringify(data),
 		success: function (res) {

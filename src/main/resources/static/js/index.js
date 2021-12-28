@@ -376,7 +376,7 @@ function getRankingAll() {
 	nextPage = parseInt(currentPage) + 1;
 	$.ajax({
 		type: "GET",
-		url: base_url + "/reviewer/rank",
+		url: base_url + "/reviewers/rank",
 		data: {
 			page: currentPage,
 		},
@@ -458,7 +458,7 @@ function getRankingAll() {
 function getRanking() {
 	$.ajax({
 		type: "GET",
-		url: base_url + "/reviewer/top",
+		url: base_url + "/reviewers/top",
 		data: {},
 		success: function (res) {
 			for (let i = 0; i < res.length; i++) {
@@ -502,7 +502,6 @@ function getRanking() {
 // ajax 요청시 token이 있다면 헤더에 추가하도록 설정
 // ========================================
 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-	console.log("ajax체크");
 	if (localStorage.getItem("mytoken") != null) {
 		jqXHR.setRequestHeader(
 			"Authorization",
