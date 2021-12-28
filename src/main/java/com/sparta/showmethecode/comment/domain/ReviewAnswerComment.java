@@ -2,7 +2,7 @@ package com.sparta.showmethecode.comment.domain;
 
 import com.sparta.showmethecode.language.domain.Timestamped;
 import com.sparta.showmethecode.comment.dto.request.UpdateCommentDto;
-import com.sparta.showmethecode.reviewAnswer.domain.ReviewAnswer;
+import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,16 +33,16 @@ public class ReviewAnswerComment extends Timestamped {
 
     @JoinColumn(name = "review_answer_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private ReviewAnswer reviewAnswer;
+    private Answer answer;
 
-    public ReviewAnswerComment(String content, User user, ReviewAnswer reviewAnswer) {
+    public ReviewAnswerComment(String content, User user, Answer answer) {
         this.content = content;
         this.user = user;
-        this.reviewAnswer = reviewAnswer;
+        this.answer = answer;
     }
 
-    public void setReviewAnswer(ReviewAnswer reviewAnswer) {
-        this.reviewAnswer = reviewAnswer;
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
     }
 
     public void update(UpdateCommentDto dto) {

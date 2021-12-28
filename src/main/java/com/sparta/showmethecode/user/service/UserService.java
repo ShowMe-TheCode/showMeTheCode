@@ -1,6 +1,6 @@
 package com.sparta.showmethecode.user.service;
 
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
+import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.common.dto.response.PageResponseDto;
 import com.sparta.showmethecode.security.JwtUtils;
 import com.sparta.showmethecode.security.UserDetailsImpl;
@@ -10,12 +10,12 @@ import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.user.domain.UserRole;
 import com.sparta.showmethecode.user.dto.request.SigninRequestDto;
 import com.sparta.showmethecode.user.dto.request.SignupRequestDto;
-import com.sparta.showmethecode.reviewRequest.dto.response.ReviewRequestResponseDto;
+import com.sparta.showmethecode.question.dto.response.ReviewRequestResponseDto;
 import com.sparta.showmethecode.user.dto.response.ReviewerInfoDto;
 import com.sparta.showmethecode.user.dto.response.SigninResponseDto;
 import com.sparta.showmethecode.language.repository.LanguageRepository;
-import com.sparta.showmethecode.reviewAnswer.repository.ReviewAnswerRepository;
-import com.sparta.showmethecode.reviewRequest.repository.ReviewRequestRepository;
+import com.sparta.showmethecode.answer.repository.AnswerRepository;
+import com.sparta.showmethecode.question.repository.QuestionRepository;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +43,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ReviewRequestRepository reviewRequestRepository;
-    private final ReviewAnswerRepository reviewAnswerRepository;
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository reviewAnswerRepository;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
@@ -122,10 +122,10 @@ public class UserService {
     /**
      * 내가 등록한 리뷰요청목록 조회 API
      */
-    public PageResponseDto<ReviewRequestResponseDto> getMyReviewRequestList(User user, int page, int size, String sortBy, boolean isAsc, ReviewRequestStatus status) {
+    public PageResponseDto<ReviewRequestResponseDto> getMyReviewRequestList(User user, int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {
         Pageable pageable = makePageable(page, size, sortBy, isAsc);
 
-        Page<ReviewRequestResponseDto> reviewRequests = reviewRequestRepository.findMyReviewRequestList(user.getId(), pageable, status);
+        Page<ReviewRequestResponseDto> reviewRequests = questionRepository.findMyReviewRequestList(user.getId(), pageable, status);
 
         log.info("getMyReviewRequestList = {}", reviewRequests.getContent());
 

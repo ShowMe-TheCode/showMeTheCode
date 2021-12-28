@@ -55,7 +55,7 @@ function signin() {
 
 	$.ajax({
 		type: "POST",
-		url: base_url + "/user/signin",
+		url: base_url + "/users/signin",
 		contentType: "application/json;charset=utf-8;",
 		data: JSON.stringify(data),
 		success: function (res) {
@@ -79,12 +79,8 @@ function signin() {
 function connectSSE(key) {
 	let subscribeUrl = base_url + `/subscribe/${key}`;
 	const eventSource = new EventSource(subscribeUrl);
-	// TODO access-token 헤더에 넣어야지 작동
 	eventSource.addEventListener("sse", function (event) {
-		console.log(event.data);
 		const data = JSON.parse(event.data);
-		console.log(data.content);
-		console.log(data);
 		if (data.content) {
 			alert(data.content);
 		}
@@ -153,7 +149,7 @@ function signup() {
 
 	$.ajax({
 		type: "POST",
-		url: base_url + "/user/signup",
+		url: base_url + "/users/signup",
 		contentType: "application/json;charset=utf-8;",
 		data: JSON.stringify(data),
 		success: function (res) {
@@ -172,7 +168,7 @@ function signup() {
 function logout() {
 	$.ajax({
 		type: "POST",
-		url: base_url + "/user/logout",
+		url: base_url + "/users/logout",
 		success: function (res) {
 			if (res["result"] == "success") {
 				localStorage.clear();

@@ -1,19 +1,12 @@
 package com.sparta.showmethecode.user.service;
 
-import com.sparta.showmethecode.notification.domain.MoveUriType;
-import com.sparta.showmethecode.reviewAnswer.dto.request.AddAnswerDto;
-import com.sparta.showmethecode.reviewAnswer.dto.request.EvaluateAnswerDto;
-import com.sparta.showmethecode.reviewAnswer.dto.request.UpdateAnswerDto;
 import com.sparta.showmethecode.common.dto.response.*;
-import com.sparta.showmethecode.reviewAnswer.repository.ReviewAnswerRepository;
-import com.sparta.showmethecode.reviewAnswer.domain.ReviewAnswer;
-import com.sparta.showmethecode.reviewAnswer.dto.response.ReviewAnswerResponseDto;
-import com.sparta.showmethecode.reviewRequest.repository.ReviewRequestRepository;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
-import com.sparta.showmethecode.reviewRequest.dto.response.ReviewRequestResponseDto;
+import com.sparta.showmethecode.answer.repository.AnswerRepository;
+import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
+import com.sparta.showmethecode.question.domain.QuestionStatus;
+import com.sparta.showmethecode.question.repository.QuestionRepository;
+import com.sparta.showmethecode.question.dto.response.ReviewRequestResponseDto;
 import com.sparta.showmethecode.notification.service.NotificationService;
-import com.sparta.showmethecode.user.dto.request.UpdateReviewerDto;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.user.dto.response.ReviewerInfoDto;
@@ -34,65 +27,17 @@ import java.util.stream.Collectors;
 @Service
 public class ReviewerService {
 
-    private final ReviewAnswerRepository reviewAnswerRepository;
-    private final ReviewRequestRepository reviewRequestRepository;
+    private final AnswerRepository reviewAnswerRepository;
+    private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    /**
-     * 리뷰요청에 대한 답변등록 API
-     * 자신에게 요청된 리뷰가 아닌 경우에 대한 처리 필요
-     */
-    @Transactional
-    public void addAnswer(Long reviewerId, Long reviewId, AddAnswerDto addAnswerDto) {
-        User reviewer = userRepository.findById(reviewerId).get();
-        if (isRequestedToMe(reviewId, reviewer)) {
-            ReviewAnswer reviewAnswer = ReviewAnswer.builder()
-                    .content(addAnswerDto.getContent())
-                    .answerUser(reviewer)
-                    .build();
-            ReviewAnswer savedReviewAnswer = reviewAnswerRepository.save(reviewAnswer);
-
-            ReviewRequest reviewRequest = reviewRequestRepository.findById(reviewId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 리뷰요청입니다.")
-            );
-
-            reviewer.increaseAnswerCount();
-            reviewRequest.setStatus(ReviewRequestStatus.SOLVE);
-            reviewRequest.setReviewAnswer(savedReviewAnswer);
-
-            notificationService
-                    .send(reviewRequest.getRequestUser(), reviewRequest, "리뷰 등록이 완료되었습니다.", MoveUriType.DETAILS);
-        }
-    }
-
-    /**
-     * 리뷰요청 거절 API
-     * 자신에게 요청된 리뷰가 아닌 경우에 대한 처리 필요
-     */
-    @Transactional
-    public void rejectRequestedReview(User reviewer, Long questionId) {
-        if (isRequestedToMe(questionId, reviewer)) {
-            ReviewRequest reviewRequest = reviewRequestRepository.findById(questionId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 리뷰요청입니다.")
-            );
-
-            // SOLVE(해결됨)이 아닌 경우에만 거절이 가능하도록
-            ReviewRequestStatus status = reviewRequest.getStatus();
-            if (!status.equals(ReviewRequestStatus.SOLVE) && !status.equals(ReviewRequestStatus.EVALUATED)) {
-                reviewRequest.setStatus(ReviewRequestStatus.REJECTED);
-                notificationService.send(reviewRequest.getRequestUser(), reviewRequest, "리뷰 요청이 거절되었습니다.", MoveUriType.DETAILS);
-            } else {
-                throw new IllegalArgumentException("해결되지 않은 리뷰요청에 대해서만 거절이 가능합니다.");
-            }
-        }
-   }
 
     /**
      * 나에게 요청된 리뷰인지 확인
      */
     private boolean isRequestedToMe(Long questionId, User reviewer) {
-        return reviewRequestRepository.isRequestedToMe(questionId, reviewer);
+        return questionRepository.isRequestedToMe(questionId, reviewer);
     }
 
     /**
@@ -155,7 +100,7 @@ public class ReviewerService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<ReviewAnswerResponseDto> myAnswer = reviewRequestRepository.findMyAnswer(reviewer.getId(), pageable);
+        Page<ReviewAnswerResponseDto> myAnswer = questionRepository.findMyAnswer(reviewer.getId(), pageable);
 
         return new PageResponseDto<ReviewAnswerResponseDto>(
                 myAnswer.getContent(),
@@ -165,30 +110,13 @@ public class ReviewerService {
         );
     }
 
-    /**
-     * 답변한 리뷰 수정 API
-     */
-    @Transactional
-    public void updateAnswer(User reviewer, Long answerId, UpdateAnswerDto updateAnswerDto) {
-        if (isMyAnswer(reviewer.getId(), answerId)) {
-            ReviewAnswer reviewAnswer = reviewAnswerRepository.findById(answerId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 답변입니다.")
-            );
-
-            reviewAnswer.update(updateAnswerDto);
-        }
-    }
-
-    private boolean isMyAnswer(Long reviewerId, Long answerId) {
-        return reviewAnswerRepository.isMyAnswer(reviewerId, answerId);
-    }
 
     /**
-     * 나에게 요청온 리뷰 조회
+     * 나에게 요청된 리뷰 조회
      */
-    public PageResponseDto getMyReceivedRequestList(User user, int page, int size, String sortBy, boolean isAsc, ReviewRequestStatus status) {
+    public PageResponseDto getMyReceivedRequestList(User user, int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {
         Pageable pageable = makePageable(page, size, sortBy, isAsc);
-        Page<ReviewRequestResponseDto> reviewRequests = reviewRequestRepository.findMyReceivedRequestList(user.getId(), pageable, status);
+        Page<ReviewRequestResponseDto> reviewRequests = questionRepository.findMyReceivedRequestList(user.getId(), pageable, status);
 
         return new PageResponseDto<ReviewRequestResponseDto>(
                 reviewRequests.getContent(),
@@ -198,46 +126,6 @@ public class ReviewerService {
         );
     }
 
-    /**
-     * 답변에 대한 평가 API
-     *
-     * 평가하고자 하는 답변이 내가 요청한 코드리뷰에 대한 답변인지 확인해야 함
-     */
-    @Transactional
-    public void evaluateAnswer(User user, Long questionId, Long answerId, EvaluateAnswerDto evaluateAnswerDto) {
-        if(reviewRequestRepository.isAnswerToMe(answerId, user)) {
-            ReviewAnswer reviewAnswer = reviewAnswerRepository.findById(answerId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 답변입니다.")
-            );
-
-            ReviewRequest reviewRequest = reviewRequestRepository.findById(questionId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 리뷰요청입니다.")
-            );
-
-            reviewRequest.setStatus(ReviewRequestStatus.EVALUATED);
-
-            reviewAnswer.evaluate(evaluateAnswerDto.getPoint());
-            reviewAnswer.getAnswerUser().evaluate(evaluateAnswerDto.getPoint());
-        }
-    }
-
-    /**
-     * 리뷰어 변경하기 API
-     */
-    @Transactional
-    public void changeReviewer(UpdateReviewerDto changeReviewerDto, Long questionId, Long reviewerId) {
-        ReviewRequest reviewRequest = reviewRequestRepository.findById(questionId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 리뷰요청입니다.")
-        );
-
-        Long newReviewerId = changeReviewerDto.getNewReviewerId();
-        User newReviewer = userRepository.findById(newReviewerId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 리뷰어입니다.")
-        );
-
-        reviewRequest.updateReviewer(newReviewer);
-
-    }
 
     private Pageable makePageable(int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;

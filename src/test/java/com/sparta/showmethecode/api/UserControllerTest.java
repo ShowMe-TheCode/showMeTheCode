@@ -3,12 +3,12 @@ package com.sparta.showmethecode.api;
 import com.google.common.net.HttpHeaders;
 import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
 import com.sparta.showmethecode.language.domain.Language;
-import com.sparta.showmethecode.reviewAnswer.repository.ReviewAnswerRepository;
+import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
-import com.sparta.showmethecode.reviewAnswer.domain.ReviewAnswer;
-import com.sparta.showmethecode.reviewRequest.repository.ReviewRequestRepository;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
+import com.sparta.showmethecode.answer.domain.Answer;
+import com.sparta.showmethecode.question.repository.QuestionRepository;
+import com.sparta.showmethecode.question.domain.Question;
+import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import com.sparta.showmethecode.security.JwtUtils;
 import com.sparta.showmethecode.security.UserDetailsImpl;
@@ -59,11 +59,11 @@ public class UserControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ReviewRequestRepository reviewRequestRepository;
+    QuestionRepository questionRepository;
     @Autowired
     ReviewRequestCommentRepository reviewRequestCommentRepository;
     @Autowired
-    ReviewAnswerRepository reviewAnswerRepository;
+    AnswerRepository reviewAnswerRepository;
     @Autowired
     JwtUtils jwtUtils;
     @Autowired
@@ -74,8 +74,8 @@ public class UserControllerTest {
     User user;
     User reviewer;
     User newReviewer;
-    ReviewRequest reviewRequest;
-    ReviewAnswer reviewAnswer;
+    Question question;
+    Answer answer;
     String token;
 
     @BeforeAll
@@ -87,21 +87,21 @@ public class UserControllerTest {
 
         userRepository.saveAll(Arrays.asList(user, reviewer, newReviewer));
 
-        reviewRequest = new ReviewRequest(user, reviewer, "제목", "내용", ReviewRequestStatus.UNSOLVE, "JAVA");
-        reviewRequestRepository.save(reviewRequest);
+        question = new Question(user, reviewer, "제목", "내용", QuestionStatus.UNSOLVE, "JAVA");
+        questionRepository.save(question);
 
         ReviewRequestComment reviewRequestComment1 = new ReviewRequestComment("댓글1", user);
         ReviewRequestComment reviewRequestComment2 = new ReviewRequestComment("댓글2", reviewer);
         reviewRequestCommentRepository.saveAll(Arrays.asList(reviewRequestComment1, reviewRequestComment2));
 
-        reviewAnswer = new ReviewAnswer("답변내용", 4.5, reviewer, reviewRequest);
-        reviewAnswerRepository.save(reviewAnswer);
+        answer = new Answer("답변내용", 4.5, reviewer, question);
+        reviewAnswerRepository.save(answer);
 
-        reviewRequest.addComment(reviewRequestComment1);
-        reviewRequest.addComment(reviewRequestComment2);
-        reviewRequest.setReviewAnswer(reviewAnswer);
+        question.addComment(reviewRequestComment1);
+        question.addComment(reviewRequestComment2);
+        question.setAnswer(answer);
 
-        reviewRequestRepository.save(reviewRequest);
+        questionRepository.save(question);
 
     }
 
@@ -152,7 +152,7 @@ public class UserControllerTest {
                         .param("size", "10")
                         .param("isAsc", "true")
                         .param("sortBy", "createdAt")
-                        .param("status", ReviewRequestStatus.UNSOLVE.toString())
+                        .param("status", QuestionStatus.UNSOLVE.toString())
                 ).andExpect(status().isOk())
                 .andDo(document("get-request-reviewList",
                                 requestParameters(
@@ -195,7 +195,7 @@ public class UserControllerTest {
                         .param("size", "10")
                         .param("isAsc", "true")
                         .param("sortBy", "createdAt")
-                        .param("status", ReviewRequestStatus.UNSOLVE.toString())
+                        .param("status", QuestionStatus.UNSOLVE.toString())
                 ).andExpect(status().isOk())
                 .andDo(document("get-received-reviewList",
                                 requestParameters(

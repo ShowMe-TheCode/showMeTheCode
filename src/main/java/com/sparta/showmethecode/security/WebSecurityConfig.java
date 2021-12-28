@@ -1,14 +1,17 @@
 package com.sparta.showmethecode.security;
 
+import com.sparta.showmethecode.user.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -23,27 +26,37 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
-
-    // 암호화에 필요한 PasswordEncoder 를 Bean 등록합니다.
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+    private final String USER = UserRole.ROLE_USER.toString();
+    private final String REVIEWER = UserRole.ROLE_REVIEWER.toString();
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
 
-        http.logout().logoutSuccessUrl("/");
-//        http.oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);
+        http
+                .csrf().disable()
+                .headers().frameOptions().disable()
+                .and()
+                .cors()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .httpBasic().disable()
+                .formLogin().disable()
 
-        http.authorizeRequests()
+                .authorizeRequests()
+                .antMatchers(
+                        "/",
+                        "/static/**",
+                        "/favicon.ico"
+                ).permitAll()
                 .anyRequest().permitAll();
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

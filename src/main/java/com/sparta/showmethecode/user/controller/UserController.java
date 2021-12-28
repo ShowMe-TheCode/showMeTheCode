@@ -1,6 +1,6 @@
 package com.sparta.showmethecode.user.controller;
 
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
+import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.security.UserDetailsImpl;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.user.dto.request.SigninRequestDto;
@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RequestMapping("/users")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -31,7 +32,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/user/signup")
+    @PostMapping("/signup")
     public ResponseEntity<BasicResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto, Errors error) {
 
         if (error.hasErrors()) {
@@ -62,7 +63,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/user/signin")
+    @PostMapping("/signin")
     public SigninResponseDto signin(@RequestBody SigninRequestDto requestDto) {
 
         return userService.signin(requestDto);
@@ -71,9 +72,8 @@ public class UserController {
     /**
      * 해당 언어의 리뷰어 조회 API
      */
-    @GetMapping("/user/language")
+    @GetMapping("language")
     public ResponseEntity findReviewerByLanguage(@RequestParam String language) {
-        log.info("findReviewerByLanguage language = {}", language);
         List<ReviewerInfoDto> reviewerInfoList = userService.findReviewerByLanguage(language);
         return ResponseEntity.ok().body(reviewerInfoList);
     }
@@ -82,8 +82,7 @@ public class UserController {
     /**
      * 로그아웃 API
      */
-//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @PostMapping("/user/logout")
+    @PostMapping("logout")
     public BasicResponseDto logout() {
         SecurityContextHolder.clearContext();
 
@@ -93,17 +92,14 @@ public class UserController {
     /**
      * 내가 등록한 리뷰요청목록 조회 API
      */
-//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @GetMapping("/user/requests")
+    @GetMapping("/requests")
     public ResponseEntity<PageResponseDto> getMyRequestList(
-            @RequestParam ReviewRequestStatus status,
+            @RequestParam QuestionStatus status,
             @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "true") Boolean isAsc,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         --page;
-
-        log.info("getMyRequestList status = {}", status);
 
         User user = userDetails.getUser();
         PageResponseDto response = userService.getMyReviewRequestList(user, page, size, sortBy, isAsc, status);

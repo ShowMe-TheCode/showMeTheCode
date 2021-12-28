@@ -3,10 +3,10 @@ package com.sparta.showmethecode.comment.service;
 import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
 import com.sparta.showmethecode.comment.dto.request.AddCommentDto;
 import com.sparta.showmethecode.comment.dto.request.UpdateCommentDto;
-import com.sparta.showmethecode.reviewAnswer.repository.ReviewAnswerRepository;
+import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
-import com.sparta.showmethecode.reviewRequest.repository.ReviewRequestRepository;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
+import com.sparta.showmethecode.question.repository.QuestionRepository;
+import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,19 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentService {
 
-    private final ReviewRequestRepository reviewRequestRepository;
+    private final QuestionRepository questionRepository;
     private final ReviewRequestCommentRepository reviewRequestCommentRepository;
 
-    private final ReviewAnswerRepository reviewAnswerRepository;
+    private final AnswerRepository reviewAnswerRepository;
 
     /**
      * 코드리뷰요청 - 댓글추가 API
      */
     @Transactional
     public void addComment_Question(User user, Long questionId, AddCommentDto addCommentDto) {
-        ReviewRequest reviewRequest = reviewRequestRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰요청입니다."));
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 리뷰요청입니다."));
         ReviewRequestComment reviewRequestComment = new ReviewRequestComment(addCommentDto.getContent(), user);
-        reviewRequest.addComment(reviewRequestComment);
+        question.addComment(reviewRequestComment);
     }
 
     /**

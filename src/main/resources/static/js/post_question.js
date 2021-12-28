@@ -18,7 +18,7 @@ function findReviewer() {
 	if (query != "") {
 		$.ajax({
 			type: "GET",
-			url: base_url + `/user/language?language=${query}`,
+			url: base_url + `/users/language?language=${query}`,
 			success: function (res) {
 				$("#select-reviewer").append("<option>리뷰어를 선택하세요</option>");
 

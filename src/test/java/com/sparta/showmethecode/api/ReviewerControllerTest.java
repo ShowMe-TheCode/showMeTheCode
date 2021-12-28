@@ -2,17 +2,17 @@ package com.sparta.showmethecode.api;
 
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
+import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
 import com.sparta.showmethecode.language.domain.Language;
-import com.sparta.showmethecode.reviewAnswer.dto.request.AddAnswerDto;
-import com.sparta.showmethecode.reviewAnswer.dto.request.EvaluateAnswerDto;
-import com.sparta.showmethecode.reviewAnswer.dto.request.UpdateAnswerDto;
-import com.sparta.showmethecode.reviewAnswer.repository.ReviewAnswerRepository;
+import com.sparta.showmethecode.answer.dto.request.AddAnswerDto;
+import com.sparta.showmethecode.answer.dto.request.EvaluateAnswerDto;
+import com.sparta.showmethecode.answer.dto.request.UpdateAnswerDto;
+import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
-import com.sparta.showmethecode.reviewAnswer.domain.ReviewAnswer;
-import com.sparta.showmethecode.reviewRequest.repository.ReviewRequestRepository;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
+import com.sparta.showmethecode.question.domain.Question;
+import com.sparta.showmethecode.question.domain.QuestionStatus;
+import com.sparta.showmethecode.question.repository.QuestionRepository;
 import com.sparta.showmethecode.user.dto.request.UpdateReviewerDto;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import com.sparta.showmethecode.security.JwtUtils;
@@ -64,11 +64,11 @@ public class ReviewerControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ReviewRequestRepository reviewRequestRepository;
+    QuestionRepository questionRepository;
     @Autowired
     ReviewRequestCommentRepository reviewRequestCommentRepository;
     @Autowired
-    ReviewAnswerRepository reviewAnswerRepository;
+    AnswerRepository reviewAnswerRepository;
     @Autowired
     JwtUtils jwtUtils;
     @Autowired
@@ -79,8 +79,8 @@ public class ReviewerControllerTest {
     User user;
     User reviewer;
     User newReviewer;
-    ReviewRequest reviewRequest;
-    ReviewAnswer reviewAnswer;
+    Question question;
+    Answer answer;
     String token;
 
     @BeforeAll
@@ -91,21 +91,21 @@ public class ReviewerControllerTest {
 
         userRepository.saveAll(Arrays.asList(user, reviewer, newReviewer));
 
-        reviewRequest = new ReviewRequest(user, reviewer, "제목", "내용", ReviewRequestStatus.UNSOLVE, "JAVA");
-        reviewRequestRepository.save(reviewRequest);
+        question = new Question(user, reviewer, "제목", "내용", QuestionStatus.UNSOLVE, "JAVA");
+        questionRepository.save(question);
 
         ReviewRequestComment reviewRequestComment1 = new ReviewRequestComment("댓글1", user);
         ReviewRequestComment reviewRequestComment2 = new ReviewRequestComment("댓글2", reviewer);
         reviewRequestCommentRepository.saveAll(Arrays.asList(reviewRequestComment1, reviewRequestComment2));
 
-        reviewAnswer = new ReviewAnswer("답변내용", 4.5, reviewer, reviewRequest);
-        reviewAnswerRepository.save(reviewAnswer);
+        answer = new Answer("답변내용", 4.5, reviewer, question);
+        reviewAnswerRepository.save(answer);
 
-        reviewRequest.addComment(reviewRequestComment1);
-        reviewRequest.addComment(reviewRequestComment2);
-        reviewRequest.setReviewAnswer(reviewAnswer);
+        question.addComment(reviewRequestComment1);
+        question.addComment(reviewRequestComment2);
+        question.setAnswer(answer);
 
-        reviewRequestRepository.save(reviewRequest);
+        questionRepository.save(question);
 
     }
 
@@ -128,7 +128,7 @@ public class ReviewerControllerTest {
         AddAnswerDto addAnswerDto = new AddAnswerDto("답변내용");
         String dtoJson = new Gson().toJson(addAnswerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/answer/{questionId}", reviewRequest.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/answer/{questionId}", question.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -193,7 +193,7 @@ public class ReviewerControllerTest {
         UpdateAnswerDto updateAnswerDto = new UpdateAnswerDto("답변수정");
         String dtoJson = new Gson().toJson(updateAnswerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/answer/{answerId}", reviewAnswer.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/answer/{answerId}", answer.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -219,7 +219,7 @@ public class ReviewerControllerTest {
         UpdateReviewerDto updateReviewerDto = new UpdateReviewerDto(newReviewer.getId());
         String dtoJson = new Gson().toJson(updateReviewerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/question/{questionId}/reviewer/{reviewerId}", reviewRequest.getId(), reviewer.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/question/{questionId}/reviewer/{reviewerId}", question.getId(), reviewer.getId())
                         .header(HttpHeaders.AUTHORIZATION, token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -246,7 +246,7 @@ public class ReviewerControllerTest {
         EvaluateAnswerDto evaluateAnswerDto = new EvaluateAnswerDto(4.5);
         String dtoJson = new Gson().toJson(evaluateAnswerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/question/{questionId}/eval/{answerId}", reviewRequest.getId(), reviewAnswer.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/question/{questionId}/eval/{answerId}", question.getId(), answer.getId())
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)

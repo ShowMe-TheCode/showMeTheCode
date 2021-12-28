@@ -3,16 +3,16 @@ package com.sparta.showmethecode.api;
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
 import com.sparta.showmethecode.language.domain.Language;
-import com.sparta.showmethecode.reviewAnswer.domain.ReviewAnswer;
-import com.sparta.showmethecode.reviewRequest.dto.request.ReviewRequestDto;
-import com.sparta.showmethecode.reviewAnswer.dto.request.UpdateReviewDto;
-import com.sparta.showmethecode.reviewAnswer.repository.ReviewAnswerRepository;
+import com.sparta.showmethecode.question.dto.request.ReviewRequestDto;
+import com.sparta.showmethecode.answer.dto.request.UpdateReviewDto;
+import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
-import com.sparta.showmethecode.reviewRequest.repository.ReviewRequestRepository;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
+import com.sparta.showmethecode.question.repository.QuestionRepository;
+import com.sparta.showmethecode.question.domain.Question;
+import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import com.sparta.showmethecode.security.JwtUtils;
 import com.sparta.showmethecode.security.UserDetailsImpl;
@@ -68,11 +68,11 @@ public class ReviewRequestControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ReviewRequestRepository reviewRequestRepository;
+    QuestionRepository questionRepository;
     @Autowired
     ReviewRequestCommentRepository reviewRequestCommentRepository;
     @Autowired
-    ReviewAnswerRepository reviewAnswerRepository;
+    AnswerRepository reviewAnswerRepository;
     @Autowired
     JwtUtils jwtUtils;
     @Autowired
@@ -82,7 +82,7 @@ public class ReviewRequestControllerTest {
 
     User user;
     User reviewer;
-    ReviewRequest reviewRequest;
+    Question question;
     String token;
 
     @BeforeAll
@@ -92,21 +92,21 @@ public class ReviewRequestControllerTest {
 
         userRepository.saveAll(Arrays.asList(user, reviewer));
 
-        reviewRequest = new ReviewRequest(user, reviewer, "제목", "내용", ReviewRequestStatus.UNSOLVE, "JAVA");
-        reviewRequestRepository.save(reviewRequest);
+        question = new Question(user, reviewer, "제목", "내용", QuestionStatus.UNSOLVE, "JAVA");
+        questionRepository.save(question);
 
         ReviewRequestComment reviewRequestComment1 = new ReviewRequestComment("댓글1", user);
         ReviewRequestComment reviewRequestComment2 = new ReviewRequestComment("댓글2", reviewer);
         reviewRequestCommentRepository.saveAll(Arrays.asList(reviewRequestComment1, reviewRequestComment2));
 
-        ReviewAnswer reviewAnswer = new ReviewAnswer("답변내용", 4.5, reviewer, reviewRequest);
-        reviewAnswerRepository.save(reviewAnswer);
+        Answer answer = new Answer("답변내용", 4.5, reviewer, question);
+        reviewAnswerRepository.save(answer);
 
-        reviewRequest.addComment(reviewRequestComment1);
-        reviewRequest.addComment(reviewRequestComment2);
-        reviewRequest.setReviewAnswer(reviewAnswer);
+        question.addComment(reviewRequestComment1);
+        question.addComment(reviewRequestComment2);
+        question.setAnswer(answer);
 
-        reviewRequestRepository.save(reviewRequest);
+        questionRepository.save(question);
 
     }
 
@@ -200,7 +200,7 @@ public class ReviewRequestControllerTest {
     public void 상세정보_조회() throws Exception {
 
         mockMvc.perform(get("/question")
-                        .param("id", reviewRequest.getId().toString())
+                        .param("id", question.getId().toString())
                 ).andExpect(status().isOk())
                 .andDo(document("get-question",
                                 requestParameters(
@@ -248,7 +248,7 @@ public class ReviewRequestControllerTest {
 
         String token = createTokenAndSpringSecuritySetting();
 
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/question/{id}", reviewRequest.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/question/{id}", question.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -275,7 +275,7 @@ public class ReviewRequestControllerTest {
     public void 코드리뷰_삭제() throws Exception {
         String token = createTokenAndSpringSecuritySetting();
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/question/{id}", reviewRequest.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/question/{id}", question.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)

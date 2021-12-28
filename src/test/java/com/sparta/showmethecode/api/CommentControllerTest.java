@@ -2,16 +2,16 @@ package com.sparta.showmethecode.api;
 
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
+import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
 import com.sparta.showmethecode.comment.dto.request.AddCommentDto;
 import com.sparta.showmethecode.comment.dto.request.UpdateCommentDto;
 import com.sparta.showmethecode.language.domain.Language;
-import com.sparta.showmethecode.reviewAnswer.repository.ReviewAnswerRepository;
+import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
-import com.sparta.showmethecode.reviewAnswer.domain.ReviewAnswer;
-import com.sparta.showmethecode.reviewRequest.repository.ReviewRequestRepository;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
+import com.sparta.showmethecode.question.domain.Question;
+import com.sparta.showmethecode.question.repository.QuestionRepository;
+import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import com.sparta.showmethecode.security.JwtUtils;
 import com.sparta.showmethecode.security.UserDetailsImpl;
@@ -65,11 +65,11 @@ public class CommentControllerTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    ReviewRequestRepository reviewRequestRepository;
+    QuestionRepository questionRepository;
     @Autowired
     ReviewRequestCommentRepository reviewRequestCommentRepository;
     @Autowired
-    ReviewAnswerRepository reviewAnswerRepository;
+    AnswerRepository reviewAnswerRepository;
     @Autowired
     JwtUtils jwtUtils;
     @Autowired
@@ -79,7 +79,7 @@ public class CommentControllerTest {
 
     User user;
     User reviewer;
-    ReviewRequest reviewRequest;
+    Question question;
     ReviewRequestComment comment;
     String token;
 
@@ -90,21 +90,21 @@ public class CommentControllerTest {
 
         userRepository.saveAll(Arrays.asList(user, reviewer));
 
-        reviewRequest = new ReviewRequest(user, reviewer, "제목", "내용", ReviewRequestStatus.UNSOLVE, "JAVA");
-        reviewRequestRepository.save(reviewRequest);
+        question = new Question(user, reviewer, "제목", "내용", QuestionStatus.UNSOLVE, "JAVA");
+        questionRepository.save(question);
 
         comment = new ReviewRequestComment("댓글1", user);
         ReviewRequestComment reviewRequestComment2 = new ReviewRequestComment("댓글2", reviewer);
         reviewRequestCommentRepository.saveAll(Arrays.asList(comment, reviewRequestComment2));
 
-        ReviewAnswer reviewAnswer = new ReviewAnswer("답변내용", 4.5, reviewer, reviewRequest);
-        reviewAnswerRepository.save(reviewAnswer);
+        Answer answer = new Answer("답변내용", 4.5, reviewer, question);
+        reviewAnswerRepository.save(answer);
 
-        reviewRequest.addComment(comment);
-        reviewRequest.addComment(reviewRequestComment2);
-        reviewRequest.setReviewAnswer(reviewAnswer);
+        question.addComment(comment);
+        question.addComment(reviewRequestComment2);
+        question.setAnswer(answer);
 
-        reviewRequestRepository.save(reviewRequest);
+        questionRepository.save(question);
     }
 
     @BeforeEach
@@ -125,7 +125,7 @@ public class CommentControllerTest {
         AddCommentDto addCommentDto = new AddCommentDto("테스트 댓글입니다.");
         String dtoJson = new Gson().toJson(addCommentDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/question/{questionId}/comment", reviewRequest.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/question/{questionId}/comment", question.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)

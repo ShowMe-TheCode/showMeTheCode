@@ -2,7 +2,7 @@ package com.sparta.showmethecode.notification.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.showmethecode.language.domain.Timestamped;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
+import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class Notification extends Timestamped {
     @JsonIgnore
     @JoinColumn(name = "fk_notification_to_review")
     @ManyToOne(fetch = FetchType.LAZY)
-    private ReviewRequest review;
+    private Question review;
 
     private String content;
 
@@ -38,7 +38,7 @@ public class Notification extends Timestamped {
     private String uri;
 
     @Builder
-    public Notification(User receiver, ReviewRequest review, String content, String url, boolean isRead, String uri) {
+    public Notification(User receiver, Question review, String content, String url, boolean isRead, String uri) {
         this.receiver = receiver;
         this.review = review;
         this.content = content;

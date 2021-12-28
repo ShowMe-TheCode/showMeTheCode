@@ -1,16 +1,12 @@
 package com.sparta.showmethecode.user.controller;
 
-import com.sparta.showmethecode.reviewAnswer.dto.response.ReviewAnswerResponseDto;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequestStatus;
+import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
+import com.sparta.showmethecode.common.dto.response.PageResponseDto;
+import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.security.UserDetailsImpl;
 import com.sparta.showmethecode.user.domain.User;
-import com.sparta.showmethecode.reviewAnswer.dto.request.AddAnswerDto;
-import com.sparta.showmethecode.reviewAnswer.dto.request.EvaluateAnswerDto;
-import com.sparta.showmethecode.reviewAnswer.dto.request.UpdateAnswerDto;
-import com.sparta.showmethecode.common.dto.response.*;
-import com.sparta.showmethecode.user.dto.request.UpdateReviewerDto;
-import com.sparta.showmethecode.user.service.ReviewerService;
 import com.sparta.showmethecode.user.dto.response.ReviewerInfoDto;
+import com.sparta.showmethecode.user.service.ReviewerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("/reviewers")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
@@ -30,7 +27,7 @@ public class ReviewerController {
     /**
      * 리뷰어 랭킹 조회 API (전체랭킹 조회)
      */
-    @GetMapping("/reviewer/rank")
+    @GetMapping("/rank")
     public ResponseEntity getReviewerRanking(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -46,7 +43,7 @@ public class ReviewerController {
     /**
      * 리뷰어 랭킹 조회 API (상위 5위)
      */
-    @GetMapping("/reviewer/top")
+    @GetMapping("/top")
     public ResponseEntity getReviewerTop5Ranking(
             @RequestParam(defaultValue = "true") boolean isDesc
     ) {
@@ -55,40 +52,10 @@ public class ReviewerController {
         return ResponseEntity.ok(reviewers);
     }
 
-    /**
-     * 리뷰요청 거절 API
-     */
-    @Secured({"ROLE_REVIEWER"})
-    @PostMapping("/reviewer/reject/{questionId}")
-    public ResponseEntity rejectRequestedReview(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long questionId
-    ) {
-        User user = userDetails.getUser();
-        reviewerService.rejectRequestedReview(user, questionId);
-
-        return ResponseEntity.ok("ok");
-    }
-
-    /**
-     * 리뷰요청에 대한 리뷰등록 API
-     */
-    @Secured("ROLE_REVIEWER")
-    @PostMapping("/answer/{questionId}")
-    public ResponseEntity addReviewAndComment(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long questionId,
-            @RequestBody AddAnswerDto addAnswerDto
-    ) {
-        User reviewer = userDetails.getUser();
-        reviewerService.addAnswer(reviewer.getId(), questionId, addAnswerDto);
-        return ResponseEntity.ok("ok");
-    }
 
     /**
      * 내가 답변한 리뷰목록 조회 API
      */
-//    @Secured({"ROLE_REVIEWER"})
     @GetMapping("/answers")
     public ResponseEntity getMyAnswerList(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -105,30 +72,12 @@ public class ReviewerController {
     }
 
     /**
-     * 답변한 리뷰 수정 API
-     */
-    @Secured({ "ROLE_REVIEWER"})
-    @PutMapping("/answer/{answerId}")
-    public ResponseEntity updateMyAnswer(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long answerId,
-            @RequestBody UpdateAnswerDto updateAnswerDto
-    ) {
-        User reviewer = userDetails.getUser();
-
-        reviewerService.updateAnswer(reviewer, answerId, updateAnswerDto);
-
-        return ResponseEntity.ok("ok");
-    }
-
-
-    /**
      * 나에게 요청된 리뷰목록 조회
      */
     @Secured({"ROLE_REVIEWER"})
-    @GetMapping("/user/received")
+    @GetMapping("/questions")
     public ResponseEntity<PageResponseDto> getMyReceivedList(
-            @RequestParam ReviewRequestStatus status,
+            @RequestParam QuestionStatus status,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "true") Boolean isAsc
@@ -140,37 +89,5 @@ public class ReviewerController {
         PageResponseDto response = reviewerService.getMyReceivedRequestList(user, page, size, sortBy, isAsc, status);
 
         return ResponseEntity.ok(response);
-    }
-
-    /**
-     * 리뷰어 변경하기 API
-     */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @PutMapping("/question/{questionId}/reviewer/{reviewerId}")
-    public ResponseEntity changeReviewer(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody UpdateReviewerDto changeReviewerDto,
-            @PathVariable Long questionId, @PathVariable Long reviewerId
-    ) {
-        reviewerService.changeReviewer(changeReviewerDto, questionId, reviewerId);
-
-        return ResponseEntity.ok("success");
-    }
-
-
-    /**
-     * 답변에 대한 평가 API
-     */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @PostMapping("/question/{questionId}/eval/{answerId}")
-    public ResponseEntity evaluateAnswer(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long questionId, @PathVariable Long answerId,
-            @RequestBody EvaluateAnswerDto evaluateAnswerDto
-    ) {
-        User user = userDetails.getUser();
-        reviewerService.evaluateAnswer(user, questionId, answerId, evaluateAnswerDto);
-
-        return ResponseEntity.ok("ok");
     }
 }

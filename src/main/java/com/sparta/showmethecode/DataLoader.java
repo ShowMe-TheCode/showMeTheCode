@@ -20,9 +20,11 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        createNormalUser("testUser@google.com", "testUser", "@@aaaa1234");
-        createReviewer("reviewer@google.com", "JavaGod", "@@aaaa1234", "Java");
+        createNormalUser("test", "testUser", "1234");
+        createReviewer("reviewer", "JavaGod", "1234", "Java");
     }
+
+
 
     private void createNormalUser(String username, String nickname, String password) {
         User user = User.builder()

@@ -2,7 +2,7 @@ package com.sparta.showmethecode.comment.domain;
 
 import com.sparta.showmethecode.language.domain.Timestamped;
 import com.sparta.showmethecode.comment.dto.request.UpdateCommentDto;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
+import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,10 +36,10 @@ public class ReviewRequestComment extends Timestamped {
 
     @JoinColumn(name = "review_request_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private ReviewRequest reviewRequest;
+    private Question question;
 
-    public void setReviewRequest(ReviewRequest reviewRequest) {
-        this.reviewRequest = reviewRequest;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     public ReviewRequestComment(String content, User user) {

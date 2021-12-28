@@ -2,7 +2,7 @@ package com.sparta.showmethecode.notification.service;
 
 import com.sparta.showmethecode.notification.domain.MoveUriType;
 import com.sparta.showmethecode.notification.domain.Notification;
-import com.sparta.showmethecode.reviewRequest.domain.ReviewRequest;
+import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.notification.dto.response.NotificationResponse;
 import com.sparta.showmethecode.notification.dto.response.NotificationsResponse;
@@ -71,7 +71,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void send(User receiver, ReviewRequest review, String content, MoveUriType type){
+    public void send(User receiver, Question review, String content, MoveUriType type){
         Notification notification = createNotification(receiver, review, content, type);
         String id = String.valueOf(receiver.getId());
 
@@ -91,7 +91,7 @@ public class NotificationService {
 
     }
 
-    private Notification createNotification(User receiver, ReviewRequest review, String content, MoveUriType type){
+    private Notification createNotification(User receiver, Question review, String content, MoveUriType type){
         if (type.equals(MoveUriType.DETAILS)) {
             return Notification.builder()
                     .receiver(receiver)
