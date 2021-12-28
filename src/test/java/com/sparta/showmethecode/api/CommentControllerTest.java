@@ -3,12 +3,12 @@ package com.sparta.showmethecode.api;
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
 import com.sparta.showmethecode.answer.domain.Answer;
-import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
+import com.sparta.showmethecode.comment.domain.Comment;
 import com.sparta.showmethecode.comment.dto.request.AddCommentDto;
 import com.sparta.showmethecode.comment.dto.request.UpdateCommentDto;
 import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
-import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
+import com.sparta.showmethecode.comment.repository.CommentRepository;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
@@ -67,7 +67,7 @@ public class CommentControllerTest {
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
-    ReviewRequestCommentRepository reviewRequestCommentRepository;
+    CommentRepository reviewRequestCommentRepository;
     @Autowired
     AnswerRepository reviewAnswerRepository;
     @Autowired
@@ -80,7 +80,7 @@ public class CommentControllerTest {
     User user;
     User reviewer;
     Question question;
-    ReviewRequestComment comment;
+    Comment comment;
     String token;
 
     @BeforeAll
@@ -93,15 +93,15 @@ public class CommentControllerTest {
         question = new Question(user, reviewer, "제목", "내용", QuestionStatus.UNSOLVE, "JAVA");
         questionRepository.save(question);
 
-        comment = new ReviewRequestComment("댓글1", user);
-        ReviewRequestComment reviewRequestComment2 = new ReviewRequestComment("댓글2", reviewer);
-        reviewRequestCommentRepository.saveAll(Arrays.asList(comment, reviewRequestComment2));
+        comment = new Comment("댓글1", user);
+        Comment comment2 = new Comment("댓글2", reviewer);
+        reviewRequestCommentRepository.saveAll(Arrays.asList(comment, comment2));
 
         Answer answer = new Answer("답변내용", 4.5, reviewer, question);
         reviewAnswerRepository.save(answer);
 
         question.addComment(comment);
-        question.addComment(reviewRequestComment2);
+        question.addComment(comment2);
         question.setAnswer(answer);
 
         questionRepository.save(question);

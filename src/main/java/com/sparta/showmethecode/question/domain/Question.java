@@ -2,7 +2,7 @@ package com.sparta.showmethecode.question.domain;
 
 import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.notification.domain.Notification;
-import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
+import com.sparta.showmethecode.comment.domain.Comment;
 import com.sparta.showmethecode.language.domain.Timestamped;
 import com.sparta.showmethecode.question.dto.request.ReviewRequestUpdateDto;
 import com.sparta.showmethecode.user.domain.User;
@@ -52,18 +52,18 @@ public class Question extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private User answerUser;
 
-    @JoinColumn(name = "review_answer_id")
+    @JoinColumn(name = "answer_id")
     @OneToOne(fetch = FetchType.LAZY)
     private Answer answer;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
-    private List<ReviewRequestComment> reviewRequestComments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<Notification> notifications = new ArrayList<>();
 
-    public void addComment(ReviewRequestComment comment) {
-        this.reviewRequestComments.add(comment);
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
         comment.setQuestion(this);
     }
 
@@ -94,8 +94,8 @@ public class Question extends Timestamped {
     }
 
     public boolean hasComments() {
-        if (!Objects.isNull(this.reviewRequestComments))
-            return this.getReviewRequestComments().size() > 0 ? true : false;
+        if (!Objects.isNull(this.comments))
+            return this.getComments().size() > 0 ? true : false;
         else
             return false;
     }

@@ -1,6 +1,6 @@
 package com.sparta.showmethecode.comment.repository;
 
-public interface ReviewRequestCommentDao {
+public interface CommentQueryRepository {
 
     // 댓글삭제
     long deleteComment(Long commentOwnerId, Long commentId);

@@ -69,15 +69,6 @@ public class UserController {
         return userService.signin(requestDto);
     }
 
-    /**
-     * 해당 언어의 리뷰어 조회 API
-     */
-    @GetMapping("language")
-    public ResponseEntity findReviewerByLanguage(@RequestParam String language) {
-        List<ReviewerInfoDto> reviewerInfoList = userService.findReviewerByLanguage(language);
-        return ResponseEntity.ok().body(reviewerInfoList);
-    }
-
 
     /**
      * 로그아웃 API

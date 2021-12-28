@@ -10,9 +10,11 @@ import com.sparta.showmethecode.user.service.ReviewerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -74,7 +76,6 @@ public class ReviewerController {
     /**
      * 나에게 요청된 리뷰목록 조회
      */
-    @Secured({"ROLE_REVIEWER"})
     @GetMapping("/questions")
     public ResponseEntity<PageResponseDto> getMyReceivedList(
             @RequestParam QuestionStatus status,
@@ -89,5 +90,14 @@ public class ReviewerController {
         PageResponseDto response = reviewerService.getMyReceivedRequestList(user, page, size, sortBy, isAsc, status);
 
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 언어 이름으로 리뷰어 조회 API
+     */
+    @GetMapping("/language")
+    public ResponseEntity findReviewerByLanguage(@RequestParam String language) {
+        List<ReviewerInfoDto> reviewerInfoList = reviewerService.findReviewerByLanguage(language);
+        return ResponseEntity.ok().body(reviewerInfoList);
     }
 }

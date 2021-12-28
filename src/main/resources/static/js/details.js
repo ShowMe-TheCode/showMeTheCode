@@ -16,7 +16,7 @@ function evaluate_confirm() {
 
 	$.ajax({
 		type: "POST",
-		url: base_url + `/question/${questionId}/eval/${g_answerId}`,
+		url: base_url + `/questions/${questionId}/eval/${g_answerId}`,
 		contentType: "application/json;charset=utf-8;",
 		data: JSON.stringify(data),
 		success: function (res) {
@@ -36,7 +36,7 @@ function drawStar(target) {
 function getDetails(id) {
 	$.ajax({
 		type: "GET",
-		url: base_url + `/question?id=${id}`,
+		url: base_url + `/questions/${id}`,
 		contentType: "application/json;charset-utf-8;",
 		success: function (res) {
 			console.log(res);
@@ -164,11 +164,9 @@ function addComment() {
 
 	let data = { content: content };
 
-	console.log(data);
-
 	$.ajax({
 		type: "POST",
-		url: base_url + `/question/${questionId}/comment`,
+		url: base_url + `/comments/${questionId}`,
 		contentType: "application/json;charset=utf-8;",
 		data: JSON.stringify(data),
 		success: function (res) {
@@ -275,7 +273,7 @@ function findReviewer() {
 	if (query != "") {
 		$.ajax({
 			type: "GET",
-			url: base_url + `/user/language?language=${query}`,
+			url: base_url + `/reviewers/language?language=${query}`,
 			success: function (res) {
 				$("#select-reviewer").append("<option>리뷰어를 선택하세요</option>");
 
@@ -318,7 +316,7 @@ function changeReviewer() {
 
 		$.ajax({
 			type: "POST",
-			url: base_url + `/question/${questionId}/reviewer/${g_reviewerId}`,
+			url: base_url + `/questions/${questionId}/reviewer/${g_reviewerId}`,
 			contentType: "application/json;charset=utf-8",
 			data: JSON.stringify(data),
 			success: function (res) {
@@ -331,13 +329,13 @@ function changeReviewer() {
 }
 
 // ========================================
-// 리뷰삭제
+// 질문삭제
 // ========================================
 function deleteReview() {
 	let questionId = getParameterByName("id");
 	$.ajax({
 		type: "DELETE",
-		url: base_url + `/question/${questionId}`,
+		url: base_url + `/questions/${questionId}`,
 		success: function (res) {
 			alert("리뷰요청 삭제했습니다.");
 			location.href = "mypage.html";
@@ -346,7 +344,7 @@ function deleteReview() {
 }
 
 // ========================================
-// 리뷰 수정 모달 폼
+// 질문 수정 모달 폼
 // ========================================
 function showEditModalForm() {
 	let content = $("#content").html();
@@ -406,7 +404,7 @@ function close_edit_modal() {
 }
 
 // ========================================
-// 리뷰 수정
+// 질문 수정
 // ========================================
 function editReview() {
 	let questionId = getParameterByName("id");
@@ -420,7 +418,7 @@ function editReview() {
 
 	$.ajax({
 		type: "PUT",
-		url: base_url + `/question/${questionId}`,
+		url: base_url + `/questions/${questionId}`,
 		contentType: "application/json;charset=utf-8;",
 		data: JSON.stringify(data),
 		success: function (res) {

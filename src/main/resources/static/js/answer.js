@@ -10,7 +10,7 @@ function getDetails() {
 
 	$.ajax({
 		type: "GET",
-		url: base_url + `/details/${id}/answer`,
+		url: base_url + `/questions/${id}/answer`,
 		success: function (res) {
 			console.log(res);
 			let questionId = res["questionId"];
@@ -74,7 +74,7 @@ function addComment2() {
 
 	$.ajax({
 		type: "POST",
-		url: base_url + `/question/${questionId}/comment`,
+		url: base_url + `/questions/${questionId}/comment`,
 		contentType: "application/json;charset=utf-8;",
 		data: JSON.stringify(data),
 		success: function (res) {
@@ -97,7 +97,7 @@ function addAnswer() {
 
 	$.ajax({
 		type: "POST",
-		url: base_url + `/answer/${questionId}`,
+		url: base_url + `/answers/${questionId}`,
 		contentType: "application/json;charset=utf-8",
 		data: JSON.stringify(data),
 		success: function (res) {
@@ -115,7 +115,7 @@ function reject() {
 
 	$.ajax({
 		type: "POST",
-		url: base_url + `/reviewer/reject/${id}`,
+		url: base_url + `/answers/${id}/reject`,
 		success: function (res) {
 			console.log(res);
 			alert("리뷰요청을 거절했습니다.");

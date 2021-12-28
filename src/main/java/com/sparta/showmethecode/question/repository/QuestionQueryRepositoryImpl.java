@@ -9,15 +9,14 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.showmethecode.answer.domain.Answer;
-import com.sparta.showmethecode.comment.dto.response.CommentResponseDto;
-import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
-import com.sparta.showmethecode.answer.dto.response.QReviewAnswerResponseDto;
 import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
+import com.sparta.showmethecode.comment.dto.response.CommentResponseDto;
+import com.sparta.showmethecode.common.repository.OrderByNull;
+import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.dto.response.*;
 import com.sparta.showmethecode.user.domain.User;
-import com.sparta.showmethecode.common.repository.OrderByNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,10 +31,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.querydsl.core.types.ExpressionUtils.count;
-import static com.querydsl.core.types.ExpressionUtils.path;
-import static com.sparta.showmethecode.comment.domain.QReviewRequestComment.reviewRequestComment;
-import static com.sparta.showmethecode.answer.domain.QReviewAnswer.reviewAnswer;
-import static com.sparta.showmethecode.question.domain.QReviewRequest.reviewRequest;
+import static com.sparta.showmethecode.answer.domain.QAnswer.answer;
+import static com.sparta.showmethecode.comment.domain.QComment.comment;
+import static com.sparta.showmethecode.question.domain.QQuestion.question;
 import static com.sparta.showmethecode.user.domain.QUser.user;
 
 
@@ -55,21 +53,21 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     public Page<ReviewRequestResponseDto> findReviewRequestList(Pageable pageable, boolean isAsc, QuestionStatus status) {
 
         JPAQuery<ReviewRequestResponseDto> jpaQuery = query.select(new QReviewRequestResponseDto(
-                        reviewRequest.id,
-                        reviewRequest.requestUser.username,
-                        reviewRequest.requestUser.nickname,
-                        reviewRequest.title,
-                        reviewRequest.content,
-                        reviewRequest.languageName,
-                        reviewRequest.status,
-                        reviewRequest.createdAt,
+                        question.id,
+                        question.requestUser.username,
+                        question.requestUser.nickname,
+                        question.title,
+                        question.content,
+                        question.languageName,
+                        question.status,
+                        question.createdAt,
                         ExpressionUtils.as(
-                                JPAExpressions.select(reviewRequestComment.id.count())
-                                        .from(reviewRequestComment)
-                                        .where(reviewRequestComment.reviewRequest.eq(reviewRequest)), "commentCount")
+                                JPAExpressions.select(comment.id.count())
+                                        .from(comment)
+                                        .where(comment.question.eq(question)), "commentCount")
                 ))
                 .where(statusEqual(status))
-                .from(reviewRequest);
+                .from(question);
 
         JPQLQuery<ReviewRequestResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
 
@@ -82,45 +80,45 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
         List<ReviewRequestResponseDto> results = query
                 .select(new QReviewRequestResponseDto(
-                        reviewRequest.id,
+                        question.id,
                         user.username,
                         user.nickname,
-                        reviewRequest.title,
-                        reviewRequest.content,
-                        reviewRequest.languageName,
-                        reviewRequest.status,
-                        reviewRequest.createdAt,
-                        ExpressionUtils.as(JPAExpressions.select(count(reviewRequestComment.id))
-                                .from(reviewRequestComment)
-                                .where(reviewRequestComment.reviewRequest.eq(reviewRequest)), "commentCount")
+                        question.title,
+                        question.content,
+                        question.languageName,
+                        question.status,
+                        question.createdAt,
+                        ExpressionUtils.as(JPAExpressions.select(count(comment.id))
+                                .from(comment)
+                                .where(comment.question.eq(question)), "commentCount")
                         )
                 )
-                .from(reviewRequest)
-                .join(reviewRequest.requestUser, user)
+                .from(question)
+                .join(question.requestUser, user)
                 .where(containingTitleOrComment(keyword))
                 .where(statusEqual(status))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(isAsc ? reviewRequest.createdAt.desc() : reviewRequest.createdAt.asc())
+                .orderBy(isAsc ? question.createdAt.desc() : question.createdAt.asc())
                 .fetch();
 
         JPAQuery<ReviewRequestResponseDto> jpaQuery = query
                 .select(new QReviewRequestResponseDto(
-                        reviewRequest.id,
+                        question.id,
                         user.username,
                         user.nickname,
-                        reviewRequest.title,
-                        reviewRequest.content,
-                        reviewRequest.languageName,
-                        reviewRequest.status,
-                        reviewRequest.createdAt,
-                        ExpressionUtils.as(JPAExpressions.select(count(reviewRequestComment.id))
-                                .from(reviewRequestComment)
-                                .where(reviewRequestComment.reviewRequest.eq(reviewRequest)), "commentCount")
+                        question.title,
+                        question.content,
+                        question.languageName,
+                        question.status,
+                        question.createdAt,
+                        ExpressionUtils.as(JPAExpressions.select(count(comment.id))
+                                .from(comment)
+                                .where(comment.question.eq(question)), "commentCount")
                         )
                 )
-                .from(reviewRequest)
-                .join(reviewRequest.requestUser, user).fetchJoin()
+                .from(question)
+                .join(question.requestUser, user).fetchJoin()
                 .where(containingTitleOrComment(keyword));
 
         return PageableExecutionUtils.getPage(results, pageable, jpaQuery::fetchCount);
@@ -131,20 +129,20 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
         QueryResults<ReviewRequestResponseDto> results
                 = query.select(new QReviewRequestResponseDto(
-                        reviewRequest.id,
+                        question.id,
                         user.username,
                         user.nickname,
-                        reviewRequest.title,
-                        reviewRequest.content,
-                        reviewRequest.languageName,
-                        reviewRequest.status,
-                        reviewRequest.createdAt,
-                        ExpressionUtils.as(JPAExpressions.select(count(reviewRequestComment.id))
-                        .from(reviewRequestComment)
-                        .where(reviewRequestComment.reviewRequest.eq(reviewRequest)), "commentCount")
+                        question.title,
+                        question.content,
+                        question.languageName,
+                        question.status,
+                        question.createdAt,
+                        ExpressionUtils.as(JPAExpressions.select(count(comment.id))
+                        .from(comment)
+                        .where(comment.question.eq(question)), "commentCount")
                  ))
-                .from(reviewRequest)
-                .join(reviewRequest.requestUser, user).fetchJoin()
+                .from(question)
+                .join(question.requestUser, user).fetchJoin()
                 .where(containingTitleOrComment(keyword))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -159,18 +157,18 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     @Override
     public ReviewRequestDetailResponseDto getReviewRequestDetails(Long id) {
 
-        Question result = query.select(reviewRequest)
-                .from(reviewRequest)
-                .join(reviewRequest.requestUser, user).fetchJoin()
-                .leftJoin(reviewRequest.reviewAnswer, reviewAnswer).fetchJoin()
-                .leftJoin(reviewRequest.reviewRequestComments, reviewRequestComment).fetchJoin()
-                .where(reviewRequest.id.eq(id))
+        Question result = query.select(question)
+                .from(question)
+                .join(question.requestUser, user).fetchJoin()
+                .leftJoin(question.answer, answer).fetchJoin()
+                .leftJoin(question.comments, comment).fetchJoin()
+                .where(question.id.eq(id))
                 .fetchFirst();
 
         List<CommentResponseDto> comments = new ArrayList<>();
 
         if (result.hasComments()) {
-            comments = result.getReviewRequestComments().stream().map(
+            comments = result.getComments().stream().map(
                     c -> new CommentResponseDto(c.getId(), c.getUser().getId(), c.getUser().getUsername(), c.getUser().getNickname(), c.getContent(), c.getCreatedAt())
             ).collect(Collectors.toList());
         }
@@ -211,9 +209,9 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
     @Override
     public List<ReviewRequestLanguageCount> getReviewRequestLanguageCountGroupByLanguage() {
-        List<Tuple> result = query.select(reviewRequest.languageName, reviewRequest.id.count())
-                .from(reviewRequest)
-                .groupBy(reviewRequest.languageName)
+        List<Tuple> result = query.select(question.languageName, question.id.count())
+                .from(question)
+                .groupBy(question.languageName)
                 .orderBy(OrderByNull.DEFAULT)
                 .fetch();
 
@@ -227,21 +225,21 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
         JPAQuery<ReviewRequestResponseDto> jpaQuery = query
                 .select(new QReviewRequestResponseDto(
-                                reviewRequest.id,
+                        question.id,
                                 user.username,
                                 user.nickname,
-                                reviewRequest.title,
-                                reviewRequest.content,
-                                reviewRequest.languageName,
-                                reviewRequest.status,
-                                reviewRequest.createdAt,
-                                ExpressionUtils.as(JPAExpressions.select(count(reviewRequestComment.id))
-                                        .from(reviewRequestComment)
-                                        .where(reviewRequestComment.reviewRequest.eq(reviewRequest)), "commentCount")
+                        question.title,
+                        question.content,
+                        question.languageName,
+                        question.status,
+                        question.createdAt,
+                                ExpressionUtils.as(JPAExpressions.select(count(comment.id))
+                                        .from(comment)
+                                        .where(comment.question.eq(question)), "commentCount")
                         )
                 )
-                .from(reviewRequest)
-                .join(reviewRequest.requestUser, user)
+                .from(question)
+                .join(question.requestUser, user)
                 .where(user.id.eq(id))
                 .where(statusEqual(status))
                 .offset(pageable.getOffset())
@@ -257,21 +255,21 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     public Page<ReviewRequestResponseDto> findMyReceivedRequestList(Long id, Pageable pageable, QuestionStatus status) {
         JPAQuery<ReviewRequestResponseDto> jpaQuery = query
                 .select(new QReviewRequestResponseDto(
-                                reviewRequest.id,
+                        question.id,
                                 user.username,
                                 user.nickname,
-                                reviewRequest.title,
-                                reviewRequest.content,
-                                reviewRequest.languageName,
-                                reviewRequest.status,
-                                reviewRequest.createdAt,
-                                ExpressionUtils.as(JPAExpressions.select(count(reviewRequestComment.id))
-                                        .from(reviewRequestComment)
-                                        .where(reviewRequestComment.reviewRequest.eq(reviewRequest)), "commentCount")
+                        question.title,
+                        question.content,
+                        question.languageName,
+                        question.status,
+                        question.createdAt,
+                                ExpressionUtils.as(JPAExpressions.select(count(comment.id))
+                                        .from(comment)
+                                        .where(comment.question.eq(question)), "commentCount")
                         )
                 )
-                .from(reviewRequest)
-                .join(reviewRequest.answerUser, user)
+                .from(question)
+                .join(question.answerUser, user)
                 .where(user.id.eq(id))
                 .where(statusEqual(status))
                 .offset(pageable.getOffset())
@@ -287,8 +285,8 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     @Override
     public boolean isMyReviewRequest(Long reviewId, User user) {
         Integer exist = query.selectOne()
-                .from(reviewRequest)
-                .where(reviewRequest.id.eq(reviewId).and(reviewRequest.requestUser.eq(user)))
+                .from(question)
+                .where(question.id.eq(reviewId).and(question.requestUser.eq(user)))
                 .fetchFirst();
 
         return exist != null;
@@ -297,8 +295,8 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     @Override
     public boolean isRequestedToMe(Long reviewId, User reviewer) {
         Integer exist = query.selectOne()
-                .from(reviewRequest)
-                .where(reviewRequest.id.eq(reviewId).and(reviewRequest.answerUser.eq(reviewer)))
+                .from(question)
+                .where(question.id.eq(reviewId).and(question.answerUser.eq(reviewer)))
                 .fetchFirst();
 
         return exist != null;
@@ -307,8 +305,8 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     @Override
     public boolean isAnswerToMe(Long answerId, User user) {
         Integer exist = query.selectOne()
-                .from(reviewRequest)
-                .where(reviewRequest.reviewAnswer.id.eq(answerId).and(reviewRequest.requestUser.id.eq(user.getId())))
+                .from(question)
+                .where(question.answer.id.eq(answerId).and(question.requestUser.id.eq(user.getId())))
                 .fetchFirst();
 
         return exist != null;
@@ -319,22 +317,22 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
         JPAQuery<ReviewRequestResponseDto> jpaQuery = query
                 .select(new QReviewRequestResponseDto(
-                                reviewRequest.id,
+                        question.id,
                                 user.username,
                                 user.nickname,
-                                reviewRequest.title,
-                                reviewRequest.content,
-                                reviewRequest.languageName,
-                                reviewRequest.status,
-                                reviewRequest.createdAt,
-                                ExpressionUtils.as(JPAExpressions.select(count(reviewRequestComment.id))
-                                        .from(reviewRequestComment)
-                                        .where(reviewRequestComment.reviewRequest.eq(reviewRequest)), "commentCount")
+                        question.title,
+                        question.content,
+                        question.languageName,
+                        question.status,
+                        question.createdAt,
+                                ExpressionUtils.as(JPAExpressions.select(count(comment.id))
+                                        .from(comment)
+                                        .where(comment.question.eq(question)), "commentCount")
                         )
                 )
-                .from(reviewRequest)
-                .join(reviewRequest.requestUser, user)
-                .where(reviewRequest.languageName.eq(languageName));
+                .from(question)
+                .join(question.requestUser, user)
+                .where(question.languageName.eq(languageName));
 
         List<ReviewRequestResponseDto> result = getQuerydsl().applyPagination(pageable, jpaQuery).fetch();
 
@@ -342,30 +340,9 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Page<ReviewAnswerResponseDto> findMyAnswer(Long userId, Pageable pageable) {
-        JPAQuery<ReviewAnswerResponseDto> jpaQuery = query.select(
-                        new QReviewAnswerResponseDto(
-                                reviewRequest.reviewAnswer.id,
-                                reviewRequest.id,
-                                reviewRequest.reviewAnswer.answerUser.username,
-                                reviewRequest.reviewAnswer.answerUser.nickname,
-                                reviewRequest.reviewAnswer.content,
-                                reviewRequest.reviewAnswer.point,
-                                reviewRequest.reviewAnswer.createdAt
-                        )
-                ).from(reviewRequest)
-                .join(reviewRequest.reviewAnswer, reviewAnswer)
-                .where(reviewRequest.reviewAnswer.answerUser.id.eq(userId));
-
-        List<ReviewAnswerResponseDto> result = getQuerydsl().applyPagination(pageable, jpaQuery).fetch();
-
-        return PageableExecutionUtils.getPage(result, pageable, jpaQuery::fetchCount);
-    }
-
-    @Override
     public void deleteComment(Long reviewId, Long commentId, Long userId) {
-        query.delete(reviewRequest)
-                .where(reviewRequest.id.eq(reviewId));
+        query.delete(question)
+                .where(question.id.eq(reviewId));
     }
 
     @Override
@@ -373,22 +350,22 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
         return query.select(
                         new QRequestAndAnswerResponseDto(
-                                reviewRequest.id, reviewRequest.requestUser.username,
-                                reviewRequest.title, reviewRequest.content, reviewRequest.status, reviewRequest.createdAt,
-                                reviewRequest.reviewAnswer.id, reviewRequest.reviewAnswer.content
+                                question.id, question.requestUser.username,
+                                question.title, question.content, question.status, question.createdAt,
+                                question.answer.id, question.answer.content
                         )
-                ).from(reviewRequest)
-                .join(reviewRequest.requestUser, user)
-                .leftJoin(reviewRequest.reviewAnswer, reviewAnswer)
-                .where(reviewRequest.id.eq(id))
+                ).from(question)
+                .join(question.requestUser, user)
+                .leftJoin(question.answer, answer)
+                .where(question.id.eq(id))
                 .fetchOne();
     }
 
     private BooleanExpression containingTitleOrComment(String keyword) {
-        return Objects.isNull(keyword) || keyword.isEmpty() ? null : reviewRequest.title.contains(keyword).or(reviewRequest.content.contains(keyword));
+        return Objects.isNull(keyword) || keyword.isEmpty() ? null : question.title.contains(keyword).or(question.content.contains(keyword));
     }
 
     private BooleanExpression statusEqual(QuestionStatus status) {
-        return !Objects.isNull(status) && !status.equals(QuestionStatus.ALL) ? reviewRequest.status.eq(status) : null;
+        return !Objects.isNull(status) && !status.equals(QuestionStatus.ALL) ? question.status.eq(status) : null;
     }
 }

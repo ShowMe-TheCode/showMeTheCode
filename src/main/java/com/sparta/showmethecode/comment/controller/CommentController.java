@@ -12,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@RequestMapping("/comments")
 @RequiredArgsConstructor
 @RestController
 @Slf4j
@@ -20,95 +21,45 @@ public class CommentController {
     private final CommentService commentService;
 
     /**
-     * 리뷰요청 - 댓글추가 API
+     * 댓글추가 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @PostMapping("/question/{questionId}/comment")
-    public ResponseEntity addComment_Question(
+    @PostMapping("/{questionId}")
+    public ResponseEntity addComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long questionId,
             @RequestBody AddCommentDto addCommentDto
     ) {
         User user = userDetails.getUser();
-        commentService.addComment_Question(user, questionId, addCommentDto);
+        commentService.addComment(user, questionId, addCommentDto);
 
         return ResponseEntity.ok().body("댓글작성 완료");
     }
 
     /**
-     * 리뷰요청 - 댓글삭제 API
+     * 댓글삭제 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @DeleteMapping("/question/comment/{commentId}")
-    public ResponseEntity removeComment_Question(
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity removeComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long commentId
     ) {
         User user = userDetails.getUser();
-        long row = commentService.removeComment_Question(user, commentId);
+        long row = commentService.removeComment(user, commentId);
 
         return ResponseEntity.ok().body("댓글삭제 완료");
     }
 
     /**
-     * 리뷰요청 - 댓글수정 API
+     * 댓글수정 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @PutMapping("/question/comment/{commentId}")
-    public ResponseEntity updateComment_Question(
+    @PutMapping("/{commentId}")
+    public ResponseEntity updateComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long commentId,
             @RequestBody UpdateCommentDto updateCommentDto
     ) {
         User user = userDetails.getUser();
-        commentService.updateComment_Question(user, commentId, updateCommentDto);
+        commentService.updateComment(user, commentId, updateCommentDto);
 
         return ResponseEntity.ok().body("댓글수정 완료");
     }
-
-//    /**
-//     * 리뷰답변 - 댓글추가 API
-//     */
-//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-//    @PostMapping("/answer/{answerId}/comment")
-//    public ResponseEntity addComment_Answer(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
-//            @PathVariable Long answerId,
-//            @RequestBody AddCommentDto addCommentDto
-//    ) {
-//        User user = userDetails.getUser();
-//        commentService.addComment_Answer(user, answerId, addCommentDto);
-//
-//        return ResponseEntity.ok().body("댓글작성 완료");
-//    }
-//
-//    /**
-//     * 리뷰답변 - 댓글수정 API
-//     */
-//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-//    @PutMapping("/answer/comment/{commentId}")
-//    public ResponseEntity updateComment_Answer(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
-//            @PathVariable Long commentId,
-//            @RequestBody UpdateCommentDto updateCommentDto
-//    ) {
-//        User user = userDetails.getUser();
-//        commentService.updateComment_Answer(user, commentId, updateCommentDto);
-//
-//        return ResponseEntity.ok().body("댓글작성 완료");
-//    }
-//
-//    /**
-//     * 리뷰답변 - 댓글삭제 API
-//     */
-//    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-//    @DeleteMapping("/answer/comment/{commentId}")
-//    public ResponseEntity removeComment_Answer(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
-//            @PathVariable Long commentId
-//    ) {
-//        User user = userDetails.getUser();
-//        commentService.removeComment_Answer(user, commentId);
-//
-//        return ResponseEntity.ok().body("댓글삭제 완료");
-//    }
 }

@@ -3,13 +3,13 @@ package com.sparta.showmethecode.api;
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
 import com.sparta.showmethecode.answer.domain.Answer;
-import com.sparta.showmethecode.comment.domain.ReviewRequestComment;
+import com.sparta.showmethecode.comment.domain.Comment;
 import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.answer.dto.request.AddAnswerDto;
 import com.sparta.showmethecode.answer.dto.request.EvaluateAnswerDto;
 import com.sparta.showmethecode.answer.dto.request.UpdateAnswerDto;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
-import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
+import com.sparta.showmethecode.comment.repository.CommentRepository;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
@@ -66,7 +66,7 @@ public class ReviewerControllerTest {
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
-    ReviewRequestCommentRepository reviewRequestCommentRepository;
+    CommentRepository reviewRequestCommentRepository;
     @Autowired
     AnswerRepository reviewAnswerRepository;
     @Autowired
@@ -94,15 +94,15 @@ public class ReviewerControllerTest {
         question = new Question(user, reviewer, "제목", "내용", QuestionStatus.UNSOLVE, "JAVA");
         questionRepository.save(question);
 
-        ReviewRequestComment reviewRequestComment1 = new ReviewRequestComment("댓글1", user);
-        ReviewRequestComment reviewRequestComment2 = new ReviewRequestComment("댓글2", reviewer);
-        reviewRequestCommentRepository.saveAll(Arrays.asList(reviewRequestComment1, reviewRequestComment2));
+        Comment comment1 = new Comment("댓글1", user);
+        Comment comment2 = new Comment("댓글2", reviewer);
+        reviewRequestCommentRepository.saveAll(Arrays.asList(comment1, comment2));
 
         answer = new Answer("답변내용", 4.5, reviewer, question);
         reviewAnswerRepository.save(answer);
 
-        question.addComment(reviewRequestComment1);
-        question.addComment(reviewRequestComment2);
+        question.addComment(comment1);
+        question.addComment(comment2);
         question.setAnswer(answer);
 
         questionRepository.save(question);

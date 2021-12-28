@@ -1,7 +1,6 @@
 package com.sparta.showmethecode.answer.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sparta.showmethecode.comment.domain.ReviewAnswerComment;
 import com.sparta.showmethecode.language.domain.Timestamped;
 import com.sparta.showmethecode.answer.dto.request.UpdateAnswerDto;
 import com.sparta.showmethecode.question.domain.Question;
@@ -17,7 +16,6 @@ import java.util.List;
 /**
  * 코드리뷰 답변서
  */
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,16 +37,13 @@ public class Answer extends Timestamped {
     private User answerUser;
 
     @JsonIgnore
-    @JoinColumn(name = "review_request_id")
-    @OneToOne(mappedBy = "reviewAnswer", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(mappedBy = "answer", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Question question;
 
     public void setQuestion(Question question) {
         this.question = question;
     }
 
-    @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ReviewAnswerComment> comments;
 
     public void evaluate(double point) {
         this.point = point;
@@ -56,11 +51,6 @@ public class Answer extends Timestamped {
 
     public void update(UpdateAnswerDto dto) {
         this.content = dto.getContent();
-    }
-
-    public void addComment(ReviewAnswerComment comment) {
-        this.getComments().add(comment);
-        comment.setAnswer(this);
     }
 
     public Answer(String content, double point, User answerUser, Question question) {

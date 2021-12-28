@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,6 @@ public class ReviewerService {
     private final AnswerRepository reviewAnswerRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
-    private final NotificationService notificationService;
-
 
     /**
      * 나에게 요청된 리뷰인지 확인
@@ -100,7 +99,7 @@ public class ReviewerService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<ReviewAnswerResponseDto> myAnswer = questionRepository.findMyAnswer(reviewer.getId(), pageable);
+        Page<ReviewAnswerResponseDto> myAnswer = reviewAnswerRepository.findMyAnswer(reviewer.getId(), pageable);
 
         return new PageResponseDto<ReviewAnswerResponseDto>(
                 myAnswer.getContent(),
@@ -124,6 +123,23 @@ public class ReviewerService {
                 reviewRequests.getTotalElements(),
                 page, size
         );
+    }
+
+    /**
+     * 언어이름으로 리뷰어 조회 API
+     */
+    public List<ReviewerInfoDto> findReviewerByLanguage(String languageName) {
+        List<User> reviewers = userRepository.findReviewerByLanguage(languageName.toUpperCase());
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        return reviewers.stream().map(
+                r -> new ReviewerInfoDto(
+                        r.getId(),
+                        r.getUsername(),
+                        r.getNickname(),
+                        r.getLanguages().stream().map(l -> new String(l.getName())).collect(Collectors.toList()),
+                        r.getAnswerCount(),
+                        r.getEvalCount() == 0 ? 0 : Double.valueOf(decimalFormat.format(r.getEvalTotal() / r.getEvalCount())))
+        ).collect(Collectors.toList());
     }
 
 

@@ -40,7 +40,7 @@ $(document).ready(function () {
 function getTag() {
 	$.ajax({
 		type: "GET",
-		url: base_url + "/question/languages/count",
+		url: base_url + "/questions/languages/count",
 		success: function (res) {
 			let tagname = "";
 			let count = 0;
@@ -74,7 +74,7 @@ function getQuestionListByLanguage(language, page) {
 	nextPage = parseInt(currentPage) + 1;
 	$.ajax({
 		type: "GET",
-		url: base_url + "/question/language",
+		url: base_url + "/questions/language",
 		data: {
 			page: currentPage,
 			language: language,

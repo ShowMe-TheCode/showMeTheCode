@@ -53,7 +53,7 @@ public class AnswerController {
     /**
      * 요청거절
      */
-    @PostMapping("/reject/{questionId}")
+    @PostMapping("/{questionId}/reject")
     public ResponseEntity rejectRequestedReview(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long questionId

@@ -12,7 +12,7 @@ import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.question.dto.request.ReviewRequestDto;
 import com.sparta.showmethecode.question.dto.request.ReviewRequestUpdateDto;
 import com.sparta.showmethecode.common.dto.response.*;
-import com.sparta.showmethecode.comment.repository.ReviewRequestCommentRepository;
+import com.sparta.showmethecode.comment.repository.CommentRepository;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
 import com.sparta.showmethecode.user.dto.request.UpdateReviewerDto;
 import com.sparta.showmethecode.user.repository.UserRepository;
@@ -35,7 +35,7 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
-    private final ReviewRequestCommentRepository reviewRequestCommentRepository;
+    private final CommentRepository reviewRequestCommentRepository;
 
     /**
      * 코드리뷰 요청목록 API

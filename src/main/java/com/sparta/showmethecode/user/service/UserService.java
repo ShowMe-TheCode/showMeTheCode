@@ -103,23 +103,6 @@ public class UserService {
 
 
     /**
-     * 언어이름으로 리뷰어 조회 API
-     */
-    public List<ReviewerInfoDto> findReviewerByLanguage(String languageName) {
-        List<User> reviewers = userRepository.findReviewerByLanguage(languageName.toUpperCase());
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
-        return reviewers.stream().map(
-                r -> new ReviewerInfoDto(
-                        r.getId(),
-                        r.getUsername(),
-                        r.getNickname(),
-                        r.getLanguages().stream().map(l -> new String(l.getName())).collect(Collectors.toList()),
-                        r.getAnswerCount(),
-                        r.getEvalCount() == 0 ? 0 : Double.valueOf(decimalFormat.format(r.getEvalTotal() / r.getEvalCount())))
-        ).collect(Collectors.toList());
-    }
-
-    /**
      * 내가 등록한 리뷰요청목록 조회 API
      */
     public PageResponseDto<ReviewRequestResponseDto> getMyReviewRequestList(User user, int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {

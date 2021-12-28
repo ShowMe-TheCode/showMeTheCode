@@ -39,9 +39,6 @@ public interface QuestionQueryRepository {
     // 언어이름으로 코드리뷰요청 조회
     Page<ReviewRequestResponseDto> searchRequestByLanguageName(String languageName, Pageable pageable, boolean isAsc);
 
-    // 내가 답변한 리뷰목록 조회
-    Page<ReviewAnswerResponseDto> findMyAnswer(Long userId, Pageable pageable);
-
     // 현재 리뷰요청에 달린 댓글 삭제
     void deleteComment(Long reviewId, Long commentId, Long userId);
 

@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Component
@@ -40,8 +41,9 @@ public class DataLoader implements CommandLineRunner {
                 .username(username)
                 .nickname(nickname)
                 .password(passwordEncoder.encode(password))
-                .languages(Arrays.asList(new Language(language.toUpperCase())))
+                .languages(new ArrayList<>())
                 .role(UserRole.ROLE_REVIEWER).build();
+        user.addLanguage(new Language(language.toUpperCase()));
         userRepository.save(user);
     }
 }
