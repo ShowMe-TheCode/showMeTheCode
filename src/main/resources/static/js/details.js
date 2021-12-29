@@ -22,6 +22,7 @@ function getDetails(id) {
 
 			console.log(res)
 
+			let questionId = res['questionId']
 			let questionUserId = res['questionUserId']
 			let answer = res['answer']
 			let date = new Date(res['createdAt']);
@@ -42,27 +43,10 @@ function getDetails(id) {
 								<span class="ac-tag__hashtag">#&nbsp;</span><span class="ac-tag__name">${res['languageName']}</span></button>`);
 
 			let status = res.status;
-
 			$("#request-status").text(status);
 
-			// "해결됨"인 경우에만 평가하기 버튼 활성화
-			console.log("밖 = " + g_questionUserId, questionUserId)
-			if (status === "해결됨" && answer != null && g_questionUserId != null && g_questionUserId.toString() === questionUserId.toString()) {
-
-				console.log("안 = " + g_questionUserId, questionUserId)
-
-				$("#changeReviewContentBtn").hide();
-				$("#changeReviewerBtn").hide();
-				$("#deleteReviewBtn").hide();
-				let tmp_html = `<div class="flex-row feature__status e-status e-hover-toggle" data-status="1">
-									<button onclick="showEvaluateForm('${answer['answerId']}')" class="ac-button is-md is-solid is-success button-rounded">평가하기</button>
-								</div>`;
-				$("#request-status-box").append(tmp_html);
-			} else if (status === "평가됨") {
-				$("#changeReviewContentBtn").hide();
-				$("#changeReviewerBtn").hide();
-				$("#deleteReviewBtn").hide();
-			}
+			if (answer != null) myQuestion(questionUserId, status, answer['answerId'])
+			else myQuestion(questionUserId, status, null)
 
 			$("#question-comment-content-box").empty();
 			let comments = res["comments"];
@@ -81,6 +65,38 @@ function getDetails(id) {
 		},
 	});
 }
+
+function myQuestion(currentQuestionUserId, questionStatus, answerId) {
+
+	console.log(currentQuestionUserId, questionStatus, answerId)
+
+	if (localStorage.getItem("userId") == null) return;
+
+	let userId = localStorage.getItem("userId")
+	if (userId.toString() === currentQuestionUserId.toString()) {
+		console.log("주인임")
+		if (questionStatus === "미해결") {
+			$("#changeReviewContentBtn").show();
+			$("#changeReviewerBtn").show();
+			$("#deleteReviewBtn").show();
+		} else if (questionStatus === "해결됨") {
+			$("#changeReviewContentBtn").show();
+			let tmp_html = `<div class="flex-row feature__status e-status e-hover-toggle" data-status="1">
+									<button onclick="showEvaluateForm('${answerId}')" class="ac-button is-md is-solid is-success button-rounded">평가하기</button>
+								</div>`;
+			$("#evaluateBtnBox").append(tmp_html);
+		} else if (questionStatus === "평가됨") {
+			$("#changeReviewContentBtn").show();
+		}
+	} else {
+		console.log("주인아님")
+		$("#changeReviewContentBtn").hide();
+		$("#changeReviewerBtn").hide();
+		$("#deleteReviewBtn").hide();
+		$("#evaluateBtnBox").empty()
+	}
+}
+
 
 function evaluate_confirm(answerId) {
 	let questionId = getParameterByName("id");
