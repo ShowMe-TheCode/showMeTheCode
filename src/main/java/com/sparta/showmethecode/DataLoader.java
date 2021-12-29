@@ -29,20 +29,22 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         User user = createNormalUser("test", "testUser", "1234");
-        User reviewer = createReviewer("reviewer", "JavaGod", "1234", "Java");
+        User reviewerJava = createReviewer("reviewer-java", "JavaGod", "1234", "Java");
+        User reviewerSpring = createReviewer("reviewer-spring", "SpringGenius", "1234", "Spring");
+        User reviewerFlask = createReviewer("reviewer-flask", "EasyFlask", "1234", "Flask");
 
-        Question question = createQuestion(user, reviewer, "title", "content");
+        Question question = createQuestion(user, reviewerJava, "title", "content", "JAVA");
         for (int i=0;i<15;i++) {
-            createQuestion(user, reviewer, "spring" + i, "spring xxx" + i);
+            createQuestion(user, reviewerSpring, "spring" + i, "spring xxx" + i, "SPRING");
         }
         for (int i=0;i<15;i++) {
-            createQuestion(user, reviewer, "flask" + i, "python xxx" + i);
+            createQuestion(user, reviewerFlask, "flask" + i, "python xxx" + i, "FLASK");
         }
         for (int i=0;i<15;i++) {
-            createQuestion(user, reviewer, "java" + i, "java xxx" + i);
+            createQuestion(user, reviewerJava, "java" + i, "java xxx" + i, "JAVA");
         }
 
-        addAnswer("answer1", question, reviewer);
+        addAnswer("answer1", question, reviewerJava);
         addComment("댓글1", user, question);
     }
 
@@ -72,8 +74,8 @@ public class DataLoader implements CommandLineRunner {
         return user;
     }
 
-    private Question createQuestion(User user, User reviewer, String title, String content) {
-        Question question = new Question(null, title, content, QuestionStatus.UNSOLVE, reviewer.getLanguages().get(0).getName(),
+    private Question createQuestion(User user, User reviewer, String title, String content, String language) {
+        Question question = new Question(null, title, content, QuestionStatus.UNSOLVE, language,
                 user, reviewer, null, new ArrayList<>(), null);
 
         questionRepository.save(question);

@@ -1,7 +1,3 @@
-import unified from "/static/node_modules/unified";
-import markdown from "/static/node_modules/remark-parse";
-import remark2rehype from "/static/node_modules/remark-rehype";
-import html from "/static/node_modules/rehype-stringify";
 
 let g_reviewerId;
 let g_answerId;
@@ -56,23 +52,12 @@ function getDetails(id) {
 			$("#request-title").append(title);
 			$("#user-name").html(res.nickname);
 			$("#created-at").html(`&nbsp;· ` + date);
-			
-			const content = unified()
-			.use(markdown)
-			.use(remark2rehype)
-			.use(html)
-			.processSync(res.content);
-
-			console.log(content)
-
-			// $("#content").html(res.content);
-			$("#content").val(content)
+			$("#content").html(res.content);
 
 
 			$("#sub-info__content")
-				.append(`<button class="ac-button is-sm is-solid is-gray  ac-tag ac-tag--blue "><span
-                                                class="ac-tag__hashtag">#&nbsp;</span><span
-                                                class="ac-tag__name">'${res.languageName}'</span></button>`);
+				.append(`<button class="ac-button is-sm is-solid is-gray  ac-tag ac-tag--blue ">
+								<span class="ac-tag__hashtag">#&nbsp;</span><span class="ac-tag__name">${res.languageName}</span></button>`);
 
 			let status = res.status;
 
