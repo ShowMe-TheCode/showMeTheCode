@@ -11,13 +11,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
 import com.sparta.showmethecode.comment.dto.response.CommentResponseDto;
-import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
 import com.sparta.showmethecode.common.repository.OrderByNull;
 import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.dto.response.*;
-import com.sparta.showmethecode.user.domain.QUser;
 import com.sparta.showmethecode.user.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -52,9 +50,9 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Page<ReviewRequestResponseDto> findReviewRequestList(Pageable pageable, boolean isAsc, QuestionStatus status) {
+    public Page<QuestionResponseDto> findReviewRequestList(Pageable pageable, boolean isAsc, QuestionStatus status) {
 
-        JPAQuery<ReviewRequestResponseDto> jpaQuery = query.select(new QReviewRequestResponseDto(
+        JPAQuery<QuestionResponseDto> jpaQuery = query.select(new QQuestionResponseDto(
                         question.id,
                         question.requestUser.username,
                         question.requestUser.nickname,
@@ -71,15 +69,15 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .where(statusEqual(status))
                 .from(question);
 
-        JPQLQuery<ReviewRequestResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
+        JPQLQuery<QuestionResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
 
         long totalCount = pagination.fetchCount();
         return new PageImpl<>(pagination.fetch(), pageable, totalCount);
     }
 
     @Override
-    public List<ReviewRequestResponseDto> findReviewRequestListV2(Long lastId, int limit, QuestionStatus status) {
-        return query.select(new QReviewRequestResponseDto(
+    public List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, QuestionStatus status) {
+        return query.select(new QQuestionResponseDto(
                         question.id,
                         question.requestUser.username,
                         question.requestUser.nickname,
@@ -102,10 +100,20 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Page<ReviewRequestResponseDto> findSearchByTitleOrCommentAdvanced(String keyword, Pageable pageable, boolean isAsc, QuestionStatus status) {
+    public boolean isLastPage(Long lastId) {
+        Integer result = query.selectOne()
+                .from(question)
+                .where(IdLessThen(lastId))
+                .fetchFirst();
 
-        List<ReviewRequestResponseDto> results = query
-                .select(new QReviewRequestResponseDto(
+        return result == null;
+    }
+
+    @Override
+    public Page<QuestionResponseDto> findSearchByTitleOrCommentAdvanced(String keyword, Pageable pageable, boolean isAsc, QuestionStatus status) {
+
+        List<QuestionResponseDto> results = query
+                .select(new QQuestionResponseDto(
                         question.id,
                         user.username,
                         user.nickname,
@@ -128,8 +136,8 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .orderBy(isAsc ? question.createdAt.desc() : question.createdAt.asc())
                 .fetch();
 
-        JPAQuery<ReviewRequestResponseDto> jpaQuery = query
-                .select(new QReviewRequestResponseDto(
+        JPAQuery<QuestionResponseDto> jpaQuery = query
+                .select(new QQuestionResponseDto(
                         question.id,
                         user.username,
                         user.nickname,
@@ -151,10 +159,10 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Page<ReviewRequestResponseDto> findSearchByTitleOrComment(String keyword, Pageable pageable) {
+    public Page<QuestionResponseDto> findSearchByTitleOrComment(String keyword, Pageable pageable) {
 
-        QueryResults<ReviewRequestResponseDto> results
-                = query.select(new QReviewRequestResponseDto(
+        QueryResults<QuestionResponseDto> results
+                = query.select(new QQuestionResponseDto(
                         question.id,
                         user.username,
                         user.nickname,
@@ -174,7 +182,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        List<ReviewRequestResponseDto> content = results.getResults();
+        List<QuestionResponseDto> content = results.getResults();
         long total = results.getTotal();
 
         return new PageImpl<>(content, pageable, total);
@@ -247,10 +255,10 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Page<ReviewRequestResponseDto> findMyReviewRequestList(Long id, Pageable pageable, QuestionStatus status) {
+    public Page<QuestionResponseDto> findMyReviewRequestList(Long id, Pageable pageable, QuestionStatus status) {
 
-        JPAQuery<ReviewRequestResponseDto> jpaQuery = query
-                .select(new QReviewRequestResponseDto(
+        JPAQuery<QuestionResponseDto> jpaQuery = query
+                .select(new QQuestionResponseDto(
                         question.id,
                                 user.username,
                                 user.nickname,
@@ -271,16 +279,16 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
-        JPQLQuery<ReviewRequestResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
+        JPQLQuery<QuestionResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
 
         long totalCount = pagination.fetchCount();
         return new PageImpl<>(pagination.fetch(), pageable, totalCount);
     }
 
     @Override
-    public Page<ReviewRequestResponseDto> findMyReceivedRequestList(Long id, Pageable pageable, QuestionStatus status) {
-        JPAQuery<ReviewRequestResponseDto> jpaQuery = query
-                .select(new QReviewRequestResponseDto(
+    public Page<QuestionResponseDto> findMyReceivedRequestList(Long id, Pageable pageable, QuestionStatus status) {
+        JPAQuery<QuestionResponseDto> jpaQuery = query
+                .select(new QQuestionResponseDto(
                         question.id,
                                 user.username,
                                 user.nickname,
@@ -302,7 +310,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .limit(pageable.getPageSize());
 
 
-        JPQLQuery<ReviewRequestResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
+        JPQLQuery<QuestionResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
         long totalCount = pagination.fetchCount();
 
         return new PageImpl<>(pagination.fetch(), pageable, totalCount);
@@ -339,10 +347,10 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Page<ReviewRequestResponseDto> searchRequestByLanguageName(String languageName, Pageable pageable, boolean isAsc) {
+    public Page<QuestionResponseDto> searchRequestByLanguageName(String languageName, Pageable pageable, boolean isAsc) {
 
-        JPAQuery<ReviewRequestResponseDto> jpaQuery = query
-                .select(new QReviewRequestResponseDto(
+        JPAQuery<QuestionResponseDto> jpaQuery = query
+                .select(new QQuestionResponseDto(
                         question.id,
                                 user.username,
                                 user.nickname,
@@ -360,7 +368,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .join(question.requestUser, user)
                 .where(question.languageName.eq(languageName));
 
-        List<ReviewRequestResponseDto> result = getQuerydsl().applyPagination(pageable, jpaQuery).fetch();
+        List<QuestionResponseDto> result = getQuerydsl().applyPagination(pageable, jpaQuery).fetch();
 
         return PageableExecutionUtils.getPage(result, pageable, jpaQuery::fetchCount);
     }
@@ -397,5 +405,9 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
     private BooleanExpression IdLessThen(Long id) {
         return !Objects.isNull(id) ? question.id.lt(id) : null;
+    }
+
+    private BooleanExpression IdGreaterThen(Long id) {
+        return !Objects.isNull(id) ? question.id.gt(id) : null;
     }
 }

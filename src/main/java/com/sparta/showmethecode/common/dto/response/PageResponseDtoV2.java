@@ -13,4 +13,5 @@ public class PageResponseDtoV2<T> {
     private List<T> data = new ArrayList<>();
 
     private Long lastId;
+    private boolean lastPage;
 }

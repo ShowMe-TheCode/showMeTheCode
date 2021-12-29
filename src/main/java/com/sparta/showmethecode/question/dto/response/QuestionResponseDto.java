@@ -7,11 +7,10 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@ToString
 @Data
-public class ReviewRequestResponseDto {
+public class QuestionResponseDto {
 
-    private Long reviewRequestId;
+    private Long questionId;
     private String username;
     private String nickname;
     private String title;
@@ -25,8 +24,8 @@ public class ReviewRequestResponseDto {
     private long commentCount;
 
     @QueryProjection
-    public ReviewRequestResponseDto(Long reviewRequestId, String username, String nickname, String title, String content, String languageName, QuestionStatus status, LocalDateTime createdAt, long commentCount) {
-        this.reviewRequestId = reviewRequestId;
+    public QuestionResponseDto(Long questionId, String username, String nickname, String title, String content, String languageName, QuestionStatus status, LocalDateTime createdAt, long commentCount) {
+        this.questionId = questionId;
         this.username = username;
         this.nickname = nickname;
         this.title = title;

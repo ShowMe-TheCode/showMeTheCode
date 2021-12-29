@@ -1,14 +1,10 @@
 package com.sparta.showmethecode.question.repository;
 
-import com.sparta.showmethecode.common.dto.response.PageResponseDto;
-import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
 import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
-import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
-import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
+import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.question.dto.response.RequestAndAnswerResponseDto;
 import com.sparta.showmethecode.question.dto.response.ReviewRequestDetailResponseDto;
-import com.sparta.showmethecode.question.dto.response.ReviewRequestResponseDto;
 import com.sparta.showmethecode.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,22 +14,22 @@ import java.util.List;
 public interface QuestionQueryRepository {
 
     // 코드리뷰 목록 조회
-    Page<ReviewRequestResponseDto> findReviewRequestList(Pageable pageable, boolean isAsc, QuestionStatus status);
+    Page<QuestionResponseDto> findReviewRequestList(Pageable pageable, boolean isAsc, QuestionStatus status);
     // 코드리뷰 목록 조회 v2 더보기 버튼 방식 (no offset)
-    List<ReviewRequestResponseDto> findReviewRequestListV2(Long lastId, int limit, QuestionStatus status);
+    List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, QuestionStatus status);
 
 
-    Page<ReviewRequestResponseDto> findSearchByTitleOrComment(String keyword, Pageable pageable);
+    Page<QuestionResponseDto> findSearchByTitleOrComment(String keyword, Pageable pageable);
     // 코드리뷰요청 목록 제목+내용 검색쿼리
-    Page<ReviewRequestResponseDto> findSearchByTitleOrCommentAdvanced(String keyword, Pageable pageable, boolean isAsc, QuestionStatus status);
+    Page<QuestionResponseDto> findSearchByTitleOrCommentAdvanced(String keyword, Pageable pageable, boolean isAsc, QuestionStatus status);
     // 코드리뷰요청 상세정보 조회
     ReviewRequestDetailResponseDto getReviewRequestDetails(Long id);
     // 언어별 코드리뷰요청 카운팅
     List<ReviewRequestLanguageCount> getReviewRequestLanguageCountGroupByLanguage();
     // 자신이 요청한 리뷰 조회
-    Page<ReviewRequestResponseDto> findMyReviewRequestList(Long userId, Pageable pageable, QuestionStatus status);
+    Page<QuestionResponseDto> findMyReviewRequestList(Long userId, Pageable pageable, QuestionStatus status);
     // 자신에게 요청된 리뷰 조회
-    Page<ReviewRequestResponseDto> findMyReceivedRequestList(Long userId, Pageable pageable, QuestionStatus status);
+    Page<QuestionResponseDto> findMyReceivedRequestList(Long userId, Pageable pageable, QuestionStatus status);
 
     // 내가 요청한 리뷰가 맞는지 체크
     boolean isMyReviewRequest(Long reviewId, User user);
@@ -41,9 +37,11 @@ public interface QuestionQueryRepository {
     boolean isRequestedToMe(Long reviewId, User reviewer);
     // 나에게 답변된 리뷰가 맞는지 체크
     boolean isAnswerToMe(Long answerId, User user);
+    // 다음 페이지가 있는지 체크, 현재 pk보다 작은 값이 있는지 체크
+    boolean isLastPage(Long lastId);
 
     // 언어이름으로 코드리뷰요청 조회
-    Page<ReviewRequestResponseDto> searchRequestByLanguageName(String languageName, Pageable pageable, boolean isAsc);
+    Page<QuestionResponseDto> searchRequestByLanguageName(String languageName, Pageable pageable, boolean isAsc);
 
     // 현재 리뷰요청에 달린 댓글 삭제
     void deleteComment(Long reviewId, Long commentId, Long userId);

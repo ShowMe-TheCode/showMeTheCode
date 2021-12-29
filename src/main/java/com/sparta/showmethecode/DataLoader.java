@@ -32,6 +32,15 @@ public class DataLoader implements CommandLineRunner {
         User reviewer = createReviewer("reviewer", "JavaGod", "1234", "Java");
 
         Question question = createQuestion(user, reviewer, "title", "content");
+        for (int i=0;i<10;i++) {
+            createQuestion(user, reviewer, "spring" + i, "spring xxx" + i);
+        }
+        for (int i=0;i<10;i++) {
+            createQuestion(user, reviewer, "flask" + i, "python xxx" + i);
+        }
+        for (int i=0;i<10;i++) {
+            createQuestion(user, reviewer, "java" + i, "java xxx" + i);
+        }
 
         addAnswer("answer1", question, reviewer);
         addComment("댓글1", user, question);

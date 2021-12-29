@@ -4,9 +4,8 @@ import com.sparta.showmethecode.common.dto.response.*;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
+import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
-import com.sparta.showmethecode.question.dto.response.ReviewRequestResponseDto;
-import com.sparta.showmethecode.notification.service.NotificationService;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.user.dto.response.ReviewerInfoDto;
@@ -115,9 +114,9 @@ public class ReviewerService {
      */
     public PageResponseDto getMyReceivedRequestList(User user, int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {
         Pageable pageable = makePageable(page, size, sortBy, isAsc);
-        Page<ReviewRequestResponseDto> reviewRequests = questionRepository.findMyReceivedRequestList(user.getId(), pageable, status);
+        Page<QuestionResponseDto> reviewRequests = questionRepository.findMyReceivedRequestList(user.getId(), pageable, status);
 
-        return new PageResponseDto<ReviewRequestResponseDto>(
+        return new PageResponseDto<QuestionResponseDto>(
                 reviewRequests.getContent(),
                 reviewRequests.getTotalPages(),
                 reviewRequests.getTotalElements(),

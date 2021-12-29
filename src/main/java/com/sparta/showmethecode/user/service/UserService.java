@@ -10,8 +10,7 @@ import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.user.domain.UserRole;
 import com.sparta.showmethecode.user.dto.request.SigninRequestDto;
 import com.sparta.showmethecode.user.dto.request.SignupRequestDto;
-import com.sparta.showmethecode.question.dto.response.ReviewRequestResponseDto;
-import com.sparta.showmethecode.user.dto.response.ReviewerInfoDto;
+import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.user.dto.response.SigninResponseDto;
 import com.sparta.showmethecode.language.repository.LanguageRepository;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
@@ -31,11 +30,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -105,14 +102,14 @@ public class UserService {
     /**
      * 내가 등록한 리뷰요청목록 조회 API
      */
-    public PageResponseDto<ReviewRequestResponseDto> getMyReviewRequestList(User user, int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {
+    public PageResponseDto<QuestionResponseDto> getMyReviewRequestList(User user, int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {
         Pageable pageable = makePageable(page, size, sortBy, isAsc);
 
-        Page<ReviewRequestResponseDto> reviewRequests = questionRepository.findMyReviewRequestList(user.getId(), pageable, status);
+        Page<QuestionResponseDto> reviewRequests = questionRepository.findMyReviewRequestList(user.getId(), pageable, status);
 
         log.info("getMyReviewRequestList = {}", reviewRequests.getContent());
 
-        return new PageResponseDto<ReviewRequestResponseDto>(
+        return new PageResponseDto<QuestionResponseDto>(
                 reviewRequests.getContent(),
                 reviewRequests.getTotalPages(),
                 reviewRequests.getTotalElements(),

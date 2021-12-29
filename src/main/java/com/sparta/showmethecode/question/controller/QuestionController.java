@@ -8,7 +8,7 @@ import com.sparta.showmethecode.question.dto.request.ReviewRequestDto;
 import com.sparta.showmethecode.question.dto.request.ReviewRequestUpdateDto;
 import com.sparta.showmethecode.question.dto.response.RequestAndAnswerResponseDto;
 import com.sparta.showmethecode.question.dto.response.ReviewRequestDetailResponseDto;
-import com.sparta.showmethecode.question.dto.response.ReviewRequestResponseDto;
+import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.question.service.QuestionService;
 import com.sparta.showmethecode.security.UserDetailsImpl;
 import com.sparta.showmethecode.user.domain.User;
@@ -139,7 +139,7 @@ public class QuestionController {
             @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "true") boolean isAsc
     ) {
         --page;
-        PageResponseDto<ReviewRequestResponseDto> result = reviewRequestService.searchRequestByLanguageName(language, page, size, isAsc);
+        PageResponseDto<QuestionResponseDto> result = reviewRequestService.searchRequestByLanguageName(language, page, size, isAsc);
 
         return ResponseEntity.ok(result);
     }

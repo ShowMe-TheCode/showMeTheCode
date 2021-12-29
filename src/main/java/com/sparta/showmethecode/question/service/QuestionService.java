@@ -4,9 +4,9 @@ import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount
 import com.sparta.showmethecode.notification.domain.MoveUriType;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
+import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.question.dto.response.RequestAndAnswerResponseDto;
 import com.sparta.showmethecode.question.dto.response.ReviewRequestDetailResponseDto;
-import com.sparta.showmethecode.question.dto.response.ReviewRequestResponseDto;
 import com.sparta.showmethecode.notification.service.NotificationService;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.question.dto.request.ReviewRequestDto;
@@ -44,9 +44,9 @@ public class QuestionService {
     public PageResponseDto getReviewRequestList(int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {
         Pageable pageable = makePageable(page, size, sortBy, isAsc);
 
-        Page<ReviewRequestResponseDto> reviewRequestList = questionRepository.findReviewRequestList(pageable, isAsc, status);
+        Page<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestList(pageable, isAsc, status);
 
-        return new PageResponseDto<ReviewRequestResponseDto>(
+        return new PageResponseDto<QuestionResponseDto>(
                 reviewRequestList.getContent(),
                 reviewRequestList.getTotalPages(),
                 reviewRequestList.getTotalElements(),
@@ -58,26 +58,29 @@ public class QuestionService {
      * 코드리뷰 요청목록 API V2 (더보기 방식)
      */
     @Transactional(readOnly = true)
-    public PageResponseDtoV2<ReviewRequestResponseDto> getReviewRequestListV2(Long lastId, int size, QuestionStatus status) {#127
+    public PageResponseDtoV2<QuestionResponseDto> getReviewRequestListV2(Long lastId, int size, QuestionStatus status) {
 
-        List<ReviewRequestResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, size, status);
+        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, size, status);
 
-        return new PageResponseDtoV2<ReviewRequestResponseDto>(reviewRequestList, reviewRequestList.get(reviewRequestList.size()-1).getReviewRequestId());
+        Long currentLastId = reviewRequestList.get(reviewRequestList.size()-1).getQuestionId();
+        boolean lastPage = questionRepository.isLastPage(currentLastId);
+
+        return new PageResponseDtoV2<QuestionResponseDto>(reviewRequestList, reviewRequestList.get(reviewRequestList.size()-1).getQuestionId(), lastPage);
     }
 
     /**
      * 코드리뷰 검색 API
      */
     @Transactional(readOnly = true)
-    public PageResponseDto<ReviewRequestResponseDto> searchByTitleOrComment(
+    public PageResponseDto<QuestionResponseDto> searchByTitleOrComment(
             String keyword,
             int page, int size, String sortBy, boolean isAsc,
             QuestionStatus status
     ) {
         Pageable pageable = makePageable(page, size, sortBy, isAsc);
-        Page<ReviewRequestResponseDto> results = questionRepository.findSearchByTitleOrCommentAdvanced(keyword, pageable, isAsc, status);
+        Page<QuestionResponseDto> results = questionRepository.findSearchByTitleOrCommentAdvanced(keyword, pageable, isAsc, status);
 
-        return new PageResponseDto<ReviewRequestResponseDto>(
+        return new PageResponseDto<QuestionResponseDto>(
                 results.getContent(),
                 results.getTotalPages(), results.getTotalElements(), page, size
         );
@@ -148,16 +151,16 @@ public class QuestionService {
     /**
      * 코드리뷰 요청 언어이름 검색 API
      */
-    public PageResponseDto<ReviewRequestResponseDto> searchRequestByLanguageName(String language, int page, int size, boolean isAsc) {
+    public PageResponseDto<QuestionResponseDto> searchRequestByLanguageName(String language, int page, int size, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, "createdAt");
         Pageable pageable = PageRequest.of(page, size, sort);
 
         language = language.toUpperCase();
 
-        Page<ReviewRequestResponseDto> reviewRequests = questionRepository.searchRequestByLanguageName(language, pageable, isAsc);
+        Page<QuestionResponseDto> reviewRequests = questionRepository.searchRequestByLanguageName(language, pageable, isAsc);
 
-        return new PageResponseDto<ReviewRequestResponseDto>(
+        return new PageResponseDto<QuestionResponseDto>(
                 reviewRequests.getContent(),
                 reviewRequests.getTotalPages(),
                 reviewRequests.getTotalElements(),
