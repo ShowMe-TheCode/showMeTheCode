@@ -1,35 +1,14 @@
 
-let g_reviewerId;
-let g_answerId;
+let g_reviewerId = null;
+let g_questionUserId = null;
 
 $(document).ready(function () {
 	let id = getParameterByName("id");
 	getDetails(id);
+	if (localStorage.getItem("mytoken") != null && localStorage.getItem("userId") != null) {
+		g_questionUserId = localStorage.getItem("userId")
+	}
 });
-
-function evaluate_confirm() {
-	let questionId = getParameterByName("id");
-	let slider = document.getElementById("star_value");
-	let point = slider.value / 2;
-	console.log("점수: ", slider.value / 2);
-
-	let data = { point: point };
-
-	$.ajax({
-		type: "POST",
-		url: base_url + `/questions/${questionId}/eval/${g_answerId}`,
-		contentType: "application/json;charset=utf-8;",
-		data: JSON.stringify(data),
-		success: function (res) {
-			alert("답변에 대한 평가를 완료했습니다.");
-			location.href = "mypage.html";
-		},
-	});
-}
-
-function drawStar(target) {
-	document.querySelector(`.star span`).style.width = `${target.value * 10}%`;
-}
 
 // ========================================
 // 상세내용 랜더링
@@ -40,14 +19,17 @@ function getDetails(id) {
 		url: base_url + `/questions/${id}`,
 		contentType: "application/json;charset-utf-8;",
 		success: function (res) {
-			console.log(res);
 
-			let date = new Date(res.createdAt);
-			let title = `<h1>`;
-			title = title + res.title + `</h1>`;
+			console.log(res)
+
+			let questionUserId = res['questionUserId']
+			let answer = res['answer']
+			let date = new Date(res['createdAt']);
+			let title = `<h1>${res['title']}</h1>`
+
 			date = dateFormat(date);
 
-			g_reviewerId = res.answerUserId;
+			g_reviewerId = res['answerUserId'];
 
 			$("#request-title").append(title);
 			$("#user-name").html(res.nickname);
@@ -57,18 +39,23 @@ function getDetails(id) {
 
 			$("#sub-info__content")
 				.append(`<button class="ac-button is-sm is-solid is-gray  ac-tag ac-tag--blue ">
-								<span class="ac-tag__hashtag">#&nbsp;</span><span class="ac-tag__name">${res.languageName}</span></button>`);
+								<span class="ac-tag__hashtag">#&nbsp;</span><span class="ac-tag__name">${res['languageName']}</span></button>`);
 
 			let status = res.status;
 
 			$("#request-status").text(status);
-			// 리뷰요청의 상태가 해결됨 인 경우 평가,수정,삭제 버튼 hide, 평가하기 버튼 show
-			if (status === "해결됨") {
+
+			// "해결됨"인 경우에만 평가하기 버튼 활성화
+			console.log("밖 = " + g_questionUserId, questionUserId)
+			if (status === "해결됨" && answer != null && g_questionUserId != null && g_questionUserId.toString() === questionUserId.toString()) {
+
+				console.log("안 = " + g_questionUserId, questionUserId)
+
 				$("#changeReviewContentBtn").hide();
 				$("#changeReviewerBtn").hide();
 				$("#deleteReviewBtn").hide();
 				let tmp_html = `<div class="flex-row feature__status e-status e-hover-toggle" data-status="1">
-									<button onclick="showEvaluateForm()" class="ac-button is-md is-solid is-success button-rounded undefined">평가하기</button>
+									<button onclick="showEvaluateForm('${answer['answerId']}')" class="ac-button is-md is-solid is-success button-rounded">평가하기</button>
 								</div>`;
 				$("#request-status-box").append(tmp_html);
 			} else if (status === "평가됨") {
@@ -84,15 +71,39 @@ function getDetails(id) {
 				addCommentHtml(comments);
 			}
 
-			let reviewAnswer = res["reviewAnswer"];
-			if (JSON.stringify(reviewAnswer) === "{}") {
+			// 답변 랜더링 여부확인 후 랜더링 메서드 호출
+			if (answer == null) {
 				$("#answer-section").hide();
 			} else {
-				addAnswerHtml(reviewAnswer);
+				addAnswerHtml(answer);
 				$("#answer-section").show();
 			}
 		},
 	});
+}
+
+function evaluate_confirm(answerId) {
+	let questionId = getParameterByName("id");
+	let slider = document.getElementById("star_value");
+	let point = slider.value / 2;
+	console.log("점수: ", slider.value / 2);
+
+	let data = { point: point };
+
+	$.ajax({
+		type: "POST",
+		url: base_url + `/questions/${questionId}/eval/${answerId}`,
+		contentType: "application/json;charset=utf-8;",
+		data: JSON.stringify(data),
+		success: function (res) {
+			alert("답변에 대한 평가를 완료했습니다.");
+			location.href = "mypage.html";
+		},
+	});
+}
+
+function drawStar(target) {
+	document.querySelector(`.star span`).style.width = `${target.value * 10}%`;
 }
 
 // ========================================
@@ -138,9 +149,8 @@ function addCommentHtml(comments) {
 // 답변 랜더링
 // ========================================
 function addAnswerHtml(answer) {
-	let answerId = answer["reviewAnswerId"];
-	g_answerId = answerId;
-	let questionId = answer["reviewRequestId"];
+	let answerId = answer["answerId"];
+	let questionId = answer["questionId"];
 	let username = answer["username"];
 	let nickname = answer["nickname"];
 
@@ -180,7 +190,7 @@ function addComment() {
 // ========================================
 // 평가하기 폼 띄우기
 // ========================================
-function showEvaluateForm() {
+function showEvaluateForm(answerId) {
 	temp_html = `<div id="eval_modal" class="modal ">
 					<div class="dimmed"></div>
 					  <article class="sign-in-modal">
@@ -198,7 +208,7 @@ function showEvaluateForm() {
                           <input id="star_value" type="range" oninput="drawStar(this)" value="1" step="1" min="0" max="10">
                         </span>
                         </div>
-                        <button type="button" onclick="evaluate_confirm()" class="ac-button is-md is-solid is-primary form__button e-sign-in">평가하기</button>
+                        <button type="button" onclick="evaluate_confirm('${answerId}')" class="ac-button is-md is-solid is-primary form__button e-sign-in">평가하기</button>
 				
 					  </article>
 					  </div>
@@ -307,8 +317,6 @@ function findReviewer() {
 function changeReviewer() {
 	let newReviewerId = $("#select-reviewer option:selected").val();
 	let questionId = getParameterByName("id");
-
-	console.log(g_reviewerId, newReviewerId, questionId);
 
 	if (g_reviewerId.toString() === newReviewerId.toString()) {
 		alert("기존 리뷰어와 동일한 리뷰어입니다.");

@@ -4,10 +4,10 @@ import com.sparta.showmethecode.common.dto.response.PageResponseDto;
 import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
 import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
-import com.sparta.showmethecode.question.dto.request.ReviewRequestDto;
-import com.sparta.showmethecode.question.dto.request.ReviewRequestUpdateDto;
+import com.sparta.showmethecode.question.dto.request.AddQuestionDto;
+import com.sparta.showmethecode.question.dto.request.UpdateQuestionDto;
+import com.sparta.showmethecode.question.dto.response.QuestionDetailsResponseDto;
 import com.sparta.showmethecode.question.dto.response.RequestAndAnswerResponseDto;
-import com.sparta.showmethecode.question.dto.response.ReviewRequestDetailResponseDto;
 import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.question.service.QuestionService;
 import com.sparta.showmethecode.security.UserDetailsImpl;
@@ -78,7 +78,7 @@ public class QuestionController {
     @PostMapping
     public ResponseEntity<String> addReviewRequest(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody ReviewRequestDto requestDto) {
+            @RequestBody AddQuestionDto requestDto) {
 
         User user = userDetails.getUser();
         reviewRequestService.addReviewRequest(requestDto, user);
@@ -90,9 +90,8 @@ public class QuestionController {
      * 질문 상세조회 API (코드리뷰 요청 상세정보)
      */
     @GetMapping("/{questionId}")
-    public ResponseEntity<ReviewRequestDetailResponseDto> getReviewRequest(@PathVariable Long questionId) {
-        log.info("질문 상세조회 API 호출");
-        ReviewRequestDetailResponseDto reviewRequest = reviewRequestService.getReviewRequest(questionId);
+    public ResponseEntity<QuestionDetailsResponseDto> getReviewRequest(@PathVariable Long questionId) {
+        QuestionDetailsResponseDto reviewRequest = reviewRequestService.getReviewRequest(questionId);
 
         return ResponseEntity.ok(reviewRequest);
     }
@@ -102,7 +101,7 @@ public class QuestionController {
      */
     @PutMapping("/{questionId}")
     public ResponseEntity updateReviewRequest(
-            @RequestBody ReviewRequestUpdateDto updateDto,
+            @RequestBody UpdateQuestionDto updateDto,
             @PathVariable Long questionId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 

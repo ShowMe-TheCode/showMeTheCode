@@ -1,6 +1,6 @@
 package com.sparta.showmethecode.answer.repository;
 
-import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
+import com.sparta.showmethecode.answer.dto.response.AnswerResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,5 +11,5 @@ public interface AnswerQueryRepository {
     // 현재 사용자의 답변인지 확인
     boolean isMyAnswer(Long reviewerId, Long answerId);
     // 내가 답변한 리뷰목록 조회
-    Page<ReviewAnswerResponseDto> findMyAnswer(Long userId, Pageable pageable);
+    Page<AnswerResponseDto> findMyAnswer(Long userId, Pageable pageable);
 }

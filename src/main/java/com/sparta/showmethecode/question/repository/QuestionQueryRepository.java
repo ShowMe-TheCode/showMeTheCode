@@ -4,7 +4,7 @@ import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.question.dto.response.RequestAndAnswerResponseDto;
-import com.sparta.showmethecode.question.dto.response.ReviewRequestDetailResponseDto;
+import com.sparta.showmethecode.question.dto.response.QuestionDetailsResponseDto;
 import com.sparta.showmethecode.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ public interface QuestionQueryRepository {
 
 
     // 코드리뷰요청 상세정보 조회
-    ReviewRequestDetailResponseDto getReviewRequestDetails(Long id);
+    QuestionDetailsResponseDto getReviewRequestDetails(Long id);
     // 언어별 코드리뷰요청 카운팅
     List<ReviewRequestLanguageCount> getReviewRequestLanguageCountGroupByLanguage();
     // 자신이 요청한 리뷰 조회

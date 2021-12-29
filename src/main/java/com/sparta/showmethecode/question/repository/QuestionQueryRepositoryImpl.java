@@ -1,6 +1,5 @@
 package com.sparta.showmethecode.question.repository;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -9,7 +8,7 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.showmethecode.answer.domain.Answer;
-import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
+import com.sparta.showmethecode.answer.dto.response.AnswerResponseDto;
 import com.sparta.showmethecode.comment.dto.response.CommentResponseDto;
 import com.sparta.showmethecode.common.repository.OrderByNull;
 import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount;
@@ -160,7 +159,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public ReviewRequestDetailResponseDto getReviewRequestDetails(Long id) {
+    public QuestionDetailsResponseDto getReviewRequestDetails(Long id) {
 
         Question result = query.select(question)
                 .from(question)
@@ -185,7 +184,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
         Answer answer = result.getAnswer();
         if (!Objects.isNull(answer)) {
-            ReviewAnswerResponseDto reviewAnswerResponseDto = new ReviewAnswerResponseDto(
+            AnswerResponseDto answerResponseDto = new AnswerResponseDto(
                     answer.getId(),
                     result.getId(),
                     answer.getAnswerUser().getUsername(),
@@ -194,17 +193,17 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                     answer.getPoint(),
                     answer.getCreatedAt()
             );
-            return new ReviewRequestDetailResponseDto(
-                    result.getId(), result.getAnswerUser().getId(),
+            return new QuestionDetailsResponseDto(
+                    result.getId(), result.getRequestUser().getId(), result.getAnswerUser().getId(),
                     result.getRequestUser().getUsername(), result.getRequestUser().getNickname(),
                     result.getTitle(), result.getContent(),
                     result.getStatus(), result.getLanguageName(), result.getCreatedAt(),
                     comments,
-                    reviewAnswerResponseDto
+                    answerResponseDto
             );
         }
-        return new ReviewRequestDetailResponseDto(
-                result.getId(), result.getAnswerUser().getId(),
+        return new QuestionDetailsResponseDto(
+                result.getId(), result.getRequestUser().getId(), result.getAnswerUser().getId(),
                 result.getRequestUser().getUsername(),  result.getRequestUser().getNickname(),
                 result.getTitle(), result.getContent(),
                 result.getStatus(), result.getLanguageName(), result.getCreatedAt(),

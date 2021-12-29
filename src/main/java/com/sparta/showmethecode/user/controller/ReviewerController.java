@@ -1,6 +1,6 @@
 package com.sparta.showmethecode.user.controller;
 
-import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
+import com.sparta.showmethecode.answer.dto.response.AnswerResponseDto;
 import com.sparta.showmethecode.common.dto.response.PageResponseDto;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.security.UserDetailsImpl;
@@ -68,7 +68,7 @@ public class ReviewerController {
         --page;
 
         User user = userDetails.getUser();
-        PageResponseDto<ReviewAnswerResponseDto> result = reviewerService.getMyAnswerList(user, page, size, isAsc, sortBy);
+        PageResponseDto<AnswerResponseDto> result = reviewerService.getMyAnswerList(user, page, size, isAsc, sortBy);
 
         return ResponseEntity.ok(result);
     }

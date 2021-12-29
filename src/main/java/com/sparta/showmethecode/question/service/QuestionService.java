@@ -4,15 +4,14 @@ import com.sparta.showmethecode.language.dto.response.ReviewRequestLanguageCount
 import com.sparta.showmethecode.notification.domain.MoveUriType;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
+import com.sparta.showmethecode.question.dto.response.QuestionDetailsResponseDto;
 import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.question.dto.response.RequestAndAnswerResponseDto;
-import com.sparta.showmethecode.question.dto.response.ReviewRequestDetailResponseDto;
 import com.sparta.showmethecode.notification.service.NotificationService;
 import com.sparta.showmethecode.user.domain.User;
-import com.sparta.showmethecode.question.dto.request.ReviewRequestDto;
-import com.sparta.showmethecode.question.dto.request.ReviewRequestUpdateDto;
+import com.sparta.showmethecode.question.dto.request.AddQuestionDto;
+import com.sparta.showmethecode.question.dto.request.UpdateQuestionDto;
 import com.sparta.showmethecode.common.dto.response.*;
-import com.sparta.showmethecode.comment.repository.CommentRepository;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
 import com.sparta.showmethecode.user.dto.request.UpdateReviewerDto;
 import com.sparta.showmethecode.user.repository.UserRepository;
@@ -106,7 +105,7 @@ public class QuestionService {
      * SSE 이벤트 포함
      */
     @Transactional
-    public void addReviewRequest(ReviewRequestDto requestDto, User user) {
+    public void addReviewRequest(AddQuestionDto requestDto, User user) {
         User reviewer = userRepository.findById(requestDto.getReviewerId()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 리뷰어입니다.")
         );
@@ -124,7 +123,7 @@ public class QuestionService {
      * 코드리뷰 수정 API
      */
     @Transactional
-    public void updateReviewRequest(ReviewRequestUpdateDto updateDto, Long reviewId, User user) {
+    public void updateReviewRequest(UpdateQuestionDto updateDto, Long reviewId, User user) {
         boolean isMyRequest = questionRepository.isMyReviewRequest(reviewId, user);
         if (isMyRequest) {
             Question question = questionRepository.findById(reviewId).orElseThrow(
@@ -150,8 +149,8 @@ public class QuestionService {
      * 코드리뷰 단건조회 API (코드리뷰 요청 상세정보)
      */
     @Transactional(readOnly = true)
-    public ReviewRequestDetailResponseDto getReviewRequest(Long id) {
-        ReviewRequestDetailResponseDto result = questionRepository.getReviewRequestDetails(id);
+    public QuestionDetailsResponseDto getReviewRequest(Long id) {
+        QuestionDetailsResponseDto result = questionRepository.getReviewRequestDetails(id);
         return result;
     }
 

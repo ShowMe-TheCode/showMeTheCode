@@ -3,10 +3,8 @@ package com.sparta.showmethecode.answer.repository;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.showmethecode.answer.domain.Answer;
-import com.sparta.showmethecode.answer.domain.QAnswer;
-import com.sparta.showmethecode.answer.dto.response.QReviewAnswerResponseDto;
-import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
-import lombok.RequiredArgsConstructor;
+import com.sparta.showmethecode.answer.dto.response.AnswerResponseDto;
+import com.sparta.showmethecode.answer.dto.response.QAnswerResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -39,9 +37,9 @@ public class AnswerQueryRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public Page<ReviewAnswerResponseDto> findMyAnswer(Long userId, Pageable pageable) {
-        JPAQuery<ReviewAnswerResponseDto> jpaQuery = query.select(
-                        new QReviewAnswerResponseDto(
+    public Page<AnswerResponseDto> findMyAnswer(Long userId, Pageable pageable) {
+        JPAQuery<AnswerResponseDto> jpaQuery = query.select(
+                        new QAnswerResponseDto(
                                 answer.id,
                                 answer.id,
                                 answer.answerUser.username,
@@ -53,7 +51,7 @@ public class AnswerQueryRepositoryImpl extends QuerydslRepositorySupport impleme
                 ).from(answer)
                 .where(answer.answerUser.id.eq(userId));
 
-        List<ReviewAnswerResponseDto> result = getQuerydsl().applyPagination(pageable, jpaQuery).fetch();
+        List<AnswerResponseDto> result = getQuerydsl().applyPagination(pageable, jpaQuery).fetch();
 
         return PageableExecutionUtils.getPage(result, pageable, jpaQuery::fetchCount);
     }

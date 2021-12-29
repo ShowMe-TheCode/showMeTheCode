@@ -1,8 +1,8 @@
 package com.sparta.showmethecode.user.service;
 
+import com.sparta.showmethecode.answer.dto.response.AnswerResponseDto;
 import com.sparta.showmethecode.common.dto.response.*;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
-import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
@@ -93,14 +93,14 @@ public class ReviewerService {
      * 내가 답변한 리뷰목록 조회 API
      */
     @Transactional(readOnly = true)
-    public PageResponseDto<ReviewAnswerResponseDto> getMyAnswerList(User reviewer, int page, int size, boolean isAsc, String sortBy) {
+    public PageResponseDto<AnswerResponseDto> getMyAnswerList(User reviewer, int page, int size, boolean isAsc, String sortBy) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<ReviewAnswerResponseDto> myAnswer = reviewAnswerRepository.findMyAnswer(reviewer.getId(), pageable);
+        Page<AnswerResponseDto> myAnswer = reviewAnswerRepository.findMyAnswer(reviewer.getId(), pageable);
 
-        return new PageResponseDto<ReviewAnswerResponseDto>(
+        return new PageResponseDto<AnswerResponseDto>(
                 myAnswer.getContent(),
                 myAnswer.getTotalPages(),
                 myAnswer.getTotalElements(),

@@ -6,10 +6,10 @@ import com.google.gson.GsonBuilder;
 import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.comment.domain.Comment;
 import com.sparta.showmethecode.language.domain.Language;
-import com.sparta.showmethecode.question.dto.request.ReviewRequestDto;
-import com.sparta.showmethecode.answer.dto.request.UpdateReviewDto;
+import com.sparta.showmethecode.question.dto.request.AddQuestionDto;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.comment.repository.CommentRepository;
+import com.sparta.showmethecode.question.dto.request.UpdateQuestionDto;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
@@ -124,8 +124,8 @@ public class ReviewRequestControllerTest {
     @DisplayName("1. 코드리뷰 요청")
     @Test
     public void 코드리뷰_요청() throws Exception {
-        ReviewRequestDto reviewRequestDto = new ReviewRequestDto("테스트_제목", "테스트_내용", "JAVA", reviewer.getId());
-        String dto = new GsonBuilder().create().toJson(reviewRequestDto);
+        AddQuestionDto addQuestionDto = new AddQuestionDto("테스트_제목", "테스트_내용", "JAVA", reviewer.getId());
+        String dto = new GsonBuilder().create().toJson(addQuestionDto);
 
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -243,8 +243,8 @@ public class ReviewRequestControllerTest {
     @DisplayName("4. 코드리뷰 요청 수정")
     @Test
     public void 코드리뷰_수정() throws Exception {
-        UpdateReviewDto updateReviewDto = new UpdateReviewDto("제목수정", "내용수정");
-        String dtoJson = new Gson().toJson(updateReviewDto);
+        UpdateQuestionDto updateQuestionDto = new UpdateQuestionDto("제목수정", "내용수정");
+        String dtoJson = new Gson().toJson(updateQuestionDto);
 
         String token = createTokenAndSpringSecuritySetting();
 

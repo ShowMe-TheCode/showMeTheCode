@@ -4,7 +4,7 @@ import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.notification.domain.Notification;
 import com.sparta.showmethecode.comment.domain.Comment;
 import com.sparta.showmethecode.language.domain.Timestamped;
-import com.sparta.showmethecode.question.dto.request.ReviewRequestUpdateDto;
+import com.sparta.showmethecode.question.dto.request.UpdateQuestionDto;
 import com.sparta.showmethecode.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -89,7 +89,7 @@ public class Question extends Timestamped {
         this.languageName = languageName.toUpperCase();
     }
 
-    public void update(ReviewRequestUpdateDto dto) {
+    public void update(UpdateQuestionDto dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
     }

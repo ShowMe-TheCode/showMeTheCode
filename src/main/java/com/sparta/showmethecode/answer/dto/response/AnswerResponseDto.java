@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 @Data
-public class ReviewAnswerResponseDto {
+public class AnswerResponseDto {
 
-    private Long reviewAnswerId;
-    private Long reviewRequestId;
+    private Long answerId;
+    private Long questionId;
 
     private String username;
     private String nickname;
@@ -26,11 +26,11 @@ public class ReviewAnswerResponseDto {
     private LocalDateTime createdAt;
 
     @QueryProjection
-    public ReviewAnswerResponseDto(
-            Long reviewAnswerId, Long reviewRequestId, String username, String nickname, String answerContent, double point, LocalDateTime createdAt
+    public AnswerResponseDto(
+            Long answerId, Long questionId, String username, String nickname, String answerContent, double point, LocalDateTime createdAt
     ) {
-        this.reviewAnswerId = reviewAnswerId;
-        this.reviewRequestId = reviewRequestId;
+        this.answerId = answerId;
+        this.questionId = questionId;
         this.username = username;
         this.nickname = nickname;
         this.answerContent = answerContent;

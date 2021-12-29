@@ -2,18 +2,18 @@ package com.sparta.showmethecode.question.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.sparta.showmethecode.comment.dto.response.CommentResponseDto;
-import com.sparta.showmethecode.answer.dto.response.ReviewAnswerResponseDto;
+import com.sparta.showmethecode.answer.dto.response.AnswerResponseDto;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ReviewRequestDetailResponseDto {
+public class QuestionDetailsResponseDto {
 
-    private Long reviewRequestId;
+    private Long questionId;
+    private Long questionUserId;
     private Long answerUserId;
     private String username;
     private String nickname;
@@ -24,21 +24,22 @@ public class ReviewRequestDetailResponseDto {
 
     private LocalDateTime createdAt;
 
-    private ReviewAnswerResponseDto reviewAnswer;
+    private AnswerResponseDto answer;
 
-    private List<CommentResponseDto> comments = new ArrayList<>();
+    private List<CommentResponseDto> comments;
 
 
     @QueryProjection
-    public ReviewRequestDetailResponseDto(
-            Long reviewRequestId, Long answerUserId,
+    public QuestionDetailsResponseDto(
+            Long questionId, Long questionUserId, Long answerUserId,
             String username, String nickname,
             String title, String content, QuestionStatus status, String languageName, LocalDateTime createdAt,
             List<CommentResponseDto> comments,
-            ReviewAnswerResponseDto reviewAnswer
+            AnswerResponseDto answer
     ) {
-        this.reviewRequestId = reviewRequestId;
+        this.questionId = questionId;
         this.answerUserId = answerUserId;
+        this.questionUserId = questionUserId;
         this.username = username;
         this.nickname = nickname;
         this.title = title;
@@ -47,17 +48,18 @@ public class ReviewRequestDetailResponseDto {
         this.languageName = languageName;
         this.createdAt = createdAt;
         this.comments = comments;
-        this.reviewAnswer = reviewAnswer;
+        this.answer = answer;
     }
 
-    public ReviewRequestDetailResponseDto(
-            Long reviewRequestId, Long answerUserId,
+    public QuestionDetailsResponseDto(
+            Long questionId, Long questionUserId, Long answerUserId,
             String username, String nickname,
             String title, String content, QuestionStatus status, String languageName, LocalDateTime createdAt,
             List<CommentResponseDto> comments
     ) {
-        this.reviewRequestId = reviewRequestId;
+        this.questionId = questionId;
         this.answerUserId = answerUserId;
+        this.questionUserId = questionUserId;
         this.username = username;
         this.nickname = nickname;
         this.title = title;
