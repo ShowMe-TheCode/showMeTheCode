@@ -54,14 +54,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getReviewerRankingTop5(boolean isDesc) {
+    public List<User> getReviewerRankingTop5() {
 
         List<User> users = query.select(user)
                 .from(user)
                 .join(user.languages, language).fetchJoin()
                 .where(user.role.eq(UserRole.ROLE_REVIEWER))
                 .limit(5)
-                .orderBy(isDesc ? user.evalTotal.desc() : user.evalTotal.desc())
+                .orderBy(user.evalTotal.desc(), user.answerCount.desc())
                 .fetch();
 
         return users;

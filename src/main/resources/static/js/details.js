@@ -20,8 +20,6 @@ function getDetails(id) {
 		contentType: "application/json;charset-utf-8;",
 		success: function (res) {
 
-			console.log(res)
-
 			let questionId = res['questionId']
 			let questionUserId = res['questionUserId']
 			let answer = res['answer']

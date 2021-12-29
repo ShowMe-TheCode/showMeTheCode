@@ -1,7 +1,9 @@
 package com.sparta.showmethecode;
 
 import com.sparta.showmethecode.answer.domain.Answer;
+import com.sparta.showmethecode.answer.dto.request.AddAnswerDto;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
+import com.sparta.showmethecode.answer.service.AnswerService;
 import com.sparta.showmethecode.comment.domain.Comment;
 import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.question.domain.Question;
@@ -15,6 +17,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 
 @Component
@@ -25,18 +28,22 @@ public class DataLoader implements CommandLineRunner {
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final AnswerService answerService;
+
+    private final EntityManager em;
 
     @Override
     public void run(String... args) throws Exception {
         User user1 = createNormalUser("test1", "코린이1", "1234");
         User user2 = createNormalUser("test2", "코린이2", "1234");
+
         User reviewerJava = createReviewer("reviewer-java", "JavaGod", "1234", "Java");
         User reviewerSpring = createReviewer("reviewer-spring", "SpringGenius", "1234", "Spring");
         User reviewerFlask = createReviewer("reviewer-flask", "EasyFlask", "1234", "Flask");
 
         Question questionJava = createQuestion(user1, reviewerJava, "Java가 너무 어려워요", "Java 안할래요 ..", "JAVA");
-        Question questionFlask = createQuestion(user2, reviewerJava, "Flask에서 라우팅은 어떻게 하는건가요 ?ㅠ", "후 ㅠㅠ", "FLASK");
-        Question questionSpring = createQuestion(user1, reviewerJava, "Spring 왜 써요 ?", "왜 ??", "SPRING");
+        Question questionFlask = createQuestion(user2, reviewerFlask, "Flask에서 라우팅은 어떻게 하는건가요 ?ㅠ", "후 ㅠㅠ", "FLASK");
+        Question questionSpring = createQuestion(user1, reviewerSpring, "Spring 왜 써요 ?", "왜 ??", "SPRING");
         for (int i=1;i<15;i++) {
             createQuestion(user1, reviewerSpring, "spring" + i, "spring xxx" + i, "SPRING");
         }
@@ -47,9 +54,14 @@ public class DataLoader implements CommandLineRunner {
             createQuestion(user1, reviewerJava, "java" + i, "java xxx" + i, "JAVA");
         }
 
-        addAnswer("answer1", questionJava, reviewerJava);
-        addAnswer("answer2", questionFlask, reviewerFlask);
-        addAnswer("answer3", questionSpring, reviewerSpring);
+//        addAnswer("answer1", questionJava, reviewerJava);
+//        addAnswer("answer2", questionFlask, reviewerFlask);
+//        addAnswer("answer3", questionSpring, reviewerSpring);
+
+        answerService.addAnswer(reviewerJava.getId(), questionJava.getId(), new AddAnswerDto("Java는 쉬워요"));
+        answerService.addAnswer(reviewerFlask.getId(), questionFlask.getId(), new AddAnswerDto("Flask는 쉬워요"));
+        answerService.addAnswer(reviewerSpring.getId(), questionSpring.getId(), new AddAnswerDto("Spring은 쉬워요"));
+
         addComment("댓글1", user1, questionJava);
         addComment("댓글2", user2, questionJava);
         addComment("댓글3", user1, questionJava);

@@ -10,7 +10,7 @@ function getDetails() {
 
 	$.ajax({
 		type: "GET",
-		url: base_url + `/questions/${id}/answer`,
+		url: base_url + `/questions/${id}`,
 		success: function (res) {
 			console.log(res);
 			let questionId = res["questionId"];
@@ -70,11 +70,9 @@ function addComment2() {
 
 	let data = { content: content };
 
-	console.log(data);
-
 	$.ajax({
 		type: "POST",
-		url: base_url + `/questions/${questionId}/comment`,
+		url: base_url + `/comments/${questionId}`,
 		contentType: "application/json;charset=utf-8;",
 		data: JSON.stringify(data),
 		success: function (res) {

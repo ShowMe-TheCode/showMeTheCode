@@ -77,7 +77,7 @@ function addReceivedReviewList(reviews) {
 	if (reviews.length > 0) {
 		for (let i = 0; i < reviews.length; i++) {
 			let tmp_html = `<li class="question-container">
-                                    <a onclick="showQuestionDetailsForReview('${reviews[i].reviewRequestId}')">
+                                    <a onclick="showQuestionDetailsForReview('${reviews[i]['questionId']}')">
                                         <div class="question-list__question  e-detail">
                                             <div class="question__info">
                                                 <div class="question__info-cover">
@@ -90,8 +90,6 @@ function addReceivedReviewList(reviews) {
                                                         <p class="question__body">
                                                            ${reviews[i].content}
                                                         </p>
-
-
                                                     </div>
                                                     <div class="question__info-footer">
                                                         <div class="footer__cover">
@@ -130,7 +128,7 @@ function addRequestReviewList(reviews) {
 	if (reviews.length > 0) {
 		for (let i = 0; i < reviews.length; i++) {
 			let tmp_html = `<li class="question-container">
-                                    <a onclick="showQuestionDetails('${reviews[i].reviewRequestId}')">
+                                    <a onclick="showQuestionDetails('${reviews[i]['questionId']}')">
                                         <div class="question-list__question  e-detail">
                                             <div class="question__info">
                                                 <div class="question__info-cover">

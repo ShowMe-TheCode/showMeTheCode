@@ -74,8 +74,8 @@ public class ReviewerService {
      * 리뷰어 랭킹 조회 API (상위 5명)
      */
     @Transactional(readOnly = true)
-    public List<ReviewerInfoDto> getReviewerTop5Ranking(boolean isDesc) {
-        return userRepository.getReviewerRankingTop5(isDesc).stream().map(
+    public List<ReviewerInfoDto> getReviewerTop5Ranking() {
+        return userRepository.getReviewerRankingTop5().stream().map(
                 u -> new ReviewerInfoDto(
                         u.getId(),
                         u.getUsername(),
