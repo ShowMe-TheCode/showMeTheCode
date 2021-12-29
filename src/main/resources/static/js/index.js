@@ -36,57 +36,12 @@ $(document).ready(function () {
 });
 
 // ========================================
-// 인기태그 목록
-// ========================================
-function getTag() {
-	$.ajax({
-		type: "GET",
-		url: base_url + "/questions/languages/count",
-		success: function (res) {
-			let tagname = "";
-			let count = 0;
-			let list = res.sort(function (a, b) {
-				return b.count - a.count;
-			});
-			for (tag in list) {
-				tagname = list[tag].languageName;
-				count = list[tag].count;
-				let temp_html = `<li class="popular-tags__tag ">
-
-                            <button onclick="getQuestionListByLanguage('${tagname}')" class="ac-button is-sm is-solid is-gray e-popular-tag ac-tag ac-tag--blue "><span class="ac-tag__hashtag">#&nbsp;</span><span class="ac-tag__name">${tagname} [${count}]</span></button>
-                            </li>`;
-				$("#tag-list").append(temp_html);
-			}
-		},
-	});
-}
-
-// ========================================
-// 언어별 코드리뷰 요청 목록보기
-// ========================================
-function getQuestionListByLanguage(language, page) {
-	$("#reviewQuestionList").empty();
-	$("#pagination-container").remove();
-
-	$.ajax({
-		type: "GET",
-		url: base_url + "/questions/language",
-		data: {
-			language: language,
-		},
-		success: function (res) {
-			makeQuestionListByLanguage(language, res);
-		},
-	});
-}
-
-// ========================================
 // 코드리뷰 요청 목록보기
 // ========================================
 function getQuestionList(lastId) {
-	// $("#reviewQuestionList").empty();
 	$("#readMoreBtnBox").empty()
 	let query = getParameterByName("query");
+	let language = getParameterByName("language");
 	let status = getParameterByName("status").toString().toUpperCase();
 
 	if (!query) {
@@ -99,10 +54,10 @@ function getQuestionList(lastId) {
 		data: {
 			lastId: lastId,
 			query: query,
+			language: language,
 			status: status,
 		},
 		success: function (res) {
-			console.log(res)
 			let lastId = res['lastId']
 			let lastPage = res['lastPage']
 
@@ -111,19 +66,10 @@ function getQuestionList(lastId) {
 	});
 }
 
-function move_page(page) {
-	let URLSearch = new URLSearchParams(location.search);
-	URLSearch.set("page", page);
-
-	let newParam = URLSearch.toString();
-
-	window.open(location.pathname + "?" + newParam, "_self");
-	// location.href = "?query="+query
-}
-
-function reviewSearch() {
+function reviewSearchByTitleAndContent() {
 	let query = $("#review-search-input").val();
 	let URLSearch = new URLSearchParams(location.search);
+	URLSearch.delete("language")
 	URLSearch.set("query", query);
 
 	let newParam = URLSearch.toString();
@@ -131,9 +77,17 @@ function reviewSearch() {
 	window.open(location.pathname + "?" + newParam, "_self");
 }
 
-function makeQuestionList(res, lastId, lastPage) {
+function reviewSearchByLanguage(language) {
+	let URLSearch = new URLSearchParams(location.search);
+	URLSearch.delete("query")
+	URLSearch.set("language", language);
 
-	console.log("makeQuestionList = " + lastId, lastPage)
+	let newParam = URLSearch.toString();
+
+	window.open(location.pathname + "?" + newParam, "_self");
+}
+
+function makeQuestionList(res, lastId, lastPage) {
 
 	let data = res["data"];
 
@@ -225,6 +179,32 @@ function getRankingAll() {
                                 </tr>`;
 				$("#rankingList").append(temp);
 			} // end-for
+		},
+	});
+}
+
+// ========================================
+// 인기태그 목록
+// ========================================
+function getTag() {
+	$.ajax({
+		type: "GET",
+		url: base_url + "/questions/languages/count",
+		success: function (res) {
+			let tagname = "";
+			let count = 0;
+			let list = res.sort(function (a, b) {
+				return b.count - a.count;
+			});
+			for (tag in list) {
+				tagname = list[tag]['languageName'];
+				count = list[tag].count;
+				let temp_html = `<li class="popular-tags__tag ">
+
+                            <button onclick="reviewSearchByLanguage('${tagname}')" class="ac-button is-sm is-solid is-gray e-popular-tag ac-tag ac-tag--blue "><span class="ac-tag__hashtag">#&nbsp;</span><span class="ac-tag__name">${tagname} [${count}]</span></button>
+                            </li>`;
+				$("#tag-list").append(temp_html);
+			}
 		},
 	});
 }

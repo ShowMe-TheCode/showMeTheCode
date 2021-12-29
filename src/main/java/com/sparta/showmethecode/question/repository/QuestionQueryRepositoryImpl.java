@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                                         .from(comment)
                                         .where(comment.question.eq(question)), "commentCount")
                 ))
-                .where(statusEqual(status))
+                .where(statusEquals(status))
                 .from(question);
 
         JPQLQuery<QuestionResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
@@ -75,7 +76,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, String keyword, QuestionStatus status) {
+    public List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, String keyword, String language, QuestionStatus status) {
         return query.select(new QQuestionResponseDto(
                         question.id,
                         question.requestUser.username,
@@ -92,8 +93,9 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 ))
                 .from(question)
                 .where(containingTitleOrComment(keyword))
+                .where(languageEquals(language))
                 .where(IdLessThen(lastId))
-                .where(statusEqual(status))
+                .where(statusEquals(status))
                 .orderBy(question.id.desc())
                 .limit(limit)
                 .fetch();
@@ -130,7 +132,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .from(question)
                 .join(question.requestUser, user)
                 .where(containingTitleOrComment(keyword))
-                .where(statusEqual(status))
+                .where(statusEquals(status))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(isAsc ? question.createdAt.desc() : question.createdAt.asc())
@@ -245,7 +247,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .from(question)
                 .join(question.requestUser, user)
                 .where(user.id.eq(id))
-                .where(statusEqual(status))
+                .where(statusEquals(status))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
@@ -275,7 +277,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .from(question)
                 .join(question.answerUser, user)
                 .where(user.id.eq(id))
-                .where(statusEqual(status))
+                .where(statusEquals(status))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
@@ -369,8 +371,12 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
         return Objects.isNull(keyword) || keyword.isEmpty() ? null : question.title.contains(keyword).or(question.content.contains(keyword));
     }
 
-    private BooleanExpression statusEqual(QuestionStatus status) {
+    private BooleanExpression statusEquals(QuestionStatus status) {
         return !Objects.isNull(status) && !status.equals(QuestionStatus.ALL) ? question.status.eq(status) : null;
+    }
+
+    private BooleanExpression languageEquals(String language) {
+        return !Objects.isNull(language) && StringUtils.hasText(language) ? question.languageName.eq(language) : null;
     }
 
     private BooleanExpression IdLessThen(Long id) {

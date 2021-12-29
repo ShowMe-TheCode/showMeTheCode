@@ -68,8 +68,6 @@ function getDetails(id) {
 
 function myQuestion(currentQuestionUserId, questionStatus, answerId) {
 
-	console.log(currentQuestionUserId, questionStatus, answerId)
-
 	if (localStorage.getItem("userId") == null) return;
 
 	let userId = localStorage.getItem("userId")

@@ -57,16 +57,22 @@ public class QuestionController {
     @GetMapping
     public ResponseEntity<PageResponseDtoV2> getReviewRequestListV2(
             @RequestParam(required = false) Long lastId,
-            @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String query, @RequestParam(required = false) String language,
             @RequestParam(required = false, defaultValue = "ALL") QuestionStatus status
     ) {
 
-        if (!Objects.isNull(query) && !StringUtils.hasText(query)) {
-            PageResponseDtoV2 result = reviewRequestService.getReviewRequestListV2(lastId, size, status);
+        if (!Objects.isNull(query) && StringUtils.hasText(query)) {
+            PageResponseDtoV2<QuestionResponseDto> result = reviewRequestService.searchByTitleOrCommentV2(lastId, size, query, status);
             return ResponseEntity.ok(result);
         }
 
-        PageResponseDtoV2<QuestionResponseDto> result = reviewRequestService.searchByTitleOrCommentV2(lastId, size, query, status);
+        if (!Objects.isNull(language) && StringUtils.hasText(language)) {
+            PageResponseDtoV2 result = reviewRequestService.searchByLanguageV2(lastId, size, language, status);
+            return ResponseEntity.ok(result);
+        }
+
+
+        PageResponseDtoV2 result = reviewRequestService.getReviewRequestListV2(lastId, size, status);
 
         return ResponseEntity.ok(result);
     }

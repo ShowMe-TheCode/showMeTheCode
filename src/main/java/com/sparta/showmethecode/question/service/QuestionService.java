@@ -58,7 +58,7 @@ public class QuestionService {
     @Transactional(readOnly = true)
     public PageResponseDtoV2<QuestionResponseDto> getReviewRequestListV2(Long lastId, int size, QuestionStatus status) {
 
-        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, size,null, status);
+        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, size,null, null, status);
 
         Long currentLastId = reviewRequestList.get(reviewRequestList.size()-1).getQuestionId();
         boolean lastPage = questionRepository.isLastPage(currentLastId);
@@ -73,7 +73,22 @@ public class QuestionService {
     public PageResponseDtoV2<QuestionResponseDto> searchByTitleOrCommentV2(
             Long lastId, int limit, String query, QuestionStatus status
     ) {
-        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, limit, query, status);
+        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, limit, query, null, status);
+
+        Long currentLastId = reviewRequestList.get(reviewRequestList.size()-1).getQuestionId();
+        boolean lastPage = questionRepository.isLastPage(currentLastId);
+
+        return new PageResponseDtoV2<QuestionResponseDto>(reviewRequestList, reviewRequestList.get(reviewRequestList.size()-1).getQuestionId(), lastPage);
+    }
+
+    /**
+     * 언어이름으로 검색 API V2
+     */
+    @Transactional(readOnly = true)
+    public PageResponseDtoV2<QuestionResponseDto> searchByLanguageV2(
+            Long lastId, int limit, String language, QuestionStatus status
+    ) {
+        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, limit, null, language, status);
 
         Long currentLastId = reviewRequestList.get(reviewRequestList.size()-1).getQuestionId();
         boolean lastPage = questionRepository.isLastPage(currentLastId);
