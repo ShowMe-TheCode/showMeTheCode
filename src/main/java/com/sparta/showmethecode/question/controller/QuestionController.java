@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,10 +61,12 @@ public class QuestionController {
             @RequestParam(required = false, defaultValue = "ALL") QuestionStatus status
     ) {
 
-        if (!Objects.isNull(query)) {
+        if (!Objects.isNull(query) && !StringUtils.hasText(query)) {
+            PageResponseDtoV2 result = reviewRequestService.getReviewRequestListV2(lastId, size, status);
+            return ResponseEntity.ok(result);
         }
 
-        PageResponseDtoV2 result = reviewRequestService.getReviewRequestListV2(lastId, size, status);
+        PageResponseDtoV2<QuestionResponseDto> result = reviewRequestService.searchByTitleOrCommentV2(lastId, size, query, status);
 
         return ResponseEntity.ok(result);
     }

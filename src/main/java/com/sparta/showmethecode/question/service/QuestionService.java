@@ -35,7 +35,6 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
-    private final CommentRepository reviewRequestCommentRepository;
 
     /**
      * 코드리뷰 요청목록 API
@@ -60,7 +59,7 @@ public class QuestionService {
     @Transactional(readOnly = true)
     public PageResponseDtoV2<QuestionResponseDto> getReviewRequestListV2(Long lastId, int size, QuestionStatus status) {
 
-        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, size, status);
+        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, size,null, status);
 
         Long currentLastId = reviewRequestList.get(reviewRequestList.size()-1).getQuestionId();
         boolean lastPage = questionRepository.isLastPage(currentLastId);
@@ -69,7 +68,22 @@ public class QuestionService {
     }
 
     /**
-     * 코드리뷰 검색 API
+     * 질문 검색 API V2
+     */
+    @Transactional(readOnly = true)
+    public PageResponseDtoV2<QuestionResponseDto> searchByTitleOrCommentV2(
+            Long lastId, int limit, String query, QuestionStatus status
+    ) {
+        List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, limit, query, status);
+
+        Long currentLastId = reviewRequestList.get(reviewRequestList.size()-1).getQuestionId();
+        boolean lastPage = questionRepository.isLastPage(currentLastId);
+
+        return new PageResponseDtoV2<QuestionResponseDto>(reviewRequestList, reviewRequestList.get(reviewRequestList.size()-1).getQuestionId(), lastPage);
+    }
+
+    /**
+     * 질문 검색 API
      */
     @Transactional(readOnly = true)
     public PageResponseDto<QuestionResponseDto> searchByTitleOrComment(
@@ -78,13 +92,14 @@ public class QuestionService {
             QuestionStatus status
     ) {
         Pageable pageable = makePageable(page, size, sortBy, isAsc);
-        Page<QuestionResponseDto> results = questionRepository.findSearchByTitleOrCommentAdvanced(keyword, pageable, isAsc, status);
+        Page<QuestionResponseDto> results = questionRepository.searchQuestionV1(keyword, pageable, isAsc, status);
 
         return new PageResponseDto<QuestionResponseDto>(
                 results.getContent(),
                 results.getTotalPages(), results.getTotalElements(), page, size
         );
     }
+
 
     /**
      * 코드리뷰 요청 API

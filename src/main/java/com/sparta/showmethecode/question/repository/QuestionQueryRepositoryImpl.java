@@ -76,7 +76,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, QuestionStatus status) {
+    public List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, String keyword, QuestionStatus status) {
         return query.select(new QQuestionResponseDto(
                         question.id,
                         question.requestUser.username,
@@ -92,6 +92,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                                         .where(comment.question.eq(question)), "commentCount")
                 ))
                 .from(question)
+                .where(containingTitleOrComment(keyword))
                 .where(IdLessThen(lastId))
                 .where(statusEqual(status))
                 .orderBy(question.id.desc())
@@ -110,7 +111,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Page<QuestionResponseDto> findSearchByTitleOrCommentAdvanced(String keyword, Pageable pageable, boolean isAsc, QuestionStatus status) {
+    public Page<QuestionResponseDto> searchQuestionV1(String keyword, Pageable pageable, boolean isAsc, QuestionStatus status) {
 
         List<QuestionResponseDto> results = query
                 .select(new QQuestionResponseDto(
@@ -156,36 +157,6 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .where(containingTitleOrComment(keyword));
 
         return PageableExecutionUtils.getPage(results, pageable, jpaQuery::fetchCount);
-    }
-
-    @Override
-    public Page<QuestionResponseDto> findSearchByTitleOrComment(String keyword, Pageable pageable) {
-
-        QueryResults<QuestionResponseDto> results
-                = query.select(new QQuestionResponseDto(
-                        question.id,
-                        user.username,
-                        user.nickname,
-                        question.title,
-                        question.content,
-                        question.languageName,
-                        question.status,
-                        question.createdAt,
-                        ExpressionUtils.as(JPAExpressions.select(count(comment.id))
-                        .from(comment)
-                        .where(comment.question.eq(question)), "commentCount")
-                 ))
-                .from(question)
-                .join(question.requestUser, user).fetchJoin()
-                .where(containingTitleOrComment(keyword))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchResults();
-
-        List<QuestionResponseDto> content = results.getResults();
-        long total = results.getTotal();
-
-        return new PageImpl<>(content, pageable, total);
     }
 
     @Override

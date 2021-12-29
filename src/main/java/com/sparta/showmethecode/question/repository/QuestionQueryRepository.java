@@ -16,12 +16,13 @@ public interface QuestionQueryRepository {
     // 코드리뷰 목록 조회
     Page<QuestionResponseDto> findReviewRequestList(Pageable pageable, boolean isAsc, QuestionStatus status);
     // 코드리뷰 목록 조회 v2 더보기 버튼 방식 (no offset)
-    List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, QuestionStatus status);
+    List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, String keyword, QuestionStatus status);
 
 
-    Page<QuestionResponseDto> findSearchByTitleOrComment(String keyword, Pageable pageable);
-    // 코드리뷰요청 목록 제목+내용 검색쿼리
-    Page<QuestionResponseDto> findSearchByTitleOrCommentAdvanced(String keyword, Pageable pageable, boolean isAsc, QuestionStatus status);
+    // 질문 검색
+    Page<QuestionResponseDto> searchQuestionV1(String keyword, Pageable pageable, boolean isAsc, QuestionStatus status);
+
+
     // 코드리뷰요청 상세정보 조회
     ReviewRequestDetailResponseDto getReviewRequestDetails(Long id);
     // 언어별 코드리뷰요청 카운팅
