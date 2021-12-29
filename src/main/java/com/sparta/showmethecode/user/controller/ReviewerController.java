@@ -83,7 +83,6 @@ public class ReviewerController {
             @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "true") Boolean isAsc
     ) {
-        log.info("getMyReceivedList status = {}", status.toString());
         --page;
         User user = userDetails.getUser();
 

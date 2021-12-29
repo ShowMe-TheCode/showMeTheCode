@@ -1,18 +1,75 @@
 $(document).ready(function () {
-	getDetails();
+	let id = getParameterByName("id");
+	getDetails(id);
 });
 
 /**
  * 상세정보
  */
-function getDetails() {
+function getDetails(id) {
+
+	$.ajax({
+		type: "GET",
+		url: base_url + `/questions/${id}`,
+		contentType: "application/json;charset-utf-8;",
+		success: function (res) {
+
+			console.log(res)
+
+			let questionId = res['questionId']
+			let questionUserId = res['questionUserId']
+			let answer = res['answer']
+			let date = new Date(res['createdAt']);
+			let title = `<h1>${res['title']}</h1>`
+			let status = res['status'];
+			let comments = res["comments"];
+
+			date = dateFormat(date);
+
+			$("#request-title").append(title);
+			$("#user-name").html(res['nickname']);
+			$("#created-at").html(`&nbsp;· ` + date);
+			$("#question-content").html(res['content']);
+
+
+			$("#sub-info__content")
+				.append(`<button class="ac-button is-sm is-solid is-gray  ac-tag ac-tag--blue ">
+								<span class="ac-tag__hashtag">#&nbsp;</span><span class="ac-tag__name">${res['languageName']}</span></button>`);
+
+			$("#question-status").text(status);
+
+			$("#question-comment-content-box").empty();
+			if (comments.length > 0) {
+				$("#comment-section").show();
+				addCommentHtml(comments);
+			}
+
+			if (answer != null) { // 답변이 있는 경우 편집이 불가능하도록 <p> 태그 내에 답변 내용을 랜더링
+
+				let answer = res['answer']
+				$('#answer-date').html(answer['createdAt'])
+				$('#answer-nickname').html(answer['nickname'])
+				$('#answer-content').html(answer['content']).show()
+
+				$('#send-answer-btn-box').hide()
+				$('#answer-markdown-box').hide()
+			} else { // 답변이 없는 경우 답변이 가능하도록 textarea (markdown폼)을 랜더링
+				$('#answer-content').hide()
+
+				$('#answer-markdown-box').show()
+				$('#send-answer-btn-box').show()
+			}
+		},
+	});
+}
+
+function getDetails2() {
 	let id = getParameterByName("id");
 
 	$.ajax({
 		type: "GET",
 		url: base_url + `/questions/${id}`,
 		success: function (res) {
-			console.log(res);
 			let questionId = res["questionId"];
 			let username = res["username"];
 			let title = res["title"];
@@ -61,12 +118,12 @@ function getDetails() {
 	});
 }
 
-function addComment2() {
+function addComment() {
 	if (localStorage.getItem("mytoken") == null) {
 		return alert("로그인 후 이용해주세요.");
 	}
 	let questionId = getParameterByName("id");
-	let content = CKEDITOR.instances["content-answer2"].getData();
+	let content = CKEDITOR.instances["comment-markdown"].getData();
 
 	let data = { content: content };
 
@@ -85,9 +142,9 @@ function addComment2() {
 /**
  * 답변하기
  */
-function addAnswer() {
+function sendAnswer() {
 	let questionId = getParameterByName("id");
-	let content = CKEDITOR.instances["content-answer"].getData();
+	let content = CKEDITOR.instances["answer-markdown"].getData();
 
 	let data = {
 		content: content,
@@ -115,7 +172,6 @@ function reject() {
 		type: "POST",
 		url: base_url + `/answers/${id}/reject`,
 		success: function (res) {
-			console.log(res);
 			alert("리뷰요청을 거절했습니다.");
 			location.href = "mypage.html";
 		},

@@ -34,13 +34,13 @@
 	<body id="inflearn" class="question_detail pg___questions_detail is_logged_in is-student-user">
 		<script>
 			$(function () {
-				CKEDITOR.replace("content-answer", {
+				CKEDITOR.replace("answer-markdown", {
 					fontSize_defaultLabel: "12",
 					skin: "minimalist",
 					language: "ko",
 				});
 
-				CKEDITOR.replace("content-answer2", {
+				CKEDITOR.replace("comment-markdown", {
 					fontSize_defaultLabel: "12",
 					skin: "minimalist",
 					language: "ko",
@@ -117,14 +117,15 @@
 							</div>
 							<div class="community-post-info__content">
 								<div class="content__body markdown-body">
-									<div id="received_content">요청된 리뷰내용</div>
+									<div id="question-content">요청된 리뷰내용</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</section>
 
-				<section id="answer-section2" class="community-post-detail__section community-post-detail__answer">
+				<!-- 답변 -->
+				<section id="answer-section" class="community-post-detail__section community-post-detail__answer">
 					<div class="section__content">
 						<div class="answer-info">
 							<div class="answer-info__header"></div>
@@ -136,10 +137,27 @@
 										<div class="comment__card">
 											<div class="comment__header flex-row">
 												<img class="comment__user-profile" src="images/default_profile.png" alt="[아이디] 프로필"/>
+												<div class="flex-column">
+													<div class="flex-row">
+														<a id="answer-nickname" class="comment__user-name"> </a>
+													</div>
+													<span id="answer-date" class="comment__updated-at"> </span>
+												</div>
 											</div>
 
 											<div class="comment__body markdown-body">
-												<p id="answer-content2"></p>
+												<div id="answer-markdown-box">
+													<textarea name="answer-markdown" class="form-control" id="answer-markdown">
+													</textarea>
+												</div>
+												<p id="answer-content"></p>
+											</div>
+											<div class="comment__footer flex-row">
+												<div id="send-answer-btn-box" class="flex-right">
+													<button onclick="sendAnswer()" class="ac-button is-md is-solid is-primary e-post-comment">
+														답변등록
+													</button>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -149,56 +167,35 @@
 					</div>
 				</section>
 
+				<!-- 댓글 -->
 				<section class="community-post-detail__section community-post-detail__answer">
 					<div class="section__content">
 						<div class="answer-info">
+							<div class="answer-info__header">
+								<div class="header__title" id="question-comment-qty">
+									총 0개의 댓글이 달렸습니다
+								</div>
+							</div>
+
 							<div class="community-post-info__content">
 								<div class="content__body">
+									<div id="question-comment-content-box" class="answer__comment" data-id="122943"></div>
+
 									<div id="question-comment-form-box" class="answer__comment" data-id="new">
-										<div class="comment__card comment__card--new">
-											<div class="comment__header flex-row">
-												<div class="flex-column">
-													<h5 class="comment__user-name">리뷰작성</h5>
-												</div>
-											</div>
-
-											<div class="comment__body markdown-body" id="content-answer-markdown-box">
-												<textarea name="content-answer" class="form-control" id="content-answer">
-												</textarea>
-											</div>
-
-											<div class="question">
-												<div class="question__info">
-													<p class="question__body" id="content-answer-text"></p>
-												</div>
-											</div>
-
-											<div class="comment__footer flex-row">
-												<div class="flex-right">
-													<button id="addAnswerBtn" onclick="addAnswer()" class="ac-button is-md is-solid is-primary e-post-comment">
-														리뷰등록
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div id="question-comment-form-box2" class="answer__comment" data-id="new">
 										<div class="comment__card comment__card--new">
 											<div class="comment__header flex-row">
 												<img class="comment__user-profile" src="images/default_profile.png" alt="[아이디] 프로필"/>
 												<div class="flex-column">
-													<h5 class="comment__user-name">
-														댓글을 작성해주세요.
-													</h5>
+													<h5 class="comment__user-name">댓글을 작성해주세요.</h5>
 												</div>
 											</div>
 											<div class="comment__body markdown-body">
-												<textarea name="content-answer2" class="form-control" id="content-answer2">
+												<textarea name="comment-markdown" class="form-control" id="comment-markdown">
 												</textarea>
 											</div>
 											<div class="comment__footer flex-row">
 												<div class="flex-right">
-													<button onclick="addComment2()" class="ac-button is-md is-solid is-primary e-post-comment">
+													<button onclick="addComment()" class="ac-button is-md is-solid is-primary e-post-comment">
 														댓글등록
 													</button>
 												</div>

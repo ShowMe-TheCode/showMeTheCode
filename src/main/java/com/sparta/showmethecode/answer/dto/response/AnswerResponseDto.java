@@ -19,7 +19,7 @@ public class AnswerResponseDto {
     private String username;
     private String nickname;
 
-    private String answerContent;
+    private String content;
 
     private double point;
 
@@ -27,13 +27,13 @@ public class AnswerResponseDto {
 
     @QueryProjection
     public AnswerResponseDto(
-            Long answerId, Long questionId, String username, String nickname, String answerContent, double point, LocalDateTime createdAt
+            Long answerId, Long questionId, String username, String nickname, String content, double point, LocalDateTime createdAt
     ) {
         this.answerId = answerId;
         this.questionId = questionId;
         this.username = username;
         this.nickname = nickname;
-        this.answerContent = answerContent;
+        this.content = content;
         this.point = point;
         this.createdAt = createdAt;
     }
