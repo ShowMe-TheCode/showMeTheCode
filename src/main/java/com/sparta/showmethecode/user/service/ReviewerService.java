@@ -58,7 +58,7 @@ public class ReviewerService {
                         u.getNickname(),
                         u.getLanguages().stream().map(l -> new String(l.getName())).collect(Collectors.toList()),
                         u.getAnswerCount(),
-                        u.getEvalTotal() / u.getEvalCount()
+                        u.getEvalCount() > 0 ? u.getEvalTotal() / u.getEvalCount() : 0.0
                 )
         ).collect(Collectors.toList());
 

@@ -39,7 +39,7 @@ public class UserDaoImpl implements UserDao {
 
         List<User> content = query.select(user)
                 .from(user)
-                .where(user.role.eq(UserRole.ROLE_REVIEWER).and(user.evalTotal.gt(0)))
+                .where(user.role.eq(UserRole.ROLE_REVIEWER).and(user.answerCount.gt(0)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(isAsc ? user.evalTotal.desc() : user.evalTotal.desc())

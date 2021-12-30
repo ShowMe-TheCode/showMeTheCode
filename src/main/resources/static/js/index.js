@@ -10,7 +10,6 @@ $(document).ready(function () {
 	$("#reviewQuestionList").empty();
 	getQuestionList(null);
 	getRanking();
-	getRankingAll();
 	getTag();
 
 	$("ul.status")
@@ -26,8 +25,6 @@ $(document).ready(function () {
 		$("ul.status li").removeClass("active");
 		$(this).addClass("active");
 		let status = $(this).data("status");
-
-		console.log(status)
 
 		if (status.toString() === "ALL") {
 			URLSearch.delete("status")
@@ -158,39 +155,6 @@ function showQuestionDetails(id) {
 }
 
 // ========================================
-// 리뷰어 랭킹 - 전체 보기
-// ========================================
-function getRankingAll() {
-	$("#rankingList").empty();
-
-	$.ajax({
-		type: "GET",
-		url: base_url + "/reviewers/rank",
-		success: function (res) {
-			let data = res["data"];
-
-			for (let i = 0; i < data.length; i++) {
-				let username = data[i]["username"];
-				let nickname = data[i]["nickname"];
-				let languages = data[i]["languages"];
-				let answerCount = data[i]["answerCount"];
-				let point = data[i]["point"];
-				let ranking = i + 1;
-
-				let temp = ` <tr>
-                                  <th scope="row">${ranking} 위</th>
-                                  <td>${nickname} 님</td>
-                                  <td>${languages}</td>
-                                  <td>${answerCount}</td>
-                                  <td>${point}</td>
-                                </tr>`;
-				$("#rankingList").append(temp);
-			} // end-for
-		},
-	});
-}
-
-// ========================================
 // 인기태그 목록
 // ========================================
 function getTag() {
@@ -225,9 +189,6 @@ function getRanking() {
 		url: base_url + "/reviewers/top",
 		data: {},
 		success: function (res) {
-
-			console.log(res);
-
 			for (let i = 0; i < res.length; i++) {
 				let ranking = i + 1;
 				let username = res[i]["username"];
