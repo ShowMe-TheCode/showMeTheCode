@@ -70,19 +70,22 @@ function myQuestion(currentQuestionUserId, questionStatus, answerId) {
 
 	let userId = localStorage.getItem("userId")
 	if (userId.toString() === currentQuestionUserId.toString()) {
-		console.log("주인임")
 		if (questionStatus === "미해결") {
 			$("#changeReviewContentBtn").show();
 			$("#changeReviewerBtn").show();
 			$("#deleteReviewBtn").show();
 		} else if (questionStatus === "해결됨") {
-			$("#changeReviewContentBtn").show();
+			$("#changeReviewContentBtn").hide();
+			$("#changeReviewerBtn").hide();
+			$("#deleteReviewBtn").hide();
 			let tmp_html = `<div class="flex-row feature__status e-status e-hover-toggle" data-status="1">
-									<button onclick="showEvaluateForm('${answerId}')" class="ac-button is-md is-solid is-success button-rounded">평가하기</button>
-								</div>`;
-			$("#evaluateBtnBox").append(tmp_html);
+								<button onclick="showEvaluateForm('${answerId}')" class="ac-button is-md is-solid is-primary button-rounded undefined">평가하기</button>
+							</div>`
+			$("#request-status-box").append(tmp_html);
 		} else if (questionStatus === "평가됨") {
-			$("#changeReviewContentBtn").show();
+			$("#changeReviewContentBtn").hide();
+			$("#changeReviewerBtn").hide();
+			$("#deleteReviewBtn").hide();
 		}
 	} else {
 		console.log("주인아님")
@@ -93,30 +96,6 @@ function myQuestion(currentQuestionUserId, questionStatus, answerId) {
 	}
 }
 
-
-function evaluate_confirm(answerId) {
-	let questionId = getParameterByName("id");
-	let slider = document.getElementById("star_value");
-	let point = slider.value / 2;
-	console.log("점수: ", slider.value / 2);
-
-	let data = { point: point };
-
-	$.ajax({
-		type: "POST",
-		url: base_url + `/questions/${questionId}/eval/${answerId}`,
-		contentType: "application/json;charset=utf-8;",
-		data: JSON.stringify(data),
-		success: function (res) {
-			alert("답변에 대한 평가를 완료했습니다.");
-			location.href = "mypage.html";
-		},
-	});
-}
-
-function drawStar(target) {
-	document.querySelector(`.star span`).style.width = `${target.value * 10}%`;
-}
 
 // ========================================
 // 댓글 랜더링
@@ -166,7 +145,7 @@ function addAnswerHtml(answer) {
 	let username = answer["username"];
 	let nickname = answer["nickname"];
 
-	let content = answer["answerContent"];
+	let content = answer["content"];
 	let point = answer["point"];
 	let createdAt = answer["createdAt"];
 
@@ -200,7 +179,7 @@ function addComment() {
 }
 
 // ========================================
-// 평가하기 폼 띄우기
+// 평가하기
 // ========================================
 function showEvaluateForm(answerId) {
 	temp_html = `<div id="eval_modal" class="modal ">
@@ -212,7 +191,7 @@ function showEvaluateForm(answerId) {
 						<span class="header__logo">
 						  <h2 style="margin: auto">평가하기</h2>
 						</span>
-						<h5>xxx님의 코드리뷰를 평가해주세요!</h5>
+						<h5>코드리뷰에 대한 평가를 해주세요 !!</h5>
 						<div style="height: 150px">
                         <span class="star">
                           ★★★★★
@@ -220,7 +199,7 @@ function showEvaluateForm(answerId) {
                           <input id="star_value" type="range" oninput="drawStar(this)" value="1" step="1" min="0" max="10">
                         </span>
                         </div>
-                        <button type="button" onclick="evaluate_confirm('${answerId}')" class="ac-button is-md is-solid is-primary form__button e-sign-in">평가하기</button>
+                        <button type="button" onclick="evaluate(${answerId})" class="ac-button is-md is-solid is-primary form__button e-sign-in">평가하기</button>
 				
 					  </article>
 					  </div>
@@ -229,8 +208,35 @@ function showEvaluateForm(answerId) {
 	$("body").append(temp_html);
 }
 
+function evaluate(answerId) {
+	console.log("evaluate 호출 = " + answerId)
+	let questionId = getParameterByName("id");
+	console.log(questionId)
+	let slider = document.getElementById("star_value");
+	console.log(slider)
+	let point = slider.value / 2;
+	console.log(point)
+
+	let data = { point: point };
+
+	$.ajax({
+		type: "POST",
+		url: base_url + `/answers/${questionId}/eval/${answerId}`,
+		contentType: "application/json;charset=utf-8;",
+		data: JSON.stringify(data),
+		success: function (res) {
+			alert("답변에 대한 평가를 완료했습니다.");
+			location.href = "mypage.html";
+		},
+	});
+}
+
 function close_eval_modal() {
 	$("#eval_modal").remove();
+}
+
+function drawStar(target) {
+	document.querySelector(`.star span`).style.width = `${target.value * 10}%`;
 }
 
 // ========================================

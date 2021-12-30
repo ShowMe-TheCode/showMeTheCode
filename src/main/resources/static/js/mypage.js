@@ -4,14 +4,15 @@ $(document).ready(function () {
 
 	$("#mypage-menu-list").empty();
 	if (mytoken != null && myAuthority != null) {
-		if (myAuthority === "ROLE_USER") {
+		if (myAuthority === "ROLE_USER") { // 일반 사용자의 경우 메뉴 탭 구성
 			let tmp_html = `<li id="menu-request">
                                     <a class="btn_wrap  " onclick="myRequestQuestionList('ALL')">
                                         <span>내가 요청한 코드리뷰 목록</span>
                                     </a>
                                 </li>`;
 			$("#mypage-menu-list").append(tmp_html);
-		} else if (myAuthority === "ROLE_REVIEWER") {
+
+		} else if (myAuthority === "ROLE_REVIEWER") { // 리뷰어의 경우 메뉴 탭 구성
 			let tmp_html = `<li id="menu-received">
                                     <a class="btn_wrap " onclick="myReceivedQuestionList('ALL')">
                                         <span>나에게 요청된 코드리뷰 목록</span>
@@ -31,6 +32,7 @@ $(document).ready(function () {
 // 요청받은 코드리뷰 목록 조회
 // ========================================
 function myReceivedQuestionList(condition) {
+	$('#mypage-review-list-box').show()
 	$("#condition-box").empty();
 	let tmp_html = `<button onclick="myReceivedQuestionList('ALL')" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
                     <button onclick="myReceivedQuestionList('SOLVE')" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
@@ -41,7 +43,6 @@ function myReceivedQuestionList(condition) {
 		type: "GET",
 		url: base_url + `/reviewers/questions?status=${condition}`,
 		success: function (res) {
-			console.log(res);
 			$("#question-list").empty();
 			let reviews = res["data"];
 			addReceivedReviewList(reviews);
@@ -53,6 +54,7 @@ function myReceivedQuestionList(condition) {
 // 내가 요청한 코드리뷰 목록
 // ========================================
 function myRequestQuestionList(condition) {
+	$('#mypage-review-list-box').show()
 	$("#condition-box").empty();
 	let tmp_html = `<button onclick="myRequestQuestionList('ALL')" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
                     <button onclick="myRequestQuestionList('SOLVE')" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
