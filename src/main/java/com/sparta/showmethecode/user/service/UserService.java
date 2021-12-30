@@ -1,5 +1,6 @@
 package com.sparta.showmethecode.user.service;
 
+import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.common.dto.response.PageResponseDto;
 import com.sparta.showmethecode.security.JwtUtils;
@@ -13,7 +14,6 @@ import com.sparta.showmethecode.user.dto.request.SignupRequestDto;
 import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.user.dto.response.SigninResponseDto;
 import com.sparta.showmethecode.language.repository.LanguageRepository;
-import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
-    private final AnswerRepository reviewAnswerRepository;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
@@ -100,21 +99,16 @@ public class UserService {
 
 
     /**
-     * 내가 등록한 리뷰요청목록 조회 API
+     * 내가 등록한 리뷰요청목록 조회 API v2 (더보기 방식)
      */
-    public PageResponseDto<QuestionResponseDto> getMyReviewRequestList(User user, int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {
-        Pageable pageable = makePageable(page, size, sortBy, isAsc);
+    public PageResponseDtoV2<QuestionResponseDto> getMyReviewRequestListV2(User user, Long lastId, int limit, QuestionStatus status) {
 
-        Page<QuestionResponseDto> reviewRequests = questionRepository.findMyReviewRequestList(user.getId(), pageable, status);
+        List<QuestionResponseDto> result = questionRepository.findMyQuestionV2(user.getId(), lastId, limit, status);
 
-        log.info("getMyReviewRequestList = {}", reviewRequests.getContent());
+        Long currentLastId = result.get(result.size() - 1).getQuestionId();
+        boolean lastPage = questionRepository.isLastPage(currentLastId);
 
-        return new PageResponseDto<QuestionResponseDto>(
-                reviewRequests.getContent(),
-                reviewRequests.getTotalPages(),
-                reviewRequests.getTotalElements(),
-                page, size
-        );
+        return new PageResponseDtoV2<QuestionResponseDto>(result, currentLastId, lastPage);
     }
 
     private Pageable makePageable(int page, int size, String sortBy, boolean isAsc) {

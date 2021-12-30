@@ -6,7 +6,7 @@ $(document).ready(function () {
 	if (mytoken != null && myAuthority != null) {
 		if (myAuthority === "ROLE_USER") { // 일반 사용자의 경우 메뉴 탭 구성
 			let tmp_html = `<li id="menu-request">
-                                    <a class="btn_wrap  " onclick="myRequestQuestionList('ALL')">
+                                    <a class="btn_wrap  " onclick="myQuestionList('ALL', null)">
                                         <span>내가 요청한 코드리뷰 목록</span>
                                     </a>
                                 </li>`;
@@ -14,12 +14,12 @@ $(document).ready(function () {
 
 		} else if (myAuthority === "ROLE_REVIEWER") { // 리뷰어의 경우 메뉴 탭 구성
 			let tmp_html = `<li id="menu-received">
-                                    <a class="btn_wrap " onclick="myReceivedQuestionList('ALL')">
+                                    <a class="btn_wrap " onclick="myReceivedQuestionList('ALL', null)">
                                         <span>나에게 요청된 코드리뷰 목록</span>
                                     </a>
                                 </li>
                                 <li id="menu-request">
-                                    <a class="btn_wrap  " onclick="myRequestQuestionList('ALL')">
+                                    <a class="btn_wrap  " onclick="myQuestionList('ALL', null)">
                                         <span>내가 요청한 코드리뷰 목록</span>
                                     </a>
                                 </li>`;
@@ -31,21 +31,34 @@ $(document).ready(function () {
 // ========================================
 // 요청받은 코드리뷰 목록 조회
 // ========================================
-function myReceivedQuestionList(condition) {
+function myReceivedQuestionList(condition, lastId) {
+	if (lastId === null) $('#question-list').empty()
+	$("#readMoreBtnBox").empty()
 	$('#mypage-review-list-box').show()
 	$("#condition-box").empty();
-	let tmp_html = `<button onclick="myReceivedQuestionList('ALL')" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
-                    <button onclick="myReceivedQuestionList('SOLVE')" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
-                    <button onclick="myReceivedQuestionList('UNSOLVE')" class="button is-link is-rounded">미해결</button>`;
+	let tmp_html = `<button onclick="myReceivedQuestionList('ALL', null)" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
+                    <button onclick="myReceivedQuestionList('SOLVE', null)" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
+                    <button onclick="myReceivedQuestionList('UNSOLVE', null)" class="button is-link is-rounded">미해결</button>`;
 	$("#condition-box").append(tmp_html);
 
 	$.ajax({
 		type: "GET",
-		url: base_url + `/reviewers/questions?status=${condition}`,
+		url: base_url + `/reviewers/questions`,
+		data: {
+			lastId: lastId,
+			status: condition
+		},
 		success: function (res) {
-			$("#question-list").empty();
+			let lastId = res['lastId']
+			let lastPage = res['lastPage']
+
 			let reviews = res["data"];
 			addReceivedReviewList(reviews);
+
+			if (!lastPage) {
+				let readMoreBtn = `<button onclick="myReceivedQuestionList('${condition}', ${lastId})"  class="button is-large is-fullwidth">더보기</button>`
+				$("#readMoreBtnBox").append(readMoreBtn)
+			}
 		},
 	});
 }
@@ -53,21 +66,34 @@ function myReceivedQuestionList(condition) {
 // ========================================
 // 내가 요청한 코드리뷰 목록
 // ========================================
-function myRequestQuestionList(condition) {
+function myQuestionList(condition, lastId) {
+	if (lastId === null) $('#question-list').empty()
+	$("#readMoreBtnBox").empty()
 	$('#mypage-review-list-box').show()
 	$("#condition-box").empty();
-	let tmp_html = `<button onclick="myRequestQuestionList('ALL')" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
-                    <button onclick="myRequestQuestionList('SOLVE')" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
-                    <button onclick="myRequestQuestionList('UNSOLVE')" class="button is-link is-rounded">미해결</button>`;
+	let tmp_html = `<button onclick="myQuestionList('ALL', null)" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
+                    <button onclick="myQuestionList('SOLVE', null)" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
+                    <button onclick="myQuestionList('UNSOLVE', null)" class="button is-link is-rounded">미해결</button>`;
 	$("#condition-box").append(tmp_html);
 
 	$.ajax({
 		type: "GET",
-		url: base_url + `/users/requests?status=${condition}`,
+		url: base_url + `/users/requests`,
+		data: {
+			lastId: lastId,
+			status: condition
+		},
 		success: function (res) {
-			$("#question-list").empty();
+			let lastId = res['lastId']
+			let lastPage = res['lastPage']
+
 			let reviews = res["data"];
 			addRequestReviewList(reviews);
+
+			if (!lastPage) {
+				let readMoreBtn = `<button onclick="myQuestionList('${condition}', ${lastId})"  class="button is-large is-fullwidth">더보기</button>`
+				$("#readMoreBtnBox").append(readMoreBtn)
+			}
 		},
 	});
 }

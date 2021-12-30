@@ -84,16 +84,13 @@ public class UserController {
      * 내가 등록한 리뷰요청목록 조회 API
      */
     @GetMapping("/requests")
-    public ResponseEntity<PageResponseDto> getMyRequestList(
-            @RequestParam QuestionStatus status,
-            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "true") Boolean isAsc,
+    public ResponseEntity<PageResponseDtoV2> getMyRequestList(
+            @RequestParam QuestionStatus status, @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        --page;
 
         User user = userDetails.getUser();
-        PageResponseDto response = userService.getMyReviewRequestList(user, page, size, sortBy, isAsc, status);
+        PageResponseDtoV2 response = userService.getMyReviewRequestListV2(user, lastId, size, status);
 
         return ResponseEntity.ok(response);
     }

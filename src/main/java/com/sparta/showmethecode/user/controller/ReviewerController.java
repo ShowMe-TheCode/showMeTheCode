@@ -2,6 +2,7 @@ package com.sparta.showmethecode.user.controller;
 
 import com.sparta.showmethecode.answer.dto.response.AnswerResponseDto;
 import com.sparta.showmethecode.common.dto.response.PageResponseDto;
+import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.security.UserDetailsImpl;
 import com.sparta.showmethecode.user.domain.User;
@@ -77,16 +78,13 @@ public class ReviewerController {
      * 나에게 요청된 리뷰목록 조회
      */
     @GetMapping("/questions")
-    public ResponseEntity<PageResponseDto> getMyReceivedList(
+    public ResponseEntity<PageResponseDtoV2> getMyReceivedList(
             @RequestParam QuestionStatus status,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "true") Boolean isAsc
+            @RequestParam(required = false) Long lastId, @RequestParam(defaultValue = "10") int size
     ) {
-        --page;
         User user = userDetails.getUser();
-
-        PageResponseDto response = reviewerService.getMyReceivedRequestList(user, page, size, sortBy, isAsc, status);
+        PageResponseDtoV2 response = reviewerService.getMyReceivedRequestList(user, lastId, size, status);
 
         return ResponseEntity.ok(response);
     }

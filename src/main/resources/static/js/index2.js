@@ -92,10 +92,7 @@ function getQuestionList() {
 	$("#reviewQuestionList").empty();
 	let currentPage = getParameterByName("page");
 	let query = getParameterByName("query");
-	let sort = getParameterByName("sortBy");
 	let status = getParameterByName("status").toString().toUpperCase();
-	let isAsc = getParameterByName("isAsc");
-	let size = getParameterByName("size");
 
 	if (!query) {
 		query = null;

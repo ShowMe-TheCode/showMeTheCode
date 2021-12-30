@@ -112,16 +112,12 @@ public class ReviewerService {
     /**
      * 나에게 요청된 리뷰 조회
      */
-    public PageResponseDto getMyReceivedRequestList(User user, int page, int size, String sortBy, boolean isAsc, QuestionStatus status) {
-        Pageable pageable = makePageable(page, size, sortBy, isAsc);
-        Page<QuestionResponseDto> reviewRequests = questionRepository.findMyReceivedRequestList(user.getId(), pageable, status);
+    public PageResponseDtoV2 getMyReceivedRequestList(User user, Long lastId, int limit, QuestionStatus status) {
+        List<QuestionResponseDto> result = questionRepository.findReceivedQuestionV2(user.getId(), lastId, limit, status);
+        Long currentLastId = result.get(result.size() - 1).getQuestionId();
+        boolean lastPage = questionRepository.isLastPage(currentLastId);
 
-        return new PageResponseDto<QuestionResponseDto>(
-                reviewRequests.getContent(),
-                reviewRequests.getTotalPages(),
-                reviewRequests.getTotalElements(),
-                page, size
-        );
+        return new PageResponseDtoV2<QuestionResponseDto>(result, currentLastId, lastPage);
     }
 
     /**

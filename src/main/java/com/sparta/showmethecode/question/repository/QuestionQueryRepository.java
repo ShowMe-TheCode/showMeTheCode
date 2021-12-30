@@ -27,10 +27,11 @@ public interface QuestionQueryRepository {
     QuestionDetailsResponseDto getReviewRequestDetails(Long id);
     // 언어별 코드리뷰요청 카운팅
     List<ReviewRequestLanguageCount> getReviewRequestLanguageCountGroupByLanguage();
-    // 자신이 요청한 리뷰 조회
-    Page<QuestionResponseDto> findMyReviewRequestList(Long userId, Pageable pageable, QuestionStatus status);
-    // 자신에게 요청된 리뷰 조회
-    Page<QuestionResponseDto> findMyReceivedRequestList(Long userId, Pageable pageable, QuestionStatus status);
+
+    // 자신이 요청한 리뷰 조회 V2
+    List<QuestionResponseDto> findMyQuestionV2(Long userId, Long lastId, int limit, QuestionStatus status);
+    // 자신에게 요청된 리뷰 조회 V2
+    List<QuestionResponseDto> findReceivedQuestionV2(Long userId, Long lastId, int limit, QuestionStatus status);
 
     // 내가 요청한 리뷰가 맞는지 체크
     boolean isMyReviewRequest(Long reviewId, User user);

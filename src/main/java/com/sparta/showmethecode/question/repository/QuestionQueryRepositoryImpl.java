@@ -227,9 +227,9 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Page<QuestionResponseDto> findMyReviewRequestList(Long id, Pageable pageable, QuestionStatus status) {
+    public List<QuestionResponseDto> findMyQuestionV2(Long id, Long lastId, int limit, QuestionStatus status) {
 
-        JPAQuery<QuestionResponseDto> jpaQuery = query
+        return query
                 .select(new QQuestionResponseDto(
                         question.id,
                                 user.username,
@@ -246,20 +246,17 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 )
                 .from(question)
                 .join(question.requestUser, user)
+                .where(IdLessThen(lastId))
                 .where(user.id.eq(id))
                 .where(statusEquals(status))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
-
-        JPQLQuery<QuestionResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
-
-        long totalCount = pagination.fetchCount();
-        return new PageImpl<>(pagination.fetch(), pageable, totalCount);
+                .orderBy(question.id.desc())
+                .limit(limit)
+                .fetch();
     }
 
     @Override
-    public Page<QuestionResponseDto> findMyReceivedRequestList(Long id, Pageable pageable, QuestionStatus status) {
-        JPAQuery<QuestionResponseDto> jpaQuery = query
+    public List<QuestionResponseDto> findReceivedQuestionV2(Long id, Long lastId, int limit, QuestionStatus status) {
+        return query
                 .select(new QQuestionResponseDto(
                         question.id,
                                 user.username,
@@ -276,16 +273,12 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 )
                 .from(question)
                 .join(question.answerUser, user)
+                .where(IdLessThen(lastId))
                 .where(user.id.eq(id))
                 .where(statusEquals(status))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
-
-
-        JPQLQuery<QuestionResponseDto> pagination = getQuerydsl().applyPagination(pageable, jpaQuery);
-        long totalCount = pagination.fetchCount();
-
-        return new PageImpl<>(pagination.fetch(), pageable, totalCount);
+                .orderBy(question.id.desc())
+                .limit(limit)
+                .fetch();
     }
 
     @Override
