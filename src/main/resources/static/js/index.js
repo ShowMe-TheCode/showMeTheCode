@@ -27,6 +27,13 @@ $(document).ready(function () {
 		$(this).addClass("active");
 		let status = $(this).data("status");
 
+		console.log(status)
+
+		if (status.toString() === "ALL") {
+			URLSearch.delete("status")
+			URLSearch.delete("language")
+		}
+
 		URLSearch.set("status", status);
 
 		let newParam = URLSearch.toString();

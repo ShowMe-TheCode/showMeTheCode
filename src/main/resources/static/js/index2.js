@@ -25,6 +25,11 @@ $(document).ready(function () {
 		$("ul.status li").removeClass("active");
 		$(this).addClass("active");
 		let status = $(this).data("status");
+		console.log(status)
+		if (status.toString() === "ALL") {
+			console.log("전체보기")
+			window.location = "/"
+		}
 
 		URLSearch.set("status", status);
 
