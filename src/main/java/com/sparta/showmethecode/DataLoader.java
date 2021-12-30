@@ -41,9 +41,12 @@ public class DataLoader implements CommandLineRunner {
         User reviewerSpring = createReviewer("reviewer-spring", "SpringGenius", "1234", "Spring");
         User reviewerFlask = createReviewer("reviewer-flask", "EasyFlask", "1234", "Flask");
 
-        Question questionJava = createQuestion(user1, reviewerJava, "Java가 너무 어려워요", "Java 안할래요 ..", "JAVA");
-        Question questionFlask = createQuestion(user2, reviewerFlask, "Flask에서 라우팅은 어떻게 하는건가요 ?ㅠ", "후 ㅠㅠ", "FLASK");
-        Question questionSpring = createQuestion(user1, reviewerSpring, "Spring 왜 써요 ?", "왜 ??", "SPRING");
+        Question questionJava1 = createQuestion(user1, reviewerJava, "Java가 너무 어려워요111", "Java 안할래요 ..111", "JAVA");
+        Question questionJava2 = createQuestion(user1, reviewerJava, "Java가 너무 어려워요222", "Java 안할래요 ..222", "JAVA");
+        Question questionFlask1 = createQuestion(user2, reviewerFlask, "Flask에서 라우팅은 어떻게 하는건가요 ?ㅠ111", "후 ㅠㅠ111", "FLASK");
+        Question questionFlask2 = createQuestion(user2, reviewerFlask, "Flask에서 라우팅은 어떻게 하는건가요 ?ㅠ222", "후 ㅠㅠ222", "FLASK");
+        Question questionSpring1 = createQuestion(user1, reviewerSpring, "Spring 왜 써요 ?111", "왜 ??111", "SPRING");
+        Question questionSpring2 = createQuestion(user1, reviewerSpring, "Spring 왜 써요 ?222", "왜 ??222", "SPRING");
         for (int i=1;i<15;i++) {
             createQuestion(user1, reviewerSpring, "spring" + i, "spring xxx" + i, "SPRING");
         }
@@ -54,17 +57,16 @@ public class DataLoader implements CommandLineRunner {
             createQuestion(user1, reviewerJava, "java" + i, "java xxx" + i, "JAVA");
         }
 
-//        addAnswer("answer1", questionJava, reviewerJava);
-//        addAnswer("answer2", questionFlask, reviewerFlask);
-//        addAnswer("answer3", questionSpring, reviewerSpring);
+        answerService.addAnswer(reviewerJava.getId(), questionJava1.getId(), new AddAnswerDto("Java는 쉬워요"));
+        answerService.addAnswer(reviewerFlask.getId(), questionFlask1.getId(), new AddAnswerDto("Flask는 쉬워요"));
+        answerService.addAnswer(reviewerSpring.getId(), questionSpring1.getId(), new AddAnswerDto("Spring은 쉬워요"));
+        answerService.addAnswer(reviewerJava.getId(), questionJava2.getId(), new AddAnswerDto("Java는 쉬워요"));
+        answerService.addAnswer(reviewerFlask.getId(), questionFlask2.getId(), new AddAnswerDto("Flask는 쉬워요"));
+        answerService.addAnswer(reviewerSpring.getId(), questionSpring2.getId(), new AddAnswerDto("Spring은 쉬워요"));
 
-        answerService.addAnswer(reviewerJava.getId(), questionJava.getId(), new AddAnswerDto("Java는 쉬워요"));
-        answerService.addAnswer(reviewerFlask.getId(), questionFlask.getId(), new AddAnswerDto("Flask는 쉬워요"));
-        answerService.addAnswer(reviewerSpring.getId(), questionSpring.getId(), new AddAnswerDto("Spring은 쉬워요"));
-
-        addComment("댓글1", user1, questionJava);
-        addComment("댓글2", user2, questionJava);
-        addComment("댓글3", user1, questionJava);
+        addComment("댓글1", user1, questionJava1);
+        addComment("댓글2", user2, questionJava1);
+        addComment("댓글3", user1, questionJava1);
     }
 
 

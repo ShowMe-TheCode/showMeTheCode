@@ -112,7 +112,7 @@ public class ReviewerService {
     /**
      * 나에게 요청된 리뷰 조회
      */
-    public PageResponseDtoV2 getMyReceivedRequestList(User user, Long lastId, int limit, QuestionStatus status) {
+    public PageResponseDtoV2 getMyReceivedRequestList(User user, Long lastId, int limit, List<QuestionStatus> status) {
         List<QuestionResponseDto> result = questionRepository.findReceivedQuestionV2(user.getId(), lastId, limit, status);
         Long currentLastId = result.get(result.size() - 1).getQuestionId();
         boolean lastPage = questionRepository.isLastPage(currentLastId);

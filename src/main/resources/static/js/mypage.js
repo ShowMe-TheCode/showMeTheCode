@@ -37,7 +37,7 @@ function myReceivedQuestionList(condition, lastId) {
 	$('#mypage-review-list-box').show()
 	$("#condition-box").empty();
 	let tmp_html = `<button onclick="myReceivedQuestionList('ALL', null)" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
-                    <button onclick="myReceivedQuestionList('SOLVE', null)" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
+                    <button onclick="myReceivedQuestionList('SOLVE,EVALUATED', null)" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
                     <button onclick="myReceivedQuestionList('UNSOLVE', null)" class="button is-link is-rounded">미해결</button>`;
 	$("#condition-box").append(tmp_html);
 
@@ -72,7 +72,7 @@ function myQuestionList(condition, lastId) {
 	$('#mypage-review-list-box').show()
 	$("#condition-box").empty();
 	let tmp_html = `<button onclick="myQuestionList('ALL', null)" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
-                    <button onclick="myQuestionList('SOLVE', null)" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
+                    <button onclick="myQuestionList('SOLVE,EVALUATED', null)" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
                     <button onclick="myQuestionList('UNSOLVE', null)" class="button is-link is-rounded">미해결</button>`;
 	$("#condition-box").append(tmp_html);
 

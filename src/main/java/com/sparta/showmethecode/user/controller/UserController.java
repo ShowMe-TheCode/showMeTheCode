@@ -85,7 +85,7 @@ public class UserController {
      */
     @GetMapping("/requests")
     public ResponseEntity<PageResponseDtoV2> getMyRequestList(
-            @RequestParam QuestionStatus status, @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) Long lastId,
+            @RequestParam List<QuestionStatus> status, @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
 

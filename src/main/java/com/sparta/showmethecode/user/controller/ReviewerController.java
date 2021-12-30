@@ -79,7 +79,7 @@ public class ReviewerController {
      */
     @GetMapping("/questions")
     public ResponseEntity<PageResponseDtoV2> getMyReceivedList(
-            @RequestParam QuestionStatus status,
+            @RequestParam List<QuestionStatus> status,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(required = false) Long lastId, @RequestParam(defaultValue = "10") int size
     ) {

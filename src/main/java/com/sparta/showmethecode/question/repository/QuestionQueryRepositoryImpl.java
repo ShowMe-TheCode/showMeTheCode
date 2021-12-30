@@ -76,7 +76,7 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, String keyword, String language, QuestionStatus status) {
+    public List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, String keyword, String language, List<QuestionStatus> status) {
         return query.select(new QQuestionResponseDto(
                         question.id,
                         question.requestUser.username,
@@ -95,7 +95,8 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .where(containingTitleOrComment(keyword))
                 .where(languageEquals(language))
                 .where(IdLessThen(lastId))
-                .where(statusEquals(status))
+//                .where(statusEquals(status))
+                .where(statusIn(status))
                 .orderBy(question.id.desc())
                 .limit(limit)
                 .fetch();
@@ -227,7 +228,8 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public List<QuestionResponseDto> findMyQuestionV2(Long id, Long lastId, int limit, QuestionStatus status) {
+    public List<QuestionResponseDto> findMyQuestionV2(Long id, Long lastId, int limit, List<QuestionStatus> status)
+    {
 
         return query
                 .select(new QQuestionResponseDto(
@@ -248,14 +250,15 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .join(question.requestUser, user)
                 .where(IdLessThen(lastId))
                 .where(user.id.eq(id))
-                .where(statusEquals(status))
+//                .where(statusEquals(status))
+                .where(statusIn(status))
                 .orderBy(question.id.desc())
                 .limit(limit)
                 .fetch();
     }
 
     @Override
-    public List<QuestionResponseDto> findReceivedQuestionV2(Long id, Long lastId, int limit, QuestionStatus status) {
+    public List<QuestionResponseDto> findReceivedQuestionV2(Long id, Long lastId, int limit, List<QuestionStatus> status) {
         return query
                 .select(new QQuestionResponseDto(
                         question.id,
@@ -275,7 +278,8 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
                 .join(question.answerUser, user)
                 .where(IdLessThen(lastId))
                 .where(user.id.eq(id))
-                .where(statusEquals(status))
+//                .where(statusEquals(status))
+                .where(statusIn(status))
                 .orderBy(question.id.desc())
                 .limit(limit)
                 .fetch();
@@ -362,6 +366,12 @@ public class QuestionQueryRepositoryImpl extends QuerydslRepositorySupport imple
 
     private BooleanExpression containingTitleOrComment(String keyword) {
         return Objects.isNull(keyword) || keyword.isEmpty() ? null : question.title.contains(keyword).or(question.content.contains(keyword));
+    }
+
+    private BooleanExpression statusIn(List<QuestionStatus> statusList) {
+        if (Objects.isNull(statusList) || statusList.size() <= 0 || statusList.get(0).equals(QuestionStatus.ALL)) return null;
+
+        return question.status.in(statusList);
     }
 
     private BooleanExpression statusEquals(QuestionStatus status) {

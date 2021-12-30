@@ -199,7 +199,7 @@ function showEvaluateForm(answerId) {
                           <input id="star_value" type="range" oninput="drawStar(this)" value="1" step="1" min="0" max="10">
                         </span>
                         </div>
-                        <button type="button" onclick="evaluate(${answerId})" class="ac-button is-md is-solid is-primary form__button e-sign-in">평가하기</button>
+                        <button type="button" onclick="evaluateAnswer(${answerId})" class="ac-button is-md is-solid is-primary form__button e-sign-in">평가하기</button>
 				
 					  </article>
 					  </div>
@@ -208,7 +208,7 @@ function showEvaluateForm(answerId) {
 	$("body").append(temp_html);
 }
 
-function evaluate(answerId) {
+function evaluateAnswer(answerId) {
 	console.log("evaluate 호출 = " + answerId)
 	let questionId = getParameterByName("id");
 	console.log(questionId)

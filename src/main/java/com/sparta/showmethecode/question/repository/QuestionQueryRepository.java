@@ -16,7 +16,7 @@ public interface QuestionQueryRepository {
     // 코드리뷰 목록 조회
     Page<QuestionResponseDto> findReviewRequestList(Pageable pageable, boolean isAsc, QuestionStatus status);
     // 코드리뷰 목록 조회 v2 더보기 버튼 방식 (no offset)
-    List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, String keyword, String language, QuestionStatus status);
+    List<QuestionResponseDto> findReviewRequestListV2(Long lastId, int limit, String keyword, String language, List<QuestionStatus> status);
 
 
     // 질문 검색
@@ -29,9 +29,9 @@ public interface QuestionQueryRepository {
     List<ReviewRequestLanguageCount> getReviewRequestLanguageCountGroupByLanguage();
 
     // 자신이 요청한 리뷰 조회 V2
-    List<QuestionResponseDto> findMyQuestionV2(Long userId, Long lastId, int limit, QuestionStatus status);
+    List<QuestionResponseDto> findMyQuestionV2(Long userId, Long lastId, int limit, List<QuestionStatus> status);
     // 자신에게 요청된 리뷰 조회 V2
-    List<QuestionResponseDto> findReceivedQuestionV2(Long userId, Long lastId, int limit, QuestionStatus status);
+    List<QuestionResponseDto> findReceivedQuestionV2(Long userId, Long lastId, int limit, List<QuestionStatus> status);
 
     // 내가 요청한 리뷰가 맞는지 체크
     boolean isMyReviewRequest(Long reviewId, User user);

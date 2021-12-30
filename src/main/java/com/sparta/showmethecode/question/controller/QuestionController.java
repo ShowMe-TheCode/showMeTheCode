@@ -58,7 +58,7 @@ public class QuestionController {
     public ResponseEntity<PageResponseDtoV2> getReviewRequestListV2(
             @RequestParam(required = false) Long lastId,
             @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) String query, @RequestParam(required = false) String language,
-            @RequestParam(required = false, defaultValue = "ALL") QuestionStatus status
+            @RequestParam(required = false, defaultValue = "ALL") List<QuestionStatus> status
     ) {
 
         if (!Objects.isNull(query) && StringUtils.hasText(query)) {

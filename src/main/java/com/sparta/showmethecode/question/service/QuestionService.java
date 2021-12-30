@@ -56,7 +56,7 @@ public class QuestionService {
      * 코드리뷰 요청목록 API V2 (더보기 방식)
      */
     @Transactional(readOnly = true)
-    public PageResponseDtoV2<QuestionResponseDto> getReviewRequestListV2(Long lastId, int size, QuestionStatus status) {
+    public PageResponseDtoV2<QuestionResponseDto> getReviewRequestListV2(Long lastId, int size, List<QuestionStatus> status) {
 
         List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, size,null, null, status);
 
@@ -71,7 +71,7 @@ public class QuestionService {
      */
     @Transactional(readOnly = true)
     public PageResponseDtoV2<QuestionResponseDto> searchByTitleOrCommentV2(
-            Long lastId, int limit, String query, QuestionStatus status
+            Long lastId, int limit, String query, List<QuestionStatus> status
     ) {
         List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, limit, query, null, status);
 
@@ -86,7 +86,7 @@ public class QuestionService {
      */
     @Transactional(readOnly = true)
     public PageResponseDtoV2<QuestionResponseDto> searchByLanguageV2(
-            Long lastId, int limit, String language, QuestionStatus status
+            Long lastId, int limit, String language, List<QuestionStatus> status
     ) {
         List<QuestionResponseDto> reviewRequestList = questionRepository.findReviewRequestListV2(lastId, limit, null, language, status);
 

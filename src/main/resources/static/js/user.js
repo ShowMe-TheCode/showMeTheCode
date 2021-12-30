@@ -173,7 +173,7 @@ function logout() {
 			if (res["result"] == "success") {
 				localStorage.clear();
 				alert(res["message"]);
-				window.location.reload();
+				window.location = "/"
 			}
 		},
 	});

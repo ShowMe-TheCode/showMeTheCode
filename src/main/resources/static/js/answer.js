@@ -14,8 +14,6 @@ function getDetails(id) {
 		contentType: "application/json;charset-utf-8;",
 		success: function (res) {
 
-			console.log(res)
-
 			let questionId = res['questionId']
 			let questionUserId = res['questionUserId']
 			let answer = res['answer']
@@ -58,61 +56,6 @@ function getDetails(id) {
 
 				$('#answer-markdown-box').show()
 				$('#send-answer-btn-box').show()
-			}
-		},
-	});
-}
-
-function getDetails2() {
-	let id = getParameterByName("id");
-
-	$.ajax({
-		type: "GET",
-		url: base_url + `/questions/${id}`,
-		success: function (res) {
-			let questionId = res["questionId"];
-			let username = res["username"];
-			let title = res["title"];
-			let content = res["content"];
-			let status = res["status"];
-			let createdAt = res["createdAt"];
-			let date = dateFormat(new Date(createdAt));
-
-			let answerId = res["answerId"];
-			let answerContent = res["answerContent"];
-
-			$("#request-title").html(title);
-			$("#user-name").html(username);
-			$("#created-at").html(date);
-			$("#received_content").html(content);
-
-			$("#question-status").text(status);
-
-			// 리뷰요청의 상태가 [해결됨] 인 경우에만 거절하기 버튼을 활성화
-			if (status === "해결됨" || status === "평가됨") {
-				$("#rejectBtn").hide();
-			} else {
-				$("#rejectBtn").show();
-			}
-
-			// 답변이 있는 경우 편집이 불가능하도록 <p> 태그 내에 답변 내용을 랜더링
-			if (answerContent) {
-				$("#content-answer-markdown-box").hide();
-				$("#addAnswerBtn").hide();
-				$("#content-answer-text").show();
-				$("#content-answer-text").html(answerContent);
-				$("#question-comment-form-box2").show();
-				$("#question-comment-form-box").hide();
-				$("#answer-section2").show();
-				$("#answer-content2").html(answerContent);
-
-				// 답변이 없는 경우 답변이 가능하도록 textarea (markdown폼)을 랜더링
-			} else {
-				$("#addAnswerBtn").show();
-				$("#content-answer-markdown-box").show();
-				$("#content-answer-text").hide();
-				$("#question-comment-form-box2").hide();
-				$("#answer-section2").hide();
 			}
 		},
 	});

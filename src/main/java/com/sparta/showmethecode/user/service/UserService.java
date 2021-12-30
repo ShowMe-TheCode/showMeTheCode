@@ -101,7 +101,7 @@ public class UserService {
     /**
      * 내가 등록한 리뷰요청목록 조회 API v2 (더보기 방식)
      */
-    public PageResponseDtoV2<QuestionResponseDto> getMyReviewRequestListV2(User user, Long lastId, int limit, QuestionStatus status) {
+    public PageResponseDtoV2<QuestionResponseDto> getMyReviewRequestListV2(User user, Long lastId, int limit, List<QuestionStatus> status) {
 
         List<QuestionResponseDto> result = questionRepository.findMyQuestionV2(user.getId(), lastId, limit, status);
 
