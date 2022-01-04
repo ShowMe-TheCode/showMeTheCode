@@ -7,9 +7,7 @@ $(document).ready(function() {
 // 리뷰어 랭킹 - 전체 보기
 // ========================================
 function getRankingAll() {
-    console.log("getRankingAll 호출")
-
-    $("#rankingList").empty();
+    //$("#rankingList").empty();
 
     $.ajax({
         type: "GET",
@@ -19,6 +17,7 @@ function getRankingAll() {
             let data = res["data"];
 
             for (let i = 0; i < data.length; i++) {
+                let id = data[i]["id"]
                 let username = data[i]["username"];
                 let nickname = data[i]["nickname"];
                 let languages = data[i]["languages"];
@@ -32,6 +31,9 @@ function getRankingAll() {
                                   <td>${languages}</td>
                                   <td>${answerCount}</td>
                                   <td>${point}</td>
+                                  <td>
+                                     <button class="button is-info is-small">질문하기</button>
+                                  </td>
                                 </tr>`;
                 $("#rankingList").append(temp);
             } // end-for

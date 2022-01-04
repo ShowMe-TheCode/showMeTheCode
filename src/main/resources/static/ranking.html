@@ -41,6 +41,7 @@
 		<link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-switch.min.css"/>
 		<link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-tooltip.min.css"/>
 		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-ekOryaXPbeCpWQNxMwSWVvQ0+1VrStoPJq54shlYhR8HzQgig1v5fas6YgOqLoKz" crossorigin="anonymous"/>
+		<script src="js/post_question.js"></script>
 	</head>
 	<body id="inflearn" class="community all_questions_list posts-by-type is_logged_out is-student-user">
 		<div id="root">
@@ -69,10 +70,20 @@
 										<th scope="col">언어</th>
 										<th scope="col">답변수</th>
 										<th scope="col">포인트</th>
+										<th scope="col"></th>
 									</tr>
 								</thead>
 								<tbody id="rankingList">
-
+								<tr>
+									<th scope="row">${ranking} 위</th>
+									<td>nickname 님</td>
+									<td>languages</td>
+									<td>answerCount</td>
+									<td>point</td>
+									<td>
+										<button class="button is-info is-small">질문하기</button>
+									</td>
+								</tr>
 								</tbody>
 							</table>
 						</div>

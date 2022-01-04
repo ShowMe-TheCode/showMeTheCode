@@ -4,7 +4,6 @@ $("document").ready(function () {
 	$("#select-reviewer").on("change", function () {
 		console.log($(this).val());
 		reviewerId = $(this).val();
-		console.log(reviewerId);
 	});
 });
 
