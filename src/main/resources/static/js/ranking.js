@@ -32,11 +32,15 @@ function getRankingAll() {
                                   <td>${answerCount}</td>
                                   <td>${point}</td>
                                   <td>
-                                     <button class="button is-info is-small">질문하기</button>
+                                     <button onclick="questionConfirm('${id}')" class="button is-info is-small">질문하기</button>
                                   </td>
                                 </tr>`;
                 $("#rankingList").append(temp);
             } // end-for
         },
     });
+}
+
+function questionConfirm(reviewerId) {
+
 }

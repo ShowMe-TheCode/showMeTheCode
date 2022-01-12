@@ -2,7 +2,7 @@ spring:
   profiles:
     group:
       dev: oauth
-      prood: oauth
+      prod: oauth
 ---
 
 spring:

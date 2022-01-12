@@ -358,6 +358,14 @@ function changeReviewer() {
 // ========================================
 // 질문삭제
 // ========================================
+function deleteReviewConfirm() {
+	if (confirm('삭제하시겠습니까?')) {
+		deleteReview()
+	} else {
+		// no click
+	}
+}
+
 function deleteReview() {
 	let questionId = getParameterByName("id");
 	$.ajax({
@@ -365,10 +373,13 @@ function deleteReview() {
 		url: base_url + `/questions/${questionId}`,
 		success: function (res) {
 			alert("리뷰요청 삭제했습니다.");
-			location.href = "mypage.html";
+			// location.href = "mypage.html";
+			history.go(-1);
 		},
 	});
 }
+
+
 
 // ========================================
 // 질문 수정 모달 폼

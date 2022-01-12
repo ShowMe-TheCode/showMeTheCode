@@ -7,6 +7,10 @@ function go_back() {
 
 $(document).ready(function () {
 	loginCheck();
+
+	let reviewerId = getParameterByName("reviewer");
+	if (reviewerId != null) openQuestionModal(reviewerId)
+
 	$("#reviewQuestionList").empty();
 	getQuestionList(null);
 	getRanking();
@@ -220,6 +224,16 @@ function getRanking() {
 			}
 		},
 	});
+}
+
+function openQuestionModal(reviewerId) {
+	console.log(reviewerId);
+
+	// 리뷰어 조회
+
+	// 조회된 결과 데이터를 모달폼에 설정
+
+	// 모달폼 show
 }
 
 /**

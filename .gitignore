@@ -37,6 +37,6 @@ out/
 .vscode/
 
 node_moduels
-js/ckeditor
-css
+js/ckeditor/
+css/
 
