@@ -28,35 +28,6 @@ public class ReviewerController {
     private final ReviewerService reviewerService;
 
     /**
-     * 리뷰어 랭킹 조회 API (전체랭킹 조회)
-     */
-    @GetMapping("/rank")
-    public ResponseEntity getReviewerRanking(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "true") boolean isAsc
-    ) {
-        --page;
-
-        PageResponseDto<ReviewerInfoDto> reviewerRanking = reviewerService.getReviewerRanking(page, size, isAsc);
-
-        return ResponseEntity.ok(reviewerRanking);
-    }
-
-    /**
-     * 리뷰어 랭킹 조회 API (상위 5위)
-     */
-    @GetMapping("/top")
-    public ResponseEntity getReviewerTop5Ranking() {
-        List<ReviewerInfoDto> reviewers = reviewerService.getReviewerTop5Ranking();
-
-        log.info("리뷰어 랭킹 5위 = {}", reviewers);
-
-        return ResponseEntity.ok(reviewers);
-    }
-
-
-    /**
      * 내가 답변한 리뷰목록 조회 API
      */
     @GetMapping("/answers")

@@ -1,0 +1,27 @@
+package com.sparta.showmethecode.ranking.repository;
+
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sparta.showmethecode.ranking.domain.Ranking;
+
+import java.util.List;
+
+import static com.sparta.showmethecode.ranking.domain.QRanking.ranking;
+import static com.sparta.showmethecode.user.domain.QUser.user;
+
+public class RankingQueryRepositoryImpl implements RankingQueryRepository {
+
+    private final JPAQueryFactory query;
+
+    public RankingQueryRepositoryImpl(JPAQueryFactory query) {
+        this.query = query;
+    }
+
+    @Override
+    public List<Ranking> findTop5Reviewer() {
+        return query.selectFrom(ranking)
+                .join(ranking.user, user).fetchJoin()
+                .orderBy(ranking.average.desc(), ranking.answerCount.desc())
+                .limit(5)
+                .fetch();
+    }
+}

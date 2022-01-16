@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class AnswerService {
@@ -95,20 +96,18 @@ public class AnswerService {
      */
     @Transactional
     public void evaluateAnswer(User user, Long questionId, Long answerId, EvaluateAnswerDto evaluateAnswerDto) {
-        if(questionRepository.isAnswerToMe(answerId, user)) {
-            Answer answer = reviewAnswerRepository.findById(answerId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 답변입니다.")
-            );
+        Answer answer = reviewAnswerRepository.findById(answerId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 답변입니다.")
+        );
 
-            Question question = questionRepository.findById(questionId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 리뷰요청입니다.")
-            );
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 리뷰요청입니다.")
+        );
 
-            question.setStatus(QuestionStatus.EVALUATED);
+        question.setStatus(QuestionStatus.EVALUATED);
 
-            answer.evaluate(evaluateAnswerDto.getPoint());
-            answer.getAnswerUser().evaluate(evaluateAnswerDto.getPoint());
-        }
+        answer.evaluate(evaluateAnswerDto.getPoint());
+        answer.getAnswerUser().evaluate(evaluateAnswerDto.getPoint());
     }
 
     private boolean isRequestedToMe(Long questionId, User reviewer) {

@@ -39,57 +39,6 @@ public class ReviewerService {
     }
 
     /**
-     * 리뷰어 랭킹 조회 API (전체랭킹 조회)
-     */
-    @Transactional(readOnly = true)
-    public PageResponseDto<ReviewerInfoDto> getReviewerRanking(
-            int page, int size, boolean isAsc
-    ) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, "evalTotal");
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        Page<User> result = userRepository.getReviewerRanking(pageable, isAsc);
-
-        List<ReviewerInfoDto> reviewerInfo = result.getContent().stream().map(
-                u -> new ReviewerInfoDto(
-                        u.getId(),
-                        u.getUsername(),
-                        u.getNickname(),
-                        u.getLanguages().stream().map(l -> new String(l.getName())).collect(Collectors.toList()),
-                        u.getAnswerCount(),
-                        u.getEvalCount() > 0 ? u.getEvalTotal() / u.getEvalCount() : 0.0
-                )
-        ).collect(Collectors.toList());
-
-        return new PageResponseDto<ReviewerInfoDto>(
-                reviewerInfo,
-                result.getTotalPages(),
-                result.getTotalElements(),
-                page, size
-        );
-    }
-
-    /**
-     * 리뷰어 랭킹 조회 API (상위 5명)
-     */
-    @Transactional(readOnly = true)
-    public List<ReviewerInfoDto> getReviewerTop5Ranking() {
-        return userRepository.getReviewerRankingTop5().stream().map(
-                u -> new ReviewerInfoDto(
-                        u.getId(),
-                        u.getUsername(),
-                        u.getNickname(),
-                        u.getLanguages().stream().map(
-                                l -> new String(l.getName())
-                        ).collect(Collectors.toList()),
-                        u.getAnswerCount(),
-                        u.getEvalCount() > 0 ? u.getEvalTotal() / u.getEvalCount() : 0
-                )
-        ).collect(Collectors.toList());
-    }
-
-    /**
      * 내가 답변한 리뷰목록 조회 API
      */
     @Transactional(readOnly = true)
@@ -132,8 +81,8 @@ public class ReviewerService {
                         r.getUsername(),
                         r.getNickname(),
                         r.getLanguages().stream().map(l -> new String(l.getName())).collect(Collectors.toList()),
-                        r.getAnswerCount(),
-                        r.getEvalCount() == 0 ? 0 : Double.valueOf(decimalFormat.format(r.getEvalTotal() / r.getEvalCount())))
+                        r.getRanking().getAnswerCount(),
+                        r.getRanking().getAverage())
         ).collect(Collectors.toList());
     }
 

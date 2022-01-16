@@ -2,6 +2,7 @@ package com.sparta.showmethecode;
 
 import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.answer.dto.request.AddAnswerDto;
+import com.sparta.showmethecode.answer.dto.request.EvaluateAnswerDto;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.answer.service.AnswerService;
 import com.sparta.showmethecode.comment.domain.Comment;
@@ -9,6 +10,7 @@ import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.question.domain.Question;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
 import com.sparta.showmethecode.question.repository.QuestionRepository;
+import com.sparta.showmethecode.ranking.domain.Ranking;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.user.domain.UserRole;
 import com.sparta.showmethecode.user.repository.UserRepository;
@@ -67,6 +69,12 @@ public class DataLoader implements CommandLineRunner {
         addComment("댓글1", user1, questionJava1);
         addComment("댓글2", user2, questionJava1);
         addComment("댓글3", user1, questionJava1);
+
+        Question question1 = addAnswer("답변11", questionJava1, reviewerJava);
+        Question question2  = addAnswer("답변22", questionFlask1, reviewerFlask);
+
+        evaluate(user1, questionJava1.getId(), question1.getAnswer().getId(),4.5);
+        evaluate(user2, questionFlask1.getId(), question2.getAnswer().getId(),3.8);
     }
 
 
@@ -89,6 +97,7 @@ public class DataLoader implements CommandLineRunner {
                 .password(passwordEncoder.encode(password))
                 .languages(new ArrayList<>())
                 .role(UserRole.ROLE_REVIEWER).build();
+        user.setRanking(new Ranking(0, 0.0, 0.0, 0));
         user.addLanguage(new Language(language.toUpperCase()));
         userRepository.save(user);
 
@@ -104,12 +113,12 @@ public class DataLoader implements CommandLineRunner {
         return question;
     }
 
-    private void addAnswer(String content, Question question, User reviewer) {
+    private Question addAnswer(String content, Question question, User reviewer) {
         Answer answer = new Answer(content, 0.0, reviewer);
         question.addAnswer(answer);
         question.setStatus(QuestionStatus.SOLVE);
 
-        questionRepository.save(question);
+        return questionRepository.save(question);
     }
 
     private void addComment(String content, User user, Question question) {
@@ -118,4 +127,9 @@ public class DataLoader implements CommandLineRunner {
 
         questionRepository.save(question);
     }
+
+    private void evaluate(User user, Long questionId, Long answerId, double point) {
+        answerService.evaluateAnswer(user, questionId, answerId, new EvaluateAnswerDto(point));
+    }
+
 }

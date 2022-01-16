@@ -1,24 +1,23 @@
 package com.sparta.showmethecode.user.service;
 
 import com.sparta.showmethecode.common.dto.response.PageResponseDtoV2;
+import com.sparta.showmethecode.language.domain.Language;
+import com.sparta.showmethecode.language.repository.LanguageRepository;
 import com.sparta.showmethecode.question.domain.QuestionStatus;
-import com.sparta.showmethecode.common.dto.response.PageResponseDto;
+import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
+import com.sparta.showmethecode.question.repository.QuestionRepository;
+import com.sparta.showmethecode.ranking.domain.Ranking;
 import com.sparta.showmethecode.security.JwtUtils;
 import com.sparta.showmethecode.security.UserDetailsImpl;
 import com.sparta.showmethecode.security.UserDetailsServiceImpl;
-import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.user.domain.User;
 import com.sparta.showmethecode.user.domain.UserRole;
 import com.sparta.showmethecode.user.dto.request.SigninRequestDto;
 import com.sparta.showmethecode.user.dto.request.SignupRequestDto;
-import com.sparta.showmethecode.question.dto.response.QuestionResponseDto;
 import com.sparta.showmethecode.user.dto.response.SigninResponseDto;
-import com.sparta.showmethecode.language.repository.LanguageRepository;
-import com.sparta.showmethecode.question.repository.QuestionRepository;
 import com.sparta.showmethecode.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -56,9 +55,6 @@ public class UserService {
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .nickname(requestDto.getNickname())
                 .role(userRole)
-                .evalCount(0)
-                .evalCount(0)
-                .answerCount(0)
                 .languages(new ArrayList<>())
                 .build();
 
@@ -71,6 +67,11 @@ public class UserService {
                 language.setUser(savedUser);
                 languageRepository.save(language);
             }
+        }
+
+        if (user.getRole().equals(UserRole.ROLE_REVIEWER)) {
+            Ranking ranking = new Ranking(0, 0.0, 0, 0);
+            user.setRanking(ranking);
         }
 
         return savedUser;

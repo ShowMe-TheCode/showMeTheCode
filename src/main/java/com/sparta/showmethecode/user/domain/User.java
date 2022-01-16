@@ -3,6 +3,7 @@ package com.sparta.showmethecode.user.domain;
 import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.comment.domain.Comment;
 import com.sparta.showmethecode.language.domain.Timestamped;
+import com.sparta.showmethecode.ranking.domain.Ranking;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,15 +32,15 @@ public class User extends Timestamped {
     @Enumerated(EnumType.STRING)
     private UserRole role; // ROLE_USER: 일반사용자, ROLE_REVIEWER: 리뷰어
 
-    private int answerCount = 0; // 몇 개의 코드리뷰를 완료했는지
-    private int evalCount = 0; // 몇 명의 평가를 받았는지
-    private double evalTotal = 0; // 평가점수 총점
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Language> languages = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "ranking_id")
+    private Ranking ranking;
 
     // 연관관계 편의 메서드
     public void addLanguage(Language language) {
@@ -47,31 +48,26 @@ public class User extends Timestamped {
         language.setUser(this);
     }
 
-    public User(String username, String password, String nickname,UserRole role, int answerCount, int evalCount,double evalTotal, List<Language> languages) {
+    // 연관관계 편의 메서드
+    public void setRanking(Ranking ranking) {
+        ranking.setUser(this);
+        this.ranking = ranking;
+    }
+
+    public User(String username, String password, String nickname, UserRole role, List<Language> languages) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
-        this.answerCount = answerCount;
-        this.evalCount = evalCount;
-        this.evalTotal = evalTotal;
         this.languages = languages;
 
     }
 
-    public User(String username, String password, String nickname, UserRole role, int answerCount, int evalCount, double evalTotal) {
+    public User(String username, String password, String nickname, UserRole role) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
-        this.answerCount = answerCount;
-        this.evalCount = evalCount;
-        this.evalTotal = evalTotal;
-    }
-
-    public void evaluate(double point) {
-        this.evalCount++;
-        this.evalTotal += point;
     }
 
     public User update(String name){
@@ -79,12 +75,17 @@ public class User extends Timestamped {
 
         return this;
     }
+
     public String getRoleKey(){
         return this.role.toString();
     }
 
+    public void evaluate(double point) {
+        this.ranking.evaluate(point);
+    }
 
     public void increaseAnswerCount() {
-        this.answerCount++;
+        this.ranking.increaseAnswerCount();
     }
+
 }

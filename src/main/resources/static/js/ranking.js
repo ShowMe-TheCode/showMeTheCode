@@ -11,7 +11,7 @@ function getRankingAll() {
 
     $.ajax({
         type: "GET",
-        url: base_url + "/reviewers/rank",
+        url: base_url + "/ranking",
         success: function (res) {
             console.log(res)
             let data = res["data"];

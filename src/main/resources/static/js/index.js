@@ -190,7 +190,7 @@ function getTag() {
 function getRanking() {
 	$.ajax({
 		type: "GET",
-		url: base_url + "/reviewers/top",
+		url: base_url + "/ranking/top",
 		data: {},
 		success: function (res) {
 			for (let i = 0; i < res.length; i++) {
