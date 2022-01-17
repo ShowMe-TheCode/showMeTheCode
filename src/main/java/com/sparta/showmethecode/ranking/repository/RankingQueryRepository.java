@@ -11,4 +11,7 @@ public interface RankingQueryRepository {
     List<Ranking> findTop5Reviewer();
 
     Page<Ranking> findReviewerRanking(Pageable pageable);
+
+    Page<Ranking> searchByLanguage(String query, String type, Pageable pageable);
+    Page<Ranking> searchByName(String query, String type, Pageable pageable);
 }

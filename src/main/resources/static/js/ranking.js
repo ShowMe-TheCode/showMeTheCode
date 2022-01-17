@@ -1,17 +1,26 @@
 $(document).ready(function() {
-    getRankingAll()
+    getRankingAll(null);
 })
 
 
 // ========================================
 // 리뷰어 랭킹 - 전체 보기
 // ========================================
-function getRankingAll() {
-    //$("#rankingList").empty();
-
+function getRankingAll(query) {
+    $("#rankingList").empty()
+    let type = $("#search-reviewer-type").val();
+    let page = getParameterByName("page");
+    let size = getParameterByName("size");
+    let data = {
+        page: page,
+        size: size,
+        query: query,
+        type: type
+    };
     $.ajax({
         type: "GET",
         url: base_url + "/ranking",
+        data: data,
         success: function (res) {
             console.log(res)
             let data = res["data"];
@@ -41,6 +50,15 @@ function getRankingAll() {
     });
 }
 
-function questionConfirm(reviewerId) {
-
+// ========================================
+// 검색하기
+// ========================================
+function searchReviewer() {
+    let query = $("#reviewer-search-input").val();
+    getRankingAll(query);
 }
+
+function questionConfirm(reviewerId) {
+    console.log(reviewerId);
+}
+

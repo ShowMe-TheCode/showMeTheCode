@@ -1,99 +1,118 @@
 <!DOCTYPE html>
 <html lang="ko-KR">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="height=device-height,
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="height=device-height,
                       width=device-width, initial-scale=1.0,
                       minimum-scale=1.0, maximum-scale=1.0,
                       user-scalable=no, target-densitydpi=device-dpi"/>
-		<title>내 질문 - 쇼미더 코드 | 리뷰어 랭킹 전체보기</title>
-		<meta name="description" content="궁금했던 내 질문과 답변을 확인해보세요...."/>
+    <title>내 질문 - 쇼미더 코드 | 리뷰어 랭킹 전체보기</title>
+    <meta name="description" content="궁금했던 내 질문과 답변을 확인해보세요...."/>
 
-		<meta property="og:url" content="" />
-		<meta property="og:type" content="website" />
-		<meta property="og:title" content="내 질문 - 쇼미더 코드 | 마이페이지" />
-		<meta property="og:description" content="강의 중 궁금했던 내 질문과 답변을 확인해보세요...."/>
-		<meta property="og:image" content="" />
-		<meta property="og:image:secure_url" content="" />
-		<meta property="og:site_name" content="쇼미더 코드" />
-		<meta property="og:locale" content="ko-KR" />
+    <meta property="og:url" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="내 질문 - 쇼미더 코드 | 마이페이지"/>
+    <meta property="og:description" content="강의 중 궁금했던 내 질문과 답변을 확인해보세요...."/>
+    <meta property="og:image" content=""/>
+    <meta property="og:image:secure_url" content=""/>
+    <meta property="og:site_name" content="쇼미더 코드"/>
+    <meta property="og:locale" content="ko-KR"/>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-		<script src="js/navbar.js"></script>
-		<script src="js/index.js"></script>
-		<script src="js/mypage.js"></script>
-		<script src="js/footer.js"></script>
-		<script src="js/user.js"></script>
-		<script src="js/login.js"></script>
-		<script src="js/ranking.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/mypage.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/ranking.js"></script>
 
-		<link rel="stylesheet" href="./css/question_list.css" />
-		<link rel="stylesheet" href="./css/main.css" />
-		<link rel="stylesheet" href="./css/bootstrap-tagsinput.css" />
+    <link rel="stylesheet" href="./css/question_list.css"/>
+    <link rel="stylesheet" href="./css/main.css"/>
+    <link rel="stylesheet" href="./css/bootstrap-tagsinput.css"/>
 
-		<link rel="stylesheet" href="https://cdn.inflearn.com/dist/css/MAIN.5be2c163f84e3cec7e85.css"/>
-		<link rel="stylesheet" href="https://cdn.inflearn.com/dist/css/_my_posts.afa92e4b25e8c2a3679b.css"/>
+    <link rel="stylesheet" href="https://cdn.inflearn.com/dist/css/MAIN.5be2c163f84e3cec7e85.css"/>
+    <link rel="stylesheet" href="https://cdn.inflearn.com/dist/css/_my_posts.afa92e4b25e8c2a3679b.css"/>
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-accordion.min.css"/>
-		<link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-switch.min.css"/>
-		<link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-tooltip.min.css"/>
-		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-ekOryaXPbeCpWQNxMwSWVvQ0+1VrStoPJq54shlYhR8HzQgig1v5fas6YgOqLoKz" crossorigin="anonymous"/>
-		<script src="js/post_question.js"></script>
-	</head>
-	<body id="inflearn" class="community all_questions_list posts-by-type is_logged_out is-student-user">
-		<div id="root">
-			<main id="main">
-				<section class="community-header">
-					<div class="community-header__content">
-						<h2 class="community-header__title">전체 리뷰어 랭킹</h2>
-						<p class="community-header__sub-title">
-							리뷰어 랭킹을 확인해보세요
-						</p>
-					</div>
-				</section>
-				<section class="community-body">
-					<nav class="community-body__navigation">
-						<ul class="navigation">
-							<li class="navigation__group"></li>
-						</ul>
-					</nav>
-					<div id="community-body2" class="community-body__content">
-						<div class="question-list-container">
-							<table class="table" id="rankig-table">
-								<thead>
-									<tr>
-										<th scope="col">순위</th>
-										<th scope="col">리뷰어</th>
-										<th scope="col">언어</th>
-										<th scope="col">답변수</th>
-										<th scope="col">포인트</th>
-										<th scope="col"></th>
-									</tr>
-								</thead>
-								<tbody id="rankingList">
-								<tr>
-									<th scope="row">${ranking} 위</th>
-									<td>nickname 님</td>
-									<td>languages</td>
-									<td>answerCount</td>
-									<td>point</td>
-									<td>
-										<button class="button is-info is-small">질문하기</button>
-									</td>
-								</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</section>
-			</main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-accordion.min.css"/>
+    <link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-switch.min.css"/>
+    <link rel="stylesheet" href="https://cdn.inflearn.com/dist/vendor/bulma-tooltip.min.css"/>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.12.0/css/all.css"
+          integrity="sha384-ekOryaXPbeCpWQNxMwSWVvQ0+1VrStoPJq54shlYhR8HzQgig1v5fas6YgOqLoKz" crossorigin="anonymous"/>
+    <script src="js/post_question.js"></script>
+</head>
+<body id="inflearn" class="community all_questions_list posts-by-type is_logged_out is-student-user">
+<div id="root">
+    <main id="main">
+        <section class="community-header">
+            <div class="community-header__content">
+                <h2 class="community-header__title">전체 리뷰어 랭킹</h2>
+                <p class="community-header__sub-title">
+                    리뷰어 랭킹을 확인해보세요
+                </p>
+            </div>
+        </section>
 
-			<button class="gototop-btn e-gototop" fxd-data='{"left":30,"bottom":70}'>
-				<i class="far fa-chevron-up"></i><span class="gototop-text">TOP</span>
-			</button>
-		</div>
-	</body>
+        <section class="community-body">
+            <nav class="community-body__navigation">
+                <ul class="navigation">
+                    <li class="navigation__group"></li>
+                </ul>
+            </nav>
+
+
+            <div id="community-body2" class="community-body__content">
+                <div class="question-list-container">
+                    <table class="table" id="ranking-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">리뷰어</th>
+                            <th scope="col">주 언어</th>
+                            <th scope="col">답변수</th>
+                            <th scope="col">포인트</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody id="rankingList">
+
+                        </tbody>
+                    </table>
+                </div>
+                <form onsubmit="return false;" class="search e-search">
+                    <div class="search-item">
+                        <select id="search-reviewer-type" style="font-size: large; text-align: center">
+                            <option value="language">언어이름</option>
+                            <option value="name">리뷰어 이름</option>
+                        </select>
+                        <div class="ac-input-with-item search-by-text">
+                            <svg width="16" width="16" height="16" viewBox="0 0 16 16"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill="#212529" fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M11.5 7c0 .59-.116 1.176-.343 1.722-.226.546-.557 1.042-.975 1.46-.418.418-.914.75-1.46.975-.546.226-1.131.343-1.722.343-.59 0-1.176-.117-1.722-.343-.546-.226-1.042-.557-1.46-.975-.418-.418-.75-.914-.975-1.46C2.616 8.176 2.5 7.591 2.5 7c0-1.194.474-2.338 1.318-3.182C4.662 2.974 5.807 2.5 7 2.5c1.193 0 2.338.474 3.182 1.318C11.026 4.662 11.5 5.806 11.5 7zm-.82 4.74c-1.206.936-2.723 1.377-4.242 1.234-1.52-.143-2.928-.86-3.937-2.005C1.49 9.825.956 8.34 1.004 6.813c.047-1.526.675-2.976 1.754-4.055 1.08-1.08 2.53-1.707 4.055-1.755 1.525-.047 3.012.488 4.156 1.498 1.145 1.01 1.862 2.417 2.005 3.937.143 1.52-.298 3.036-1.234 4.242l3.04 3.04c.074.069.133.151.174.243.04.092.063.192.065.292.001.101-.017.201-.055.294-.038.094-.094.179-.165.25-.071.071-.156.127-.25.165-.093.038-.193.056-.293.054-.101-.001-.2-.023-.293-.064-.091-.041-.174-.1-.243-.174l-3.04-3.04z"/>
+                            </svg>
+                            <input onkeypress="if(event.keyCode==13){searchReviewer();}" id="reviewer-search-input"
+                                   placeholder="언어이름 및 리뷰어 검색"/>
+                        </div>
+                        <button type="button" onclick="searchReviewer()"
+                                class="ac-button is-md is-solid is-primary search-form__search e-search-posts"
+                                style="min-width: 96px">
+                            검색
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <button class="gototop-btn e-gototop" fxd-data='{"left":30,"bottom":70}'>
+        <i class="far fa-chevron-up"></i><span class="gototop-text">TOP</span>
+    </button>
+</div>
+</body>
 </html>

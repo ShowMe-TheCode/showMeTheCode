@@ -18,12 +18,12 @@ public class PageResponseDto<T> {
     private int page;
     private int size;
 
-    public PageResponseDto(Page<T> pageData) {
-        this.data = pageData.getContent();
+    public PageResponseDto(List<T> data, int totalPage, int totalElements, int page, int size ) {
+        this.data = data;
 
-        this.totalPage = pageData.getTotalPages();
-        this.totalElements = pageData.getTotalElements();
-        this.page = pageData.getNumber();
-        this.page = pageData.getSize();
+        this.totalPage = totalPage;
+        this.totalElements = totalElements;
+        this.page = page;
+        this.size = size;
     }
 }

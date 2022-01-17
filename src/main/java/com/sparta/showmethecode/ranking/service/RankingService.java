@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,11 +22,18 @@ public class RankingService {
 
     private final RankingRepository rankingRepository;
 
-    public PageResponseDto getRankings(int page, int size) {
+    public PageResponseDto getRankings(int page, int size, String query, String type) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Ranking> result = rankingRepository.findReviewerRanking(pageable);
+        Page<Ranking> result;
+        if (StringUtils.hasText(query)) {
+            if (type.equals("language")) result = rankingRepository.searchByLanguage(query, type, pageable);
+            else result = rankingRepository.searchByName(query, type, pageable);
+        } else {
+            result = rankingRepository.findReviewerRanking(pageable);
+        }
 
-        return new PageResponseDto(result);
+        List<RankingUserResponseDto> collect = result.stream().map(r -> new RankingUserResponseDto(r)).collect(Collectors.toList());
+        return new PageResponseDto(collect, result.getTotalPages(), result.getTotalElements(), result.getNumber(), result.getSize());
     }
 
     public List<RankingUserResponseDto> getTop5Ranking() {
