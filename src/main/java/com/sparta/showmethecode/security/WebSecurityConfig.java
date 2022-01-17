@@ -26,8 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final String USER = UserRole.ROLE_USER.toString();
-    private final String REVIEWER = UserRole.ROLE_REVIEWER.toString();
+    private final String USER = "USER";
+    private final String REVIEWER = "REVIEWER";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -49,6 +49,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/static/**",
                         "/favicon.ico"
                 ).permitAll()
+                .antMatchers(HttpMethod.POST, "/questions/**").hasAnyRole(USER, REVIEWER)
+                .antMatchers(HttpMethod.PUT, "/questions/**").hasAnyRole(USER, REVIEWER)
+                .antMatchers(HttpMethod.DELETE, "/questions/**").hasAnyRole(USER, REVIEWER)
+
+                .antMatchers(HttpMethod.GET, "/users/requests").hasAnyRole(USER, REVIEWER)
+
+                .antMatchers("/reviewers/answers", "/reviewers/questions").hasRole(REVIEWER)
+                .antMatchers("/reviewers/language").hasAnyRole(USER, REVIEWER)
+
+                .antMatchers(HttpMethod.GET, "/subscribe/**").hasAnyRole(USER, REVIEWER)
+                .antMatchers(HttpMethod.GET, "/notifications/**").hasAnyRole(USER, REVIEWER)
+
+                .antMatchers(HttpMethod.POST, "/comments/**").hasAnyRole(USER, REVIEWER)
+                .antMatchers(HttpMethod.DELETE, "/comments/**").hasAnyRole(USER, REVIEWER)
+                .antMatchers(HttpMethod.PUT, "/comments/**").hasAnyRole(USER, REVIEWER)
+
+
+                .antMatchers(HttpMethod.POST, "/answers/eval/**").hasAnyRole(USER, REVIEWER)
+                .antMatchers(HttpMethod.POST, "/answers/**").hasRole(REVIEWER)
+                .antMatchers(HttpMethod.POST, "/answers/**").hasRole(REVIEWER)
+                .antMatchers(HttpMethod.PUT, "/answers/**").hasRole(REVIEWER)
+
                 .anyRequest().permitAll();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

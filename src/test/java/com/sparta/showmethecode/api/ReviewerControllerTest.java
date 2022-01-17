@@ -247,7 +247,7 @@ public class ReviewerControllerTest {
         EvaluateAnswerDto evaluateAnswerDto = new EvaluateAnswerDto(4.5);
         String dtoJson = new Gson().toJson(evaluateAnswerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/answers/{questionId}/eval/{answerId}", question.getId(), answer.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/answers/eval/{questionId}/{answerId}", question.getId(), answer.getId())
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)

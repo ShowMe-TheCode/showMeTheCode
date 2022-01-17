@@ -221,7 +221,7 @@ function evaluateAnswer(answerId) {
 
 	$.ajax({
 		type: "POST",
-		url: base_url + `/answers/${questionId}/eval/${answerId}`,
+		url: base_url + `/answers/eval/${questionId}/${answerId}`,
 		contentType: "application/json;charset=utf-8;",
 		data: JSON.stringify(data),
 		success: function (res) {

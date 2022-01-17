@@ -155,7 +155,7 @@ public class QuestionController {
     /**
      * 답변을 위한 질문 상세정보 조회 (댓글 X, 답변 O)
      */
-    @GetMapping("/{id}/answer")
+    //@GetMapping("/{id}/answer")
     public ResponseEntity getReviewRequestDetailsWithoutComments(
             @PathVariable Long id
     ) {

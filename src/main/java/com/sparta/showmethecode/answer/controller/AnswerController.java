@@ -22,7 +22,6 @@ public class AnswerController {
     /**
      * 답변 API
      */
-    @Secured("ROLE_REVIEWER")
     @PostMapping("/{questionId}")
     public ResponseEntity addReviewAndComment(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -67,8 +66,7 @@ public class AnswerController {
     /**
      * 답변에 대한 평가 API
      */
-    @Secured({"ROLE_USER", "ROLE_REVIEWER"})
-    @PostMapping("/{questionId}/eval/{answerId}")
+    @PostMapping("/eval/{questionId}/{answerId}")
     public ResponseEntity evaluateAnswer(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long questionId, @PathVariable Long answerId,
