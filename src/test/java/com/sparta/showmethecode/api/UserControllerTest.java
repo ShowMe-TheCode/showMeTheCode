@@ -2,6 +2,7 @@ package com.sparta.showmethecode.api;
 
 import com.google.common.net.HttpHeaders;
 import com.sparta.showmethecode.comment.domain.Comment;
+import com.sparta.showmethecode.helper.UserHelper;
 import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.comment.repository.CommentRepository;
@@ -80,10 +81,9 @@ public class UserControllerTest {
 
     @BeforeAll
     void init() {
-        user = new User("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER, 0, 0, 0.0);
-        reviewer = new User("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어1", UserRole.ROLE_REVIEWER, 0, 0, 0.0, Arrays.asList(new Language("JAVA")));
-        newReviewer = new User("newReviewer", passwordEncoder.encode("password"), "테스트_리뷰어2", UserRole.ROLE_REVIEWER, 0, 0, 0.0, Arrays.asList(new Language("JAVA")));
-        User reviewer2 = new User("newReviewer2", passwordEncoder.encode("password"), "테스트_리뷰어3", UserRole.ROLE_REVIEWER, 0, 0, 0.0, Arrays.asList(new Language("Python")));
+        user = UserHelper.createUser("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER);
+        reviewer = UserHelper.createUser("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어1", UserRole.ROLE_REVIEWER, "JAVA");
+        newReviewer = UserHelper.createUser("newReviewer", passwordEncoder.encode("password"), "테스트_리뷰어2", UserRole.ROLE_REVIEWER, "JAVA");
 
         userRepository.saveAll(Arrays.asList(user, reviewer, newReviewer));
 
@@ -120,7 +120,7 @@ public class UserControllerTest {
     @Test
     public void 회원가입() throws Exception {
         final String testLanguageName = "JAVA";
-        mockMvc.perform(get("/user/language")
+        mockMvc.perform(get("/reviewers/language")
                         .param("language", testLanguageName)
                 ).andExpect(status().isOk())
                 .andDo(document("get-user-searchByLanguageName",
@@ -146,29 +146,21 @@ public class UserControllerTest {
     public void 리뷰요청목록조회() throws Exception {
         String token = createTokenAndSpringSecuritySetting(user);
 
-        mockMvc.perform(get("/user/requests")
+        mockMvc.perform(get("/users/requests")
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
-                        .param("page", "1")
                         .param("size", "10")
-                        .param("isAsc", "true")
-                        .param("sortBy", "createdAt")
                         .param("status", QuestionStatus.UNSOLVE.toString())
                 ).andExpect(status().isOk())
                 .andDo(document("get-request-reviewList",
                                 requestParameters(
-                                        parameterWithName("page").description("요청_페이지_번호").optional(),
                                         parameterWithName("size").description("페이지_당_요소수").optional(),
-                                        parameterWithName("sortBy").description("정렬기준_필드_이름").optional(),
-                                        parameterWithName("isAsc").description("정렬방향").optional(),
                                         parameterWithName("status").description("리뷰요청_처리상태").optional()
                                 ), responseFields(
-                                        fieldWithPath("totalPage").description("전체 페이지수").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("totalElements").description("전체 요소수").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("page").description("현재페이지 번호").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("size").description("페이지 당 요소수").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("lastId").description("마지막 요소 ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("lastPage").description("현재 페이지가 마지막 페이지인지").type(JsonFieldType.BOOLEAN),
 
                                         subsectionWithPath("data").description("리뷰요청_데이터"),
-                                        fieldWithPath("data.[].reviewRequestId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("data.[].questionId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
                                         fieldWithPath("data.[].username").description("리뷰요청자_이름").type(JsonFieldType.STRING),
                                         fieldWithPath("data.[].nickname").description("리뷰요청자_닉네임").type(JsonFieldType.STRING),
                                         fieldWithPath("data.[].title").description("리뷰요청_제목").type(JsonFieldType.STRING),
@@ -189,29 +181,22 @@ public class UserControllerTest {
     public void 요청된_리뷰목록_조회() throws Exception {
         String token = createTokenAndSpringSecuritySetting(reviewer);
 
-        mockMvc.perform(get("/user/received")
+        mockMvc.perform(get("/reviewers/questions")
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
-                        .param("page", "1")
                         .param("size", "10")
-                        .param("isAsc", "true")
-                        .param("sortBy", "createdAt")
                         .param("status", QuestionStatus.UNSOLVE.toString())
                 ).andExpect(status().isOk())
                 .andDo(document("get-received-reviewList",
                                 requestParameters(
-                                        parameterWithName("page").description("요청_페이지_번호").optional(),
+                                        parameterWithName("lastId").description("현재_페이지_마지막_ID").optional(),
                                         parameterWithName("size").description("페이지_당_요소수").optional(),
-                                        parameterWithName("sortBy").description("정렬기준_필드_이름").optional(),
-                                        parameterWithName("isAsc").description("정렬방향").optional(),
                                         parameterWithName("status").description("리뷰요청_처리상태").optional()
                                 ), responseFields(
-                                        fieldWithPath("totalPage").description("전체 페이지수").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("totalElements").description("전체 요소수").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("page").description("현재페이지 번호").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("size").description("페이지 당 요소수").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("lastId").description("마지막 요소 ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("lastPage").description("현재 페이지가 마지막 페이지인지").type(JsonFieldType.BOOLEAN),
 
                                         subsectionWithPath("data").description("리뷰요청_데이터"),
-                                        fieldWithPath("data.[].reviewRequestId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("data.[].questionId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
                                         fieldWithPath("data.[].username").description("리뷰요청자_이름").type(JsonFieldType.STRING),
                                         fieldWithPath("data.[].nickname").description("리뷰요청자_닉네임").type(JsonFieldType.STRING),
                                         fieldWithPath("data.[].title").description("리뷰요청_제목").type(JsonFieldType.STRING),

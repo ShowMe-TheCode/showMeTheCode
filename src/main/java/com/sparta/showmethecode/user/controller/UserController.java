@@ -73,7 +73,7 @@ public class UserController {
     /**
      * 로그아웃 API
      */
-    @PostMapping("logout")
+    @PostMapping("/logout")
     public BasicResponseDto logout() {
         SecurityContextHolder.clearContext();
 

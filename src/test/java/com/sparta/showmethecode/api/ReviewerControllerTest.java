@@ -4,6 +4,7 @@ import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
 import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.comment.domain.Comment;
+import com.sparta.showmethecode.helper.UserHelper;
 import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.answer.dto.request.AddAnswerDto;
 import com.sparta.showmethecode.answer.dto.request.EvaluateAnswerDto;
@@ -85,9 +86,9 @@ public class ReviewerControllerTest {
 
     @BeforeAll
     void init() {
-        user = new User("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER, 0, 0, 0.0);
-        reviewer = new User("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어", UserRole.ROLE_REVIEWER, 0, 0, 0.0, Arrays.asList(new Language("JAVA")));
-        newReviewer = new User("newReviewer", passwordEncoder.encode("password"), "테스트_리뷰어", UserRole.ROLE_REVIEWER, 0, 0, 0.0, Arrays.asList(new Language("JAVA")));
+        user = UserHelper.createUser("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER);
+        reviewer = UserHelper.createUser("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어1", UserRole.ROLE_REVIEWER, "JAVA");
+        newReviewer = UserHelper.createUser("newReviewer", passwordEncoder.encode("password"), "테스트_리뷰어2", UserRole.ROLE_REVIEWER, "JAVA");
 
         userRepository.saveAll(Arrays.asList(user, reviewer, newReviewer));
 
@@ -128,7 +129,7 @@ public class ReviewerControllerTest {
         AddAnswerDto addAnswerDto = new AddAnswerDto("답변내용");
         String dtoJson = new Gson().toJson(addAnswerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/answer/{questionId}", question.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/answers/{questionId}", question.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -146,11 +147,11 @@ public class ReviewerControllerTest {
     }
 
     @Order(2)
-    @DisplayName("2. 답변목록 조회 API")
+    @DisplayName("2. 내가 답변한 답변목록 조회 API")
     @Test
     public void 답변목록_조회() throws Exception {
         String token = createTokenAndSpringSecuritySetting(reviewer);
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/answers")
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/reviewers/answers")
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .param("page", "1")
                         .param("size", "10")
@@ -172,11 +173,11 @@ public class ReviewerControllerTest {
                                         fieldWithPath("size").description("페이지 당 요소수").type(JsonFieldType.NUMBER),
 
                                         subsectionWithPath("data").description("답변_데이터"),
-                                        fieldWithPath("data.[].reviewAnswerId").description("리뷰답변_ID").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("data.[].reviewRequestId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("data.[].answerId").description("리뷰답변_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("data.[].questionId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
                                         fieldWithPath("data.[].username").description("답변자_이름").type(JsonFieldType.STRING),
                                         fieldWithPath("data.[].nickname").description("답변자_닉네임").type(JsonFieldType.STRING),
-                                        fieldWithPath("data.[].answerContent").description("답변_내용").type(JsonFieldType.STRING),
+                                        fieldWithPath("data.[].content").description("답변_내용").type(JsonFieldType.STRING),
                                         fieldWithPath("data.[].point").description("답변_점수").type(JsonFieldType.NUMBER),
                                         fieldWithPath("data.[].createdAt").description("답변_날짜").type(JsonFieldType.STRING)
                                 )
@@ -193,7 +194,7 @@ public class ReviewerControllerTest {
         UpdateAnswerDto updateAnswerDto = new UpdateAnswerDto("답변수정");
         String dtoJson = new Gson().toJson(updateAnswerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/answer/{answerId}", answer.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/answers/{answerId}", answer.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -219,7 +220,7 @@ public class ReviewerControllerTest {
         UpdateReviewerDto updateReviewerDto = new UpdateReviewerDto(newReviewer.getId());
         String dtoJson = new Gson().toJson(updateReviewerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/question/{questionId}/reviewer/{reviewerId}", question.getId(), reviewer.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/questions/{questionId}/reviewer/{reviewerId}", question.getId(), reviewer.getId())
                         .header(HttpHeaders.AUTHORIZATION, token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -246,7 +247,7 @@ public class ReviewerControllerTest {
         EvaluateAnswerDto evaluateAnswerDto = new EvaluateAnswerDto(4.5);
         String dtoJson = new Gson().toJson(evaluateAnswerDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/question/{questionId}/eval/{answerId}", question.getId(), answer.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/answers/{questionId}/eval/{answerId}", question.getId(), answer.getId())
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)

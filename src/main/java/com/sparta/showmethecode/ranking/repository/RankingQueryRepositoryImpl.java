@@ -1,7 +1,11 @@
 package com.sparta.showmethecode.ranking.repository;
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.showmethecode.ranking.domain.Ranking;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
@@ -17,11 +21,28 @@ public class RankingQueryRepositoryImpl implements RankingQueryRepository {
     }
 
     @Override
+    public Page<Ranking> findReviewerRanking(Pageable pageable) {
+        List<Ranking> content = query.selectFrom(ranking).distinct()
+                .join(ranking.user, user).fetchJoin()
+                .orderBy(ranking.average.desc(), ranking.answerCount.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Ranking> jpaQuery = query.selectFrom(ranking).distinct()
+                .join(ranking.user, user).fetchJoin();
+
+        return PageableExecutionUtils.getPage(content, pageable, jpaQuery::fetchCount);
+    }
+
+    @Override
     public List<Ranking> findTop5Reviewer() {
-        return query.selectFrom(ranking)
+        return query.selectFrom(ranking).distinct()
                 .join(ranking.user, user).fetchJoin()
                 .orderBy(ranking.average.desc(), ranking.answerCount.desc())
                 .limit(5)
                 .fetch();
     }
+
+
 }

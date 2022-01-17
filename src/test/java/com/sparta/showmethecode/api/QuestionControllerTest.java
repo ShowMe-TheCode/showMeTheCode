@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.comment.domain.Comment;
+import com.sparta.showmethecode.helper.UserHelper;
 import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.question.dto.request.AddQuestionDto;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
@@ -61,7 +62,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-public class ReviewRequestControllerTest {
+public class QuestionControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -87,9 +88,8 @@ public class ReviewRequestControllerTest {
 
     @BeforeAll
     void init() {
-        user = new User("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER, 0, 0, 0.0);
-        reviewer = new User("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어", UserRole.ROLE_REVIEWER, 0, 0, 0.0, Arrays.asList(new Language("JAVA")));
-
+        user = UserHelper.createUser("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER);
+        reviewer = UserHelper.createUser("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어1", UserRole.ROLE_REVIEWER, "JAVA");
         userRepository.saveAll(Arrays.asList(user, reviewer));
 
         question = new Question(user, reviewer, "제목", "내용", QuestionStatus.UNSOLVE, "JAVA");
@@ -133,7 +133,7 @@ public class ReviewRequestControllerTest {
 
         String token = jwtUtils.createToken(userDetails.getUsername());
 
-        mockMvc.perform(post("/question")
+        mockMvc.perform(post("/questions")
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -159,28 +159,23 @@ public class ReviewRequestControllerTest {
     public void 코드리뷰_요청목록() throws Exception {
 
         mockMvc.perform(get("/questions")
-                        .param("page", "1")
                         .param("size", "10")
-                        .param("sortBy", "createdAt")
-                        .param("isAsc", "true")
                 )
                 .andExpect(status().isOk())
                 .andDo(document("get-questions",
                                 requestParameters(
-                                        parameterWithName("page").description("요청 페이지 번호").optional(),
-                                        parameterWithName("size").description("페이지 당 요소수").optional(),
+                                        parameterWithName("lastId").description("현재_페이지_마지막_ID").optional(),
+                                        parameterWithName("size").description("페이지_당_요소수").optional(),
+                                        parameterWithName("status").description("리뷰요청_처리상태").optional(),
                                         parameterWithName("sortBy").description("정렬기준 필드 이름").optional(),
-                                        parameterWithName("isAsc").description("정렬방향").optional(),
                                         parameterWithName("query").description("코드리뷰요청 목록 검색").optional()
                                 )
                                 , responseFields(
-                                        fieldWithPath("totalPage").description("전체 페이지수").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("totalElements").description("전체 요소수").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("page").description("현재페이지 번호").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("size").description("페이지 당 요소수").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("lastId").description("마지막 요소 ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("lastPage").description("현재 페이지가 마지막 페이지인지").type(JsonFieldType.BOOLEAN),
 
                                         subsectionWithPath("data").description("리뷰요청_데이터"),
-                                        fieldWithPath("data.[].reviewRequestId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("data.[].questionId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
                                         fieldWithPath("data.[].username").description("리뷰요청자_이름").type(JsonFieldType.STRING),
                                         fieldWithPath("data.[].nickname").description("리뷰요청자_닉네임").type(JsonFieldType.STRING),
                                         fieldWithPath("data.[].title").description("리뷰요청_제목").type(JsonFieldType.STRING),
@@ -199,15 +194,15 @@ public class ReviewRequestControllerTest {
     @Test
     public void 상세정보_조회() throws Exception {
 
-        mockMvc.perform(get("/question")
-                        .param("id", question.getId().toString())
+        mockMvc.perform(get("/questions/{questionId}", question.getId().toString())
                 ).andExpect(status().isOk())
                 .andDo(document("get-question",
-                                requestParameters(
-                                        parameterWithName("id").description("리뷰요청_ID")
-                                ),
+                        pathParameters(
+                                parameterWithName("questionId").description("리뷰요청_ID")
+                        ),
                                 responseFields(
-                                        fieldWithPath("reviewRequestId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("questionId").description("리뷰요청_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("questionUserId").description("리뷰요청자_ID").type(JsonFieldType.NUMBER),
                                         fieldWithPath("answerUserId").description("리뷰답변자_ID").type(JsonFieldType.NUMBER),
                                         fieldWithPath("username").description("리뷰요청자_이름").type(JsonFieldType.STRING),
                                         fieldWithPath("nickname").description("리뷰요청자_닉네임").type(JsonFieldType.STRING),
@@ -217,14 +212,14 @@ public class ReviewRequestControllerTest {
                                         fieldWithPath("status").description("리뷰요청_상태").type(JsonFieldType.STRING),
                                         fieldWithPath("createdAt").description("리뷰요청_생성날짜").type(JsonFieldType.STRING),
 
-                                        subsectionWithPath("reviewAnswer").description("리뷰답변"),
-                                        fieldWithPath("reviewAnswer.reviewAnswerId").description("리뷰답변자_ID").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("reviewAnswer.reviewRequestId").description("리뷰요청자_ID").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("reviewAnswer.username").description("리뷰답변자_이름").type(JsonFieldType.STRING),
-                                        fieldWithPath("reviewAnswer.nickname").description("리뷰답변자_닉네임").type(JsonFieldType.STRING),
-                                        fieldWithPath("reviewAnswer.answerContent").description("리뷰답변_내용").type(JsonFieldType.STRING),
-                                        fieldWithPath("reviewAnswer.point").description("리뷰답변_점수").type(JsonFieldType.NUMBER),
-                                        fieldWithPath("reviewAnswer.createdAt").description("리뷰답변_생성날짜").type(JsonFieldType.STRING),
+                                        subsectionWithPath("answer").description("리뷰답변"),
+                                        fieldWithPath("answer.answerId").description("리뷰답변자_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("answer.questionId").description("리뷰요청자_ID").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("answer.username").description("리뷰답변자_이름").type(JsonFieldType.STRING),
+                                        fieldWithPath("answer.nickname").description("리뷰답변자_닉네임").type(JsonFieldType.STRING),
+                                        fieldWithPath("answer.content").description("리뷰답변_내용").type(JsonFieldType.STRING),
+                                        fieldWithPath("answer.point").description("리뷰답변_점수").type(JsonFieldType.NUMBER),
+                                        fieldWithPath("answer.createdAt").description("리뷰답변_생성날짜").type(JsonFieldType.STRING),
 
 
                                         subsectionWithPath("comments").description("댓글"),
@@ -248,7 +243,7 @@ public class ReviewRequestControllerTest {
 
         String token = createTokenAndSpringSecuritySetting();
 
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/question/{id}", question.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/questions/{id}", question.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -275,7 +270,7 @@ public class ReviewRequestControllerTest {
     public void 코드리뷰_삭제() throws Exception {
         String token = createTokenAndSpringSecuritySetting();
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/question/{id}", question.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/questions/{id}", question.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -291,11 +286,11 @@ public class ReviewRequestControllerTest {
                 );
     }
 
-    @Order(5)
-    @DisplayName("5. 코드리뷰 요청 언어별 카운팅 API 테스트")
+    @Order(6)
+    @DisplayName("6. 코드리뷰 요청 언어별 카운팅 API 테스트")
     @Test
     public void 언어별_카운팅() throws Exception {
-        mockMvc.perform(get("/question/language")
+        mockMvc.perform(get("/questions/language")
                         .param("language", "JAVA")
                         .param("page", "1")
                         .param("size", "10")

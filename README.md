@@ -64,6 +64,12 @@
 <br/>
 <br/>
 
+### 📌 ERD 
+![image](https://user-images.githubusercontent.com/77182648/149709625-6f4384d9-e12f-48ff-993d-5a987dea9417.png)
+
+<br/>
+<br/>
+
 ### 📌 문제를 이렇게 해결했어요!
 1. [Querydsl (+Mysql) Group by 성능 최적화](https://velog.io/@dhk22/TIL-Day-65-Querydsl-Group-by)
 2. [Querydsl Jpa exist 최적화](https://velog.io/@dhk22/TIL-Day-66-Jpa-exist-%EC%B5%9C%EC%A0%81%ED%99%94)

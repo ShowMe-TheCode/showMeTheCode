@@ -171,9 +171,9 @@ public class QuestionController {
     public ResponseEntity changeReviewer(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody UpdateReviewerDto changeReviewerDto,
-            @PathVariable Long questionId, @PathVariable Long currentReviewerId
+            @PathVariable Long questionId, @PathVariable Long reviewerId
     ) {
-        reviewRequestService.changeReviewer(changeReviewerDto, questionId, currentReviewerId);
+        reviewRequestService.changeReviewer(changeReviewerDto, questionId, reviewerId);
 
         return ResponseEntity.ok("success");
     }

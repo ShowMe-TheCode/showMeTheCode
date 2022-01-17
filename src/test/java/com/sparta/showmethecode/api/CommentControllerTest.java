@@ -6,6 +6,7 @@ import com.sparta.showmethecode.answer.domain.Answer;
 import com.sparta.showmethecode.comment.domain.Comment;
 import com.sparta.showmethecode.comment.dto.request.AddCommentDto;
 import com.sparta.showmethecode.comment.dto.request.UpdateCommentDto;
+import com.sparta.showmethecode.helper.UserHelper;
 import com.sparta.showmethecode.language.domain.Language;
 import com.sparta.showmethecode.answer.repository.AnswerRepository;
 import com.sparta.showmethecode.comment.repository.CommentRepository;
@@ -85,8 +86,8 @@ public class CommentControllerTest {
 
     @BeforeAll
     public void init() {
-        user = new User("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER, 0, 0, 0.0);
-        reviewer = new User("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어", UserRole.ROLE_REVIEWER, 0, 0, 0.0, Arrays.asList(new Language("JAVA")));
+        user = UserHelper.createUser("user", passwordEncoder.encode("password"), "테스트_사용자", UserRole.ROLE_USER);
+        reviewer = UserHelper.createUser("reviewer", passwordEncoder.encode("password"), "테스트_리뷰어1", UserRole.ROLE_REVIEWER, "JAVA");
 
         userRepository.saveAll(Arrays.asList(user, reviewer));
 
@@ -125,7 +126,7 @@ public class CommentControllerTest {
         AddCommentDto addCommentDto = new AddCommentDto("테스트 댓글입니다.");
         String dtoJson = new Gson().toJson(addCommentDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/question/{questionId}/comment", question.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/comments/{questionId}", question.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -148,7 +149,7 @@ public class CommentControllerTest {
     public void 댓글삭제() throws Exception {
         String token = createTokenAndSpringSecuritySetting(user);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/question/comment/{commentId}", comment.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/comments/{commentId}", comment.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                 ).andExpect(status().isOk())
                 .andDo(document("delete-comment",
@@ -167,7 +168,7 @@ public class CommentControllerTest {
         UpdateCommentDto updateCommentDto = new UpdateCommentDto("댓글수정 테스트");
         String dtoJson = new Gson().toJson(updateCommentDto);
 
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/question/comment/{commentId}", comment.getId())
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/comments/{commentId}", comment.getId())
                         .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + token)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
