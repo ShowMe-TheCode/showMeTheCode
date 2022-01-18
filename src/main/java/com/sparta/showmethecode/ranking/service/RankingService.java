@@ -5,6 +5,7 @@ import com.sparta.showmethecode.ranking.domain.Ranking;
 import com.sparta.showmethecode.ranking.dto.response.RankingUserResponseDto;
 import com.sparta.showmethecode.ranking.repository.RankingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
@@ -26,8 +28,14 @@ public class RankingService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Ranking> result;
         if (StringUtils.hasText(query)) {
-            if (type.equals("language")) result = rankingRepository.searchByLanguage(query, type, pageable);
-            else result = rankingRepository.searchByName(query, type, pageable);
+            if (type.equals("language")) {
+                log.info("searchType(Language)={}, query={}", type, query);
+                result = rankingRepository.searchByLanguage(query, type, pageable);
+            }
+            else {
+                log.info("searchType(Name)={}, query={}", type, query);
+                result = rankingRepository.searchByName(query, type, pageable);
+            }
         } else {
             result = rankingRepository.findReviewerRanking(pageable);
         }

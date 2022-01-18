@@ -23,7 +23,7 @@ public class PageResponseDto<T> {
 
         this.totalPage = totalPage;
         this.totalElements = totalElements;
-        this.page = page;
+        this.page = page++;
         this.size = size;
     }
 }

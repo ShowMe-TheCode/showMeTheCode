@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    getRankingAll(null);
+    let query = getParameterByName("query");
+    getRankingAll(query);
 })
 
 
@@ -10,10 +11,8 @@ function getRankingAll(query) {
     $("#rankingList").empty()
     let type = $("#search-reviewer-type").val();
     let page = getParameterByName("page");
-    let size = getParameterByName("size");
     let data = {
         page: page,
-        size: size,
         query: query,
         type: type
     };
@@ -24,7 +23,9 @@ function getRankingAll(query) {
         success: function (res) {
             console.log(res)
             let data = res["data"];
-
+            let totalPage = res['totalPage']
+            let page = res['page'];
+            let size = res['size'];
             for (let i = 0; i < data.length; i++) {
                 let id = data[i]["id"]
                 let username = data[i]["username"];
@@ -32,7 +33,7 @@ function getRankingAll(query) {
                 let languages = data[i]["languages"];
                 let answerCount = data[i]["answerCount"];
                 let point = data[i]["point"];
-                let ranking = i + 1;
+                let ranking = i + 1 + size * page;
 
                 let temp = ` <tr>
                                   <th scope="row">${ranking} 위</th>
@@ -46,16 +47,40 @@ function getRankingAll(query) {
                                 </tr>`;
                 $("#rankingList").append(temp);
             } // end-for
+
+            addPageButton(totalPage, page, type, query);
         },
     });
+}
+
+function addPageButton(totalPage, page, type, query) {
+    $('#ranking-list-pagination-ul').empty();
+    for (let i=1;i<=totalPage;i++) {
+        let html_button = ``;
+        if (i===page+1) {
+            html_button = `<li><a class="pagination-link is-current" onclick="movePage('${i}', '${type}', '${query}')">${i}</a></li>`
+        } else {
+            html_button = `<li><a class="pagination-link" onclick="movePage('${i}', '${type}', '${query}')">${i}</a></li>`
+        }
+        $('#ranking-list-pagination-ul').append(html_button);
+    }
+}
+
+function movePage(page, type, query) {
+    if (query != null) {
+        location.href=`ranking.html?page=${page}&type=${type}&query=${query}`;
+    } else {
+        location.href=`ranking.html?page=${page}&type=${type}`;
+    }
 }
 
 // ========================================
 // 검색하기
 // ========================================
 function searchReviewer() {
+
     let query = $("#reviewer-search-input").val();
-    getRankingAll(query);
+    location.href=`ranking.html?query=${query}`;
 }
 
 function questionConfirm(reviewerId) {
