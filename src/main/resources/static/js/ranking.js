@@ -1,16 +1,13 @@
 $(document).ready(function() {
-    let query = getParameterByName("query");
-    getRankingAll(query);
+    getRankingAll(undefined, undefined, undefined);
 })
 
 
 // ========================================
 // 리뷰어 랭킹 - 전체 보기
 // ========================================
-function getRankingAll(query) {
+function getRankingAll(page, type, query) {
     $("#rankingList").empty()
-    let type = $("#search-reviewer-type").val();
-    let page = getParameterByName("page");
     let data = {
         page: page,
         query: query,
@@ -42,7 +39,7 @@ function getRankingAll(query) {
                                   <td>${answerCount}</td>
                                   <td>${point}</td>
                                   <td>
-                                     <button onclick="questionConfirm('${id}')" class="button is-info is-small">질문하기</button>
+                                     <button onclick="questionConfirm(${id})" class="button is-info is-small">질문하기</button>
                                   </td>
                                 </tr>`;
                 $("#rankingList").append(temp);
@@ -55,32 +52,34 @@ function getRankingAll(query) {
 
 function addPageButton(totalPage, page, type, query) {
     $('#ranking-list-pagination-ul').empty();
+    console.log("addPage=",totalPage, page, type, query);
     for (let i=1;i<=totalPage;i++) {
         let html_button = ``;
         if (i===page+1) {
-            html_button = `<li><a class="pagination-link is-current" onclick="movePage('${i}', '${type}', '${query}')">${i}</a></li>`
+            html_button = `<li><a class="pagination-link is-current" onclick="movePage(${i}, ${type}, ${query})">${i}</a></li>`
         } else {
-            html_button = `<li><a class="pagination-link" onclick="movePage('${i}', '${type}', '${query}')">${i}</a></li>`
+            if (query !== undefined && type !== undefined) {
+                html_button = `<li><a class="pagination-link" onclick="movePage(${i}, '${type}', '${query}')">${i}</a></li>`
+            } else {
+                html_button = `<li><a class="pagination-link" onclick="movePage(${i}, ${type}, ${query})">${i}</a></li>`
+            }
         }
         $('#ranking-list-pagination-ul').append(html_button);
     }
 }
 
 function movePage(page, type, query) {
-    if (query != null) {
-        location.href=`ranking.html?page=${page}&type=${type}&query=${query}`;
-    } else {
-        location.href=`ranking.html?page=${page}&type=${type}`;
-    }
+    console.log("movePage=", page, type, query)
+    getRankingAll(page, type, query);
 }
 
 // ========================================
 // 검색하기
 // ========================================
 function searchReviewer() {
-
+    let type = $("#search-reviewer-type").val();
     let query = $("#reviewer-search-input").val();
-    location.href=`ranking.html?query=${query}`;
+    getRankingAll(undefined, type, query);
 }
 
 function questionConfirm(reviewerId) {

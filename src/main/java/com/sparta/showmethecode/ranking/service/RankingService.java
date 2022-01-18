@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,7 +28,7 @@ public class RankingService {
     public PageResponseDto getRankings(int page, int size, String query, String type) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Ranking> result;
-        if (StringUtils.hasText(query)) {
+        if (!Objects.isNull(query) && StringUtils.hasText(query)) {
             if (type.equals("language")) {
                 log.info("searchType(Language)={}, query={}", type, query);
                 result = rankingRepository.searchByLanguage(query, type, pageable);

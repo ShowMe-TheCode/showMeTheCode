@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,10 +25,13 @@ public class RankingController {
 
     @GetMapping
     public ResponseEntity getRanking(
-            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "3") int size,
-            @RequestParam String type, @RequestParam(required = false) String query) {
+            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "2") int size,
+            @RequestParam(required = false) String type, @RequestParam(required = false) String query) {
         --page;
         log.info("page={}, size={}, query={}, type={}", page, size, query, type);
+        if (Objects.isNull(query)) {
+            log.info("query가 null임");
+        }
 
         PageResponseDto result = rankingService.getRankings(page, size, query, type);
         return ResponseEntity.ok(result);
