@@ -26,7 +26,7 @@ public class NotificationController {
     @CrossOrigin
     @GetMapping(value = "/subscribe/{id}", consumes = MediaType.ALL_VALUE)
     public SseEmitter subscribe(@PathVariable Long id,
-                                @RequestParam(value = "lastEventId", required = false, defaultValue = "") String lastEventId) {
+                                @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
 
         log.info("SSE 연결 id = {}", id);
 

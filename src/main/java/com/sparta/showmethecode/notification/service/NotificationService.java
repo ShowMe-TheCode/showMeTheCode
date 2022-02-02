@@ -66,7 +66,7 @@ public class NotificationService {
                     .data(data));
         } catch (IOException exception) {
             emitterRepository.deleteById(id);
-            log.error("SSE 연결 오류!", exception);
+            log.error("SSE connect error", exception);
         }
     }
 
@@ -131,10 +131,6 @@ public class NotificationService {
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알림입니다."));
         notification.read();
     }
-
-
-
-
 }
 
 

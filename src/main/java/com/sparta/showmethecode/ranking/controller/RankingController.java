@@ -25,7 +25,7 @@ public class RankingController {
 
     @GetMapping
     public ResponseEntity getRanking(
-            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "2") int size,
+            @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String type, @RequestParam(required = false) String query) {
         --page;
         log.info("page={}, size={}, query={}, type={}", page, size, query, type);
